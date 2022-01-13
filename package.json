@@ -1,0 +1,61 @@
+{
+  "name": "oilandrope-tabletop",
+  "version": "0.0.1",
+  "description": "The logic under movement and interactions in Oil & Rope's tabletop.",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --config-name main --config-name dev --merge",
+    "build": "if-env NODE_ENV=production ?? npm run build:prod || npm run build:dev",
+    "build:prod": "webpack --config-name main --config-name prod --merge",
+    "build:dev": "webpack --config-name main --config-name dev --merge",
+    "lint": "eslint --color .",
+    "lint:fix": "eslint --fix .",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oil-rope/oilandrope-tabletop.git"
+  },
+  "keywords": [
+    "oilandrope",
+    "tabletop",
+    "rol",
+    "roleplay",
+    "game"
+  ],
+  "author": "LeCuay <suso.becerra98@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oil-rope/oilandrope-tabletop/issues"
+  },
+  "homepage": "https://github.com/oil-rope/oilandrope-tabletop#readme",
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.8",
+    "@babel/preset-react": "^7.16.7",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "babel-jest": "^27.4.6",
+    "babel-loader": "^8.2.3",
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest-dom": "^4.0.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "html-webpack-plugin": "^5.5.0",
+    "if-env": "^1.0.4",
+    "jest": "^27.4.7",
+    "prettier": "^2.5.1",
+    "react-test-renderer": "^17.0.2",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.6.0"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
