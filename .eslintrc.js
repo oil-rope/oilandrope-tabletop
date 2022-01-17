@@ -5,8 +5,11 @@ module.exports = {
     es2021: true,
     jest: true
   },
+  parser: "@typescript-eslint/parser",
   extends: [
     "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
     "plugin:jest-dom/recommended"
@@ -18,8 +21,8 @@ module.exports = {
     ecmaVersion: 13,
     sourceType: "module"
   },
-  plugins: ["react", "jest-dom"],
-  ignorePatterns: ["**/dist/"],
+  plugins: ["@typescript-eslint", "react", "jest-dom"],
+  ignorePatterns: ["**/dist/**", "**/vendor/**"],
   settings: {
     react: {
       version: "17.0.2"

@@ -1,26 +1,30 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = [
   {
     name: "main",
-    entry: path.join(__dirname, "src", "index.js"),
+    entry: path.join(__dirname, "src", "index.tsx"),
     output: {
       path: path.resolve(__dirname, "dist")
     },
     module: {
       rules: [
         {
-          test: [/\.m?js$/, /\.m?jsx$/],
-          exclude: /node_modules/,
-          use: {
-            loader: "babel-loader"
-          }
+          test: /\.tsx$/,
+          use: "ts-loader",
+          exclude: /node_modules/
+        },
+        {
+          test: /\.js$/,
+          use: "babel-loader",
+          exclude: /node_modules/
         }
       ]
     },
     resolve: {
-      extensions: [".js", ".jsx"]
+      extensions: [".ts", ".tsx", ".js", ".jsx"]
     },
     plugins: [
       new HtmlWebpackPlugin({
