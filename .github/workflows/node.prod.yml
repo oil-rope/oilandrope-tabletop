@@ -30,7 +30,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci
+          npm ci --save-dev
         
       - name: Build
         run: |
