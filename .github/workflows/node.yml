@@ -3,9 +3,11 @@ name: (Dev) Node.js Checker
 on:
   push:
     branches:
+      - master
       - develop
   pull_request:
     branches:
+      - master
       - develop
 
 jobs:
@@ -16,6 +18,7 @@ jobs:
       NODE_ENV: development
 
     strategy:
+      max-parallel: 4
       matrix:
         node-version: [12.x, 14.x, 16.x]
 
