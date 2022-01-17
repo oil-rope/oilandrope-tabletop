@@ -4,7 +4,7 @@
   "description": "The logic under movement and interactions in Oil &amp; Rope's tabletop.",
   "main": "index.ts",
   "scripts": {
-    "start": "webpack serve --config-name main --config-name dev --merge",
+    "start": "webpack-dev-server --progress --config-name main --config-name dev --merge",
     "build": "if-env NODE_ENV=production ?? npm run build:prod || npm run build:dev",
     "build:prod": "webpack --config-name main --config-name prod --merge",
     "build:dev": "webpack --config-name main --config-name dev --merge",

@@ -1,4 +1,4 @@
-name: (Dev) Node.js Checker
+name: Node.js Checker
 
 on:
   push:

@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
+const PUBLIC_PATH = path.resolve(__dirname, "public/");
 
 module.exports = [
   {
     name: "main",
     entry: path.join(__dirname, "src", "index.tsx"),
     output: {
-      path: path.resolve(__dirname, "dist")
+      path: path.join(PUBLIC_PATH, "dist/"),
+      publicPath: "/vendor/",
+      filename: "main.js"
     },
     module: {
       rules: [
