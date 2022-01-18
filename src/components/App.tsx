@@ -1,10 +1,12 @@
 import React from "react";
 
-const App = () => {
+import Main from "./Main";
+import Cube from "./Cube";
+
+const App: React.FC = () => {
   return (
     <>
-      <header></header>
-      <main className="py-5">
+      <Main>
         <h1 className="font-ds text-center">
           Welcome to Oil &amp; Rope Tabletop!
           <br />
@@ -13,8 +15,8 @@ const App = () => {
           </small>
         </h1>
         <hr />
-      </main>
-      <footer></footer>
+        <Cube />
+      </Main>
     </>
   );
 };
