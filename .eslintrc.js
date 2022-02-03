@@ -3,29 +3,31 @@ module.exports = {
     browser: true,
     node: true,
     es2021: true,
-    jest: true
+    jest: true,
   },
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended",
-    "plugin:jest-dom/recommended"
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended',
+    'plugin:jest/recommended',
+    'plugin:jest-dom/recommended',
   ],
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true
-    },
-    ecmaVersion: 13,
-    sourceType: "module"
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'jest', 'jest-dom'],
+  rules: {
+    'prettier/prettier': 'warn',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
-  plugins: ["@typescript-eslint", "react", "jest-dom"],
-  ignorePatterns: ["**/dist/**", "**/vendor/**"],
   settings: {
     react: {
-      version: "17.0.2"
-    }
-  }
+      version: '17.0.2',
+    },
+  },
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
 };

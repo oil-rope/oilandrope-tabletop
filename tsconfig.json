@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "dist/",
-    "noImplicitAny": true,
-    "module": "CommonJS",
     "target": "ES3",
+    "lib": ["DOM", "ES2021"],
     "jsx": "react",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "types": ["node", "jest", "@testing-library/jest-dom", "@testing-library/react"]
-  },
-  "exclude": ["node_modules"],
-  "include": ["src/**/*"],
-  "files": ["src/index.tsx"]
+    "module": "ESNext",
+    "rootDir": ".",
+    "moduleResolution": "Node",
+    "baseUrl": ".",
+    "outDir": "./vendor/",
+    "newLine": "lf",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@Components/*": ["./src/components/*"],
+    }
+  }
 }

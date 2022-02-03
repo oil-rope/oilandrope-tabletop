@@ -1,23 +1,14 @@
-import React from "react";
+import React, { FC } from 'react';
 
-import Main from "./Main";
-import Cube from "./Cube";
-
-const App: React.FC = () => {
+const App: FC = () => {
   return (
-    <>
-      <Main>
-        <h1 className="font-ds text-center">
-          Welcome to Oil &amp; Rope Tabletop!
-          <br />
-          <small className="small text-muted" style={{ fontSize: "1.5rem" }}>
-            (Pre-Alpha version)
-          </small>
-        </h1>
-        <hr />
-        <Cube />
-      </Main>
-    </>
+    <h1 className="font-ds text-center">
+      Welcome to Oil &amp; Rope Tabletop!
+      <br />
+      <small className="small text-muted" style={{ fontSize: '1.5rem' }}>
+        (Pre-Alpha version)
+      </small>
+    </h1>
   );
 };
 
