@@ -1,40 +1,46 @@
-// noinspection JSUnusedGlobalSymbols
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const BASE_PATH = path.resolve(__dirname, '../');
-const PUBLIC_PATH = path.join(BASE_PATH, 'public/');
+const BASE_PATH = path.resolve(__dirname, '../../');
 const SOURCE_PATH = path.join(BASE_PATH, 'src/');
+const PUBLIC_PATH = path.join(BASE_PATH, 'public/');
 
 const HtmlWebpackPluginConf = new HtmlWebpackPlugin({
-  template: path.join(PUBLIC_PATH, 'index.html'),
+  template: path.join(SOURCE_PATH, 'index.html'),
   title: 'Oil &amp; Rope Tabletop',
+  filename: path.join(PUBLIC_PATH, 'index.html'),
 });
 
 module.exports = {
   entry: {
-    oar_tabletop: path.join(SOURCE_PATH, 'index.tsx'),
+    oilandrope_tabletop: path.join(SOURCE_PATH, 'index.tsx'),
   },
   output: {
     path: path.join(PUBLIC_PATH, 'vendor/'),
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].[contenthash:8].bundle.js',
     clean: true,
-    filename: '[name].[contenthash].bundle.js',
     publicPath: '/',
   },
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)$/,
+        test: /\.ts(x)?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'img/[name][ext][query]',
+        },
       },
     ],
   },
   performance: {
-    assetFilter: function (assetFilename) {
-      return !/\.(map)$/.test(assetFilename);
-    },
+    assetFilter: (assetFilename) => !/\.(map|png)$/.test(assetFilename),
     hints: 'error',
   },
   resolve: {

@@ -5,14 +5,16 @@
     "jsx": "react",
     "module": "ESNext",
     "rootDir": ".",
-    "moduleResolution": "Node",
-    "baseUrl": ".",
-    "outDir": "./vendor/",
-    "newLine": "lf",
-    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "moduleResolution": "node",
     "paths": {
-      "@/*": ["./src/*"],
-      "@Components/*": ["./src/components/*"],
-    }
+      "@/*": ["*"],
+      "@Components/*": ["components/*"],
+    },
+    "newLine": "lf",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "resolveJsonModule": true
   }
 }
