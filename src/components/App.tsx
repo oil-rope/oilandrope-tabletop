@@ -1,21 +1,14 @@
-import React from "react";
+import React, { FC } from 'react';
 
-const App = () => {
+const App: FC = () => {
   return (
-    <>
-      <header></header>
-      <main className="py-5">
-        <h1 className="font-ds text-center">
-          Welcome to Oil &amp; Rope Tabletop!
-          <br />
-          <small className="small text-muted" style={{ fontSize: "1.5rem" }}>
-            (Pre-Alpha version)
-          </small>
-        </h1>
-        <hr />
-      </main>
-      <footer></footer>
-    </>
+    <h1 className="font-ds text-center">
+      Welcome to Oil &amp; Rope Tabletop!
+      <br />
+      <small className="small text-muted" style={{ fontSize: '1.5rem' }}>
+        (Pre-Alpha version)
+      </small>
+    </h1>
   );
 };
 
