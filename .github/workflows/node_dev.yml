@@ -3,11 +3,9 @@ name: Node.js Checker
 on:
   push:
     branches:
-      - master
-      - develop
+      - feature/*
   pull_request:
     branches:
-      - master
       - develop
 
 jobs:
@@ -20,7 +18,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        node-version: [16.x, 17.x]
+        node-version: [12.x, 14.x, 16.x, 17.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -45,11 +43,3 @@ jobs:
 
       - name: Test
         run: npm run test:coverage
-
-      - name: Update Codecov (coverage)
-        if: ${{ success() }}
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
-          file: ./coverage/clover.xml
