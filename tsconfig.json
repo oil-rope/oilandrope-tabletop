@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES3",
-    "lib": ["DOM", "ES2021"],
+    "lib": ["dom", "es2021"],
     "jsx": "react",
     "module": "ESNext",
     "rootDir": ".",
@@ -10,6 +10,7 @@
     "paths": {
       "@/*": ["*"],
       "@Components/*": ["components/*"],
+      "@Constants": ["const/globalConst"]
     },
     "newLine": "lf",
     "esModuleInterop": true,

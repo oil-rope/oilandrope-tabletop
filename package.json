@@ -4,10 +4,10 @@
   "description": "The logic under movement and interactions in Oil &amp; Rope's tabletop.",
   "main": "src/index.tsx",
   "scripts": {
-    "start": "if-env NODE_ENV=production ?? npm run start:prod || npm run start:dev",
+    "start": "env-cmd .env if-env NODE_ENV=production ?? npm run start:prod || npm run start:dev",
     "start:dev": "webpack-dev-server --progress --config ./config/webpack/webpack.dev.js",
     "start:prod": "webpack-dev-server --progress --config ./config/webpack/webpack.prod.js",
-    "build": "if-env NODE_ENV=production ?? npm run build:prod || npm run build:dev",
+    "build": "env-cmd .env if-env NODE_ENV=production ?? npm run build:prod || npm run build:dev",
     "build:prod": "webpack --config ./config/webpack/webpack.prod.js",
     "build:dev": "webpack --config ./config/webpack/webpack.dev.js",
     "report": "webpack --config ./config/webpack/webpack.mix.js",
@@ -76,6 +76,7 @@
     "webpack-merge": "5.8.0"
   },
   "dependencies": {
+    "dotenv": "^16.0.0",
     "react": "17.0.2",
     "react-bootstrap": "2.1.2",
     "react-dom": "17.0.2"
