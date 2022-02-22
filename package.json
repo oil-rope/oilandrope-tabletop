@@ -81,6 +81,7 @@
     "webpack-merge": "5.8.0"
   },
   "dependencies": {
+    "canvas": "2.9.0",
     "react": "17.0.2",
     "react-bootstrap": "2.1.2",
     "react-dom": "17.0.2"
