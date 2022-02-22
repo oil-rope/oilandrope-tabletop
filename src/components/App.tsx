@@ -1,26 +1,15 @@
 import React, { FC, useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 
-import { AuthContext, IAuthUserContext } from '@/contexts';
-import { CURRENT_USER_API } from '@Constants';
+import { AuthContext, IAuthUserContext } from '@Contexts';
+import { loadUser } from '@Utils/apiCalls';
 
 const App: FC = () => {
   const [user, setUser] = useState<IAuthUserContext | null>(null);
 
-  const loadUser = () => {
-    fetch(CURRENT_USER_API, {
-      mode: 'cors',
-      credentials: 'include',
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data);
-      });
-  };
-
   useEffect(() => {
     if (user !== null) return;
-    loadUser();
+    loadUser(setUser);
   }, [user]);
 
   return (

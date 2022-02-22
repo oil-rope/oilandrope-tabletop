@@ -10,7 +10,9 @@
     "paths": {
       "@/*": ["*"],
       "@Components/*": ["components/*"],
-      "@Constants": ["const/globalConst"]
+      "@Constants": ["const/globalConst"],
+      "@Contexts": ["contexts"],
+      "@Utils/*": ["utils/*"]
     },
     "newLine": "lf",
     "esModuleInterop": true,
