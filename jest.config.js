@@ -5,6 +5,12 @@ const { defaults } = require('jest-config');
 module.exports = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  collectCoverageFrom: [
+    '**/*.{ts,tsx}',
+    '!src/index.tsx',
+    '!**/node_modules/**',
+    '!**/vendor/**',
+  ],
   errorOnDeprecated: true,
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
