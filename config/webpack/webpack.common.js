@@ -2,6 +2,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { EnvironmentPlugin } = require('webpack');
+require('dotenv').config();
 
 const BASE_PATH = path.resolve(__dirname, '../../');
 const SOURCE_PATH = path.join(BASE_PATH, 'src/');
@@ -15,6 +17,7 @@ const HtmlWebpackPluginConf = new HtmlWebpackPlugin({
 const MiniCssExtractPluginConf = new MiniCssExtractPlugin({
   filename: 'css/oar_tabletop.css',
 });
+const EnvironmentPluginConf = new EnvironmentPlugin(['API_URL']);
 
 module.exports = {
   entry: {
@@ -58,7 +61,14 @@ module.exports = {
     alias: {
       '@': SOURCE_PATH,
       '@Components': path.join(SOURCE_PATH, 'components/'),
+      '@Constants': path.join(SOURCE_PATH, 'const/globalConst'),
+      '@Contexts': path.join(SOURCE_PATH, 'contexts'),
+      '@Utils': path.join(SOURCE_PATH, 'utils/'),
     },
   },
-  plugins: [HtmlWebpackPluginConf, MiniCssExtractPluginConf],
+  plugins: [
+    HtmlWebpackPluginConf,
+    MiniCssExtractPluginConf,
+    EnvironmentPluginConf,
+  ],
 };

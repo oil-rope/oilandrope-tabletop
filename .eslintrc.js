@@ -1,9 +1,9 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true,
     node: true,
-    'jest/globals': true,
+    es2021: true,
+    jest: true,
   },
   parser: '@typescript-eslint/parser',
   extends: [
