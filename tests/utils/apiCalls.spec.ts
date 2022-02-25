@@ -1,9 +1,7 @@
-import React from 'react';
-import { render } from '@testing-library/react';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import { IAuthUserContext } from '@Contexts';
-import App from '@Components/App';
+import { loadUser } from '@Utils/apiCalls';
 
 const userMock: IAuthUserContext = {
   id: 1,
@@ -28,11 +26,13 @@ beforeAll(() => {
   enableFetchMocks();
 });
 
-describe('App suite', () => {
-  it('renders correctly', () => {
+describe('loadUser suite', () => {
+  it('calls API correctly', () => {
     fetchMock.mockResponseOnce(JSON.stringify(userMock));
+    const callbackFn = jest.fn();
 
-    const { container } = render(<App />);
-    expect(container).toBeInTheDocument();
+    loadUser(callbackFn);
+
+    expect(fetchMock.mock.calls.length).toBe(1);
   });
 });
