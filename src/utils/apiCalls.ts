@@ -2,7 +2,7 @@ import { CURRENT_USER_API } from '@Constants';
 import { IAuthUserContext } from '@Contexts';
 
 /**
- * Calls User API with current cookies in order to acces logged user data.
+ * Calls User API with current cookies in order to access logged user data.
  *
  * @param {Function} callbackFn Function to call when JSON data is returned.
  */
