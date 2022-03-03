@@ -1,17 +1,17 @@
 import { createContext } from 'react';
 
-export interface IAuthUserContext {
+export interface IUser {
   id: number;
   username: string;
   email: string;
   last_login: Date;
   is_active: boolean;
   is_premium: boolean;
-  first_name: string;
-  last_name: string;
-  profile: IAuthProfileContext;
+  first_name: string | null;
+  last_name: string | null;
+  profile: IProfile;
 }
-interface IAuthProfileContext {
+interface IProfile {
   bio: string | null;
   birthday: Date | null;
   language: string;
@@ -22,6 +22,4 @@ interface IAuthProfileContext {
 
 const defaultAuthContext = null;
 
-export const AuthContext = createContext<IAuthUserContext | null>(
-  defaultAuthContext,
-);
+export const AuthContext = createContext<IUser | null>(defaultAuthContext);

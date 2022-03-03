@@ -1,11 +1,11 @@
 import React, { FC, useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 
-import { AuthContext, IAuthUserContext } from '@Contexts';
+import { AuthContext, IUser } from '@Contexts';
 import { loadUser } from '@Utils/apiCalls';
 
 const App: FC = () => {
-  const [user, setUser] = useState<IAuthUserContext | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
     if (user !== null) return;

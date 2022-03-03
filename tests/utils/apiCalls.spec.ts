@@ -1,9 +1,9 @@
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { IAuthUserContext } from '@Contexts';
+import { IUser } from '@Contexts';
 import { loadUser } from '@Utils/apiCalls';
 
-const userMock: IAuthUserContext = {
+const userMock: IUser = {
   id: 1,
   username: 'Oil & Rope Bot',
   email: 'oilandropeteam@gmail.com',
