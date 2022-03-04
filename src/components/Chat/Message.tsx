@@ -9,12 +9,15 @@ import { AuthContext } from '@Contexts';
 
 const MessageProps = {
   message: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    chat: PropTypes.number.isRequired,
     author: PropTypes.shape({
       id: PropTypes.number.isRequired,
       username: PropTypes.string.isRequired,
     }).isRequired,
     message: PropTypes.string.isRequired,
     entry_created_at: PropTypes.string.isRequired,
+    entry_updated_at: PropTypes.string.isRequired,
   }).isRequired,
   colWidthXS: PropTypes.number,
   colWidthMD: PropTypes.number,
@@ -40,8 +43,9 @@ const Message: FC<MessageTypes> = ({ message, colWidthXS, colWidthMD }) => {
       </p>
       <p className="text-right mb-0">
         <small className="text-muted">
-          Sent at{' '}
-          {dayjs(message.entry_created_at).format('DD/MM/YYYY HH:mm:ss')}
+          {dayjs(message.entry_created_at).format(
+            '[Sent on] DD/MM/YYYY [at] HH:mm',
+          )}
         </small>
       </p>
     </>
