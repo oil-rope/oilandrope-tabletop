@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/oil-rope/oilandrope-tabletop#readme",
   "devDependencies": {
+    "@faker-js/faker": "^5.5",
     "@testing-library/jest-dom": "^5.16",
     "@testing-library/react": "^12.1",
     "@testing-library/react-hooks": "^7.0",
