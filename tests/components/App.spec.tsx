@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { IUser } from '@Contexts';
+import { IUser } from '@/interfaces';
 import App from '@Components/App';
 
 const userMock: IUser = {
@@ -13,9 +13,11 @@ const userMock: IUser = {
   is_premium: false,
   first_name: '',
   last_name: '',
-  last_login: new Date('2022-02-22T10:18:58.560468Z'),
+  last_login: '2022-02-22T10:18:58.560468Z',
+  date_joined: '2022-02-22T10:18:58.560468Z',
+  token: 's3cr3tT0k3n@',
   profile: {
-    alias: '',
+    user: 1,
     bio: null,
     birthday: null,
     language: 'en',

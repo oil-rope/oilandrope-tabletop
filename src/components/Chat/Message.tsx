@@ -42,7 +42,7 @@ const Message: FC<MessageTypes> = ({ message, colWidthXS, colWidthMD }) => {
         {message.message}
       </p>
       <p className="text-right mb-0">
-        <small className="text-muted">
+        <small style={{ fontSize: '0.5rem' }} className="text-muted">
           {dayjs(message.entry_created_at).format(
             '[Sent on] DD/MM/YYYY [at] HH:mm',
           )}

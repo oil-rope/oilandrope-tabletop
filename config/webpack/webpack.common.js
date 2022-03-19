@@ -9,11 +9,10 @@ const SOURCE_PATH = path.join(BASE_PATH, 'src/');
 const PUBLIC_PATH = path.join(BASE_PATH, 'public/');
 
 const HtmlWebpackPluginConf = new HtmlWebpackPlugin({
-  template: path.join(SOURCE_PATH, 'index.html'),
-  title: 'Oil &amp; Rope Tabletop',
-  filename: path.join(PUBLIC_PATH, 'index.html'),
+  template: path.join(PUBLIC_PATH, 'index.html'),
+  filename: path.join(PUBLIC_PATH, 'vendor/index.html'),
 });
-const EnvironmentPluginConf = new EnvironmentPlugin(['API_URL']);
+const EnvironmentPluginConf = new EnvironmentPlugin(['API_URL', 'WS_URL']);
 
 module.exports = {
   entry: {
