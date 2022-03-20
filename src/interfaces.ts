@@ -41,3 +41,14 @@ export interface IMessage {
   entry_created_at: string;
   entry_updated_at: string;
 }
+
+export interface ISession {
+  id: number;
+  name: string;
+  players: Array<number>;
+  chat: IChat;
+  next_game: string;
+  system: number;
+  world: number;
+  game_masters: Array<number>;
+}

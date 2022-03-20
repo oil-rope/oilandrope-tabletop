@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { CHAT_WEBSOCKET } from '@Constants';
-import { AuthContext } from '@/contexts';
+import { AuthContext, SessionContext } from '@/contexts';
 
 import Loader from '@Components/Loader';
 
@@ -14,14 +14,18 @@ import MessagesContainer from './MessagesContainer';
 
 const Chat = () => {
   const user = useContext(AuthContext);
+  const session = useContext(SessionContext);
   const [loading, setLoading] = useState(true);
   const [chatWS, setChatWS] = useState<WebSocket>(new WebSocket('ws://dummy/'));
   const reconnectMessage =
     "Seems like you've been disconnected from chat. Would you like to reconnect?";
+  const canvasContainer = document.getElementById('tabletopCanvasContainer');
+  const height = canvasContainer?.offsetHeight || 720;
 
   useEffect(() => {
     // Do nothing until user is loaded
     if (user === null) return;
+    if (session === null) return;
     // For some reason if we declare the WebSocket object on top it would connect at least 5 times
     if (chatWS.url === 'ws://dummy/') {
       setChatWS(new WebSocket(CHAT_WEBSOCKET));
@@ -32,8 +36,8 @@ const Chat = () => {
       chatWS.send(
         JSON.stringify({
           type: 'setup_channel_layer',
-          token: user?.token,
-          chat: 1,
+          token: user.token,
+          chat: session.chat.id,
         }),
       );
       setLoading(false);
@@ -45,14 +49,22 @@ const Chat = () => {
       if (!reconnect) return;
       setChatWS(new WebSocket(CHAT_WEBSOCKET));
     };
-  }, [user, chatWS]);
+  }, [user, chatWS, session]);
 
   if (loading) {
     return <Loader text="Loading chat..." />;
   } else {
     return (
-      <Container fluid className="bg-light pb-4">
-        <Row>
+      <Container
+        fluid={true}
+        className="bg-light pb-4 h-100"
+        style={{
+          maxHeight: `${height}px`,
+        }}
+      >
+        <Row
+          style={{ maxHeight: `${height - height / 8}px`, overflowY: 'scroll' }}
+        >
           <Col>
             <MessagesContainer chatWebSocket={chatWS} />
           </Col>

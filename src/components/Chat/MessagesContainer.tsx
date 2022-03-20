@@ -1,10 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, Fragment, useContext, useEffect, useState } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
 import { CHAT_SEND_MESSAGE } from '@Constants';
 import { IMessage } from '@/interfaces';
 
 import Message from './Message';
+import { SessionContext } from '@/contexts';
 
 interface MessageWebSocket {
   type: typeof CHAT_SEND_MESSAGE;
@@ -18,6 +19,7 @@ const MessagesContainerProps = {
 
 type MessagesContainerTypes = InferProps<typeof MessagesContainerProps>;
 const MessagesContainer: FC<MessagesContainerTypes> = ({ chatWebSocket }) => {
+  const session = useContext(SessionContext);
   const [messages, setMessages] = useState<Array<IMessage>>([]);
 
   useEffect(() => {
@@ -32,8 +34,13 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({ chatWebSocket }) => {
     };
   }, [chatWebSocket, messages]);
 
+  useEffect(() => {
+    if (session === null) return;
+    setMessages(session.chat.chat_message_set);
+  }, [session]);
+
   return (
-    <>
+    <Fragment>
       {messages.map((message, index) => (
         <Message
           key={index}
@@ -50,7 +57,7 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({ chatWebSocket }) => {
           }}
         />
       ))}
-    </>
+    </Fragment>
   );
 };
 

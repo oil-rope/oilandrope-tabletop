@@ -43,6 +43,7 @@
     "@types/node": "^17.0",
     "@types/react": "^17.0",
     "@types/react-dom": "^17.0",
+    "@types/react-router-dom": "^5.3",
     "@types/three": "^0.136",
     "@types/webpack": "^5.28",
     "@types/webpack-bundle-analyzer": "^4.4",
@@ -81,6 +82,7 @@
     "react": "^17.0",
     "react-bootstrap": "^2.2",
     "react-dom": "^17.0",
-    "react-error-boundary": "^3.1.4"
+    "react-error-boundary": "^3.1",
+    "react-router-dom": "^6.2"
   }
 }

@@ -1,7 +1,6 @@
 import { createContext } from 'react';
 
-import { IUser } from '@/interfaces';
+import { ISession, IUser } from '@/interfaces';
 
-const defaultAuthContext = null;
-
-export const AuthContext = createContext<IUser | null>(defaultAuthContext);
+export const AuthContext = createContext<IUser | null>(null);
+export const SessionContext = createContext<ISession | null>(null);
