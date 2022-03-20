@@ -1,17 +1,19 @@
 import { loadSession } from '@Utils/apiCalls';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useParams } from 'react-router';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
+import Loader from '@Components/Loader';
+
 import { SessionContext } from '@Contexts';
 
 import { ISession } from '@/interfaces';
 
-import Chat from '@Components/Chat/Chat';
+const Chat = lazy(() => import('@Components/Chat/Chat'));
 
 const Tabletop = () => {
   const { sessionID } = useParams();
@@ -40,7 +42,9 @@ const Tabletop = () => {
             ></canvas>
           </Col>
           <Col className="px-0 mx-0">
-            <Chat />
+            <Suspense fallback={<Loader text="Loading chat..." />}>
+              <Chat />
+            </Suspense>
           </Col>
         </Row>
       </Container>

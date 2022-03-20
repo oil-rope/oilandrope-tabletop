@@ -6,6 +6,6 @@ const WS_URL = `${process.env.WS_URL}`;
 export const CHAT_WEBSOCKET = `${WS_URL}/ws/chat/`;
 // WebSocket functions
 export const WS_TYPES = {
-  SETUP_CHANNEL: 'setup_channel',
+  SETUP_CHANNEL: 'setup_channel_layer',
   SEND_MESSAGE: 'send_message',
 };

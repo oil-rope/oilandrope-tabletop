@@ -16,8 +16,7 @@ const Chat = () => {
   const user = useContext(AuthContext);
   const session = useContext(SessionContext);
   const [chatWS, setChatWS] = useState<WebSocket | null>(null);
-  const reconnectMessage =
-    "Seems like you've been disconnected from chat. Would you like to reconnect?";
+  const reconnectMessage = "You've been disconnected. Reconnect?";
   const canvasContainer = document.getElementById('tabletopCanvasContainer');
   const height = canvasContainer?.offsetHeight || 720;
 
@@ -50,7 +49,17 @@ const Chat = () => {
   }, [user, chatWS, session]);
 
   if (chatWS === null) {
-    return <Loader text="Loading chat..." />;
+    return (
+      <Container
+        fluid={true}
+        className="bg-light pb-4 h-100"
+        style={{
+          maxHeight: `${height}px`,
+        }}
+      >
+        <Loader text="Connecting chat..." />
+      </Container>
+    );
   } else {
     return (
       <Container
