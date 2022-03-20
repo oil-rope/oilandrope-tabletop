@@ -1,14 +1,14 @@
 import React, { FC, Fragment, useContext, useEffect, useState } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
-import { CHAT_SEND_MESSAGE } from '@Constants';
+import { WS_TYPES } from '@Constants';
 import { IMessage } from '@/interfaces';
 
 import Message from './Message';
 import { SessionContext } from '@/contexts';
 
 interface MessageWebSocket {
-  type: typeof CHAT_SEND_MESSAGE;
+  type: typeof WS_TYPES.SEND_MESSAGE;
   status: string;
   content: IMessage;
 }
@@ -28,7 +28,7 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({ chatWebSocket }) => {
 
     chatWebSocket.onmessage = (ev: MessageEvent) => {
       const data: MessageWebSocket = JSON.parse(ev.data);
-      if (data.type !== CHAT_SEND_MESSAGE) return;
+      if (data.type !== WS_TYPES.SEND_MESSAGE) return;
       const message = Object.assign({}, data.content);
       setMessages((messages) => [...messages, message]);
     };

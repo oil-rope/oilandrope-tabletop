@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-import { CHAT_SEND_MESSAGE } from '@Constants';
+import { WS_TYPES } from '@Constants';
 
 const ChatInputProps = {
   chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
@@ -20,7 +20,7 @@ const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
     if (!message) return;
     chatWebSocket.send(
       JSON.stringify({
-        type: CHAT_SEND_MESSAGE,
+        type: WS_TYPES.SEND_MESSAGE,
         message,
         chat: 1,
       }),

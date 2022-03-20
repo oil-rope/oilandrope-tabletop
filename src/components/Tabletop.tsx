@@ -1,4 +1,4 @@
-import { loadSession } from '@/utils/apiCalls';
+import { loadSession } from '@Utils/apiCalls';
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';

@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Loader from '@Components/Loader';
+import NotFound from '@Components/NotFound';
 
 import { AuthContext } from '@Contexts';
 import { loadUser } from '@Utils/apiCalls';
@@ -24,6 +25,7 @@ const App: FC = () => {
         <AuthContext.Provider value={user}>
           <Routes>
             <Route path="/session/:sessionID" element={<Tabletop />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthContext.Provider>
       </BrowserRouter>

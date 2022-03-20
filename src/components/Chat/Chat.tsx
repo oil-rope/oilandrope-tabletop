@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import { CHAT_WEBSOCKET } from '@Constants';
+import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
 import { AuthContext, SessionContext } from '@/contexts';
 
 import Loader from '@Components/Loader';
@@ -15,8 +15,7 @@ import MessagesContainer from './MessagesContainer';
 const Chat = () => {
   const user = useContext(AuthContext);
   const session = useContext(SessionContext);
-  const [loading, setLoading] = useState(true);
-  const [chatWS, setChatWS] = useState<WebSocket>(new WebSocket('ws://dummy/'));
+  const [chatWS, setChatWS] = useState<WebSocket | null>(null);
   const reconnectMessage =
     "Seems like you've been disconnected from chat. Would you like to reconnect?";
   const canvasContainer = document.getElementById('tabletopCanvasContainer');
@@ -27,7 +26,7 @@ const Chat = () => {
     if (user === null) return;
     if (session === null) return;
     // For some reason if we declare the WebSocket object on top it would connect at least 5 times
-    if (chatWS.url === 'ws://dummy/') {
+    if (chatWS === null) {
       setChatWS(new WebSocket(CHAT_WEBSOCKET));
       return;
     }
@@ -35,12 +34,11 @@ const Chat = () => {
     chatWS.onopen = () => {
       chatWS.send(
         JSON.stringify({
-          type: 'setup_channel_layer',
+          type: WS_TYPES.SETUP_CHANNEL,
           token: user.token,
           chat: session.chat.id,
         }),
       );
-      setLoading(false);
     };
 
     chatWS.onclose = (ev: CloseEvent) => {
@@ -51,7 +49,7 @@ const Chat = () => {
     };
   }, [user, chatWS, session]);
 
-  if (loading) {
+  if (chatWS === null) {
     return <Loader text="Loading chat..." />;
   } else {
     return (

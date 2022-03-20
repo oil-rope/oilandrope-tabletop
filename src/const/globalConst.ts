@@ -5,4 +5,7 @@ export const SESSION_API = `${API_URL}/roleplay/session`;
 const WS_URL = `${process.env.WS_URL}`;
 export const CHAT_WEBSOCKET = `${WS_URL}/ws/chat/`;
 // WebSocket functions
-export const CHAT_SEND_MESSAGE = 'send_message';
+export const WS_TYPES = {
+  SETUP_CHANNEL: 'setup_channel',
+  SEND_MESSAGE: 'send_message',
+};
