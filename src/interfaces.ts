@@ -37,7 +37,7 @@ export interface IMessage {
   id: number;
   chat: number;
   message: string;
-  author: ISimpleUser | number;
+  author: ISimpleUser;
   entry_created_at: string;
   entry_updated_at: string;
 }
