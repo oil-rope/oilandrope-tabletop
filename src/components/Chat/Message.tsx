@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 
-import React, { FC, useContext } from 'react';
+import React, { FC, Fragment, useContext } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { AuthContext } from '@Contexts';
+import { IUser } from '@/interfaces';
 
 const MessageProps = {
   message: PropTypes.shape({
@@ -33,8 +34,18 @@ type MessageTypes = InferProps<typeof MessageProps>;
 const Message: FC<MessageTypes> = ({ message, colWidthXS, colWidthMD }) => {
   const user = useContext(AuthContext);
 
+  /**
+   * Checks if the person whom message belongs to is user.
+   *
+   * @param {IUser} user Logged user.
+   * @returns {Boolean} User is author.
+   */
+  const isAuthor = (user: IUser) => {
+    return message.author.id === user.id;
+  };
+
   const renderMessage = () => (
-    <>
+    <Fragment>
       <p className="mb-0">
         <small className="text-white font-weight-bold">
           <u>{message.author.username}</u>
@@ -49,37 +60,25 @@ const Message: FC<MessageTypes> = ({ message, colWidthXS, colWidthMD }) => {
           )}
         </small>
       </p>
-    </>
+    </Fragment>
   );
 
-  if (message.author.id === user?.id) {
-    return (
-      <Row
-        className="justify-content-end m-0 mb-2"
-        style={{ minHeight: '50px' }}
-      >
-        <Col
-          xs={colWidthXS || 0}
-          md={colWidthMD || 0}
-          className="bg-secondary border"
-          style={{ borderRadius: '10px' }}
-        >
-          {renderMessage()}
-        </Col>
-      </Row>
-    );
+  if (!user) {
+    // If user is not loaded yet we don't even bother about rendering
+    return <></>;
   }
 
   return (
     <Row
-      className="justify-content-start m-0 mb-2"
+      className={`justify-content-${isAuthor(user) ? 'end' : 'start'} m-0 mb-2`}
       style={{ minHeight: '50px' }}
     >
       <Col
         xs={colWidthXS || 0}
         md={colWidthMD || 0}
-        className="bg-info border"
+        className={`bg-${isAuthor(user) ? 'secondary' : 'primary'} border`}
         style={{ borderRadius: '10px' }}
+        role="container"
       >
         {renderMessage()}
       </Col>
