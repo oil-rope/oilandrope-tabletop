@@ -1,6 +1,6 @@
 {
   "name": "oilandrope-tabletop",
-  "version": "^0.1",
+  "version": "1.0.2",
   "description": "The logic under movement and interactions in Oil &amp; Rope's tabletop.",
   "main": "src/index.tsx",
   "scripts": {
