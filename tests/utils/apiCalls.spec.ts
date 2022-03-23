@@ -17,7 +17,7 @@ describe('loadUser suite', () => {
 
     loadUser(callbackFn);
 
-    expect(fetchMock).toBeCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('calls API but fails', () => {
@@ -26,7 +26,7 @@ describe('loadUser suite', () => {
 
     loadUser(callbackFn);
 
-    expect(fetchMock).toBeCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -37,7 +37,7 @@ describe('loadSession suite', () => {
 
     loadSession(1, callbackFn);
 
-    expect(fetchMock).toBeCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('calls API but fails', () => {
@@ -46,7 +46,7 @@ describe('loadSession suite', () => {
 
     loadSession(1, callbackFn);
 
-    expect(fetchMock).toBeCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -57,7 +57,7 @@ describe('loadChat suite', () => {
 
     loadChat(1, callbackFn);
 
-    expect(fetchMock).toBeCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('calls API but fails', () => {
@@ -66,6 +66,6 @@ describe('loadChat suite', () => {
 
     loadChat(1, callbackFn);
 
-    expect(fetchMock).toBeCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });

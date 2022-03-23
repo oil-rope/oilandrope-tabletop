@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
-import { ISimpleUser, IUser } from '@Interfaces';
+import { ISession, ISimpleUser, IUser } from '@Interfaces';
 
 export const emptyFunc = () => null;
 
@@ -32,4 +32,15 @@ export const UserMock: IUser = {
     image: null,
     web: faker.internet.url(),
   },
+};
+
+export const SessionMock: ISession = {
+  id: faker.datatype.number(),
+  name: faker.lorem.words(),
+  players: [],
+  chat: faker.datatype.number(),
+  next_game: dayjs(faker.date.future()).format('YYYY-MM-DDTHH:mm:ssZ[Z]'),
+  system: faker.datatype.number(),
+  world: faker.datatype.number(),
+  game_masters: [],
 };

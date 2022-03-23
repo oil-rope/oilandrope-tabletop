@@ -28,6 +28,6 @@ describe('ErrorFallback suite', () => {
     const { getByText } = render(<ErrorFallback {...mockedProps} />);
     fireEvent.click(getByText('Try again'));
 
-    expect(resetErrorMock).toBeCalledTimes(1);
+    expect(resetErrorMock).toHaveBeenCalledTimes(1);
   });
 });
