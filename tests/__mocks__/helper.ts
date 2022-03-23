@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 
 import { ISimpleUser, IUser } from '@Interfaces';
 
+export const emptyFunc = () => null;
+
 export const SimpleUserMock: ISimpleUser = {
   id: faker.datatype.number(),
   username: faker.internet.userName(),
