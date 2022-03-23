@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { ISimpleUser } from '@/interfaces';
+import { ISimpleUser } from '@Interfaces';
 
 export const SimpleUserMock: ISimpleUser = {
   id: faker.datatype.number(),

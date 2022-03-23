@@ -1,6 +1,6 @@
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { IUser } from '@/interfaces';
+import { IUser } from '@Interfaces';
 import { loadUser } from '@Utils/apiCalls';
 
 const userMock: IUser = {

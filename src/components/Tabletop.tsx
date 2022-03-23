@@ -11,7 +11,7 @@ import Loader from '@Components/Loader';
 
 import { SessionContext } from '@Contexts';
 
-import { ISession } from '@/interfaces';
+import { ISession } from '@Interfaces';
 
 const Chat = lazy(() => import('@Components/Chat/Chat'));
 

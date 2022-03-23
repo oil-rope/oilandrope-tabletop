@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { IUser } from '@/interfaces';
+import { IUser } from '@Interfaces';
 import App from '@Components/App';
 
 const userMock: IUser = {

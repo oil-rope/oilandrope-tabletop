@@ -7,7 +7,7 @@ import NotFound from '@Components/NotFound';
 import { AuthContext } from '@Contexts';
 import { loadUser } from '@Utils/apiCalls';
 
-import { IUser } from '@/interfaces';
+import { IUser } from '@Interfaces';
 
 const Tabletop = lazy(() => import('@Components/Tabletop'));
 

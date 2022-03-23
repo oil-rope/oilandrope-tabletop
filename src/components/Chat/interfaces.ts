@@ -1,4 +1,4 @@
-import { ISimpleUser } from '@/interfaces';
+import { ISimpleUser } from '@Interfaces';
 
 export interface IChat {
   id: number;

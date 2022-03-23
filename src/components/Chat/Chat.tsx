@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
-import { AuthContext, SessionContext } from '@/contexts';
+import { AuthContext, SessionContext } from '@Contexts';
 
 import Loader from '@Components/Loader';
 
@@ -35,7 +35,7 @@ const Chat = () => {
         JSON.stringify({
           type: WS_TYPES.SETUP_CHANNEL,
           token: user.token,
-          chat: session.chat.id,
+          chat: session.chat,
         }),
       );
     };

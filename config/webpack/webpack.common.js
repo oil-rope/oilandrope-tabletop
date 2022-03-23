@@ -53,6 +53,7 @@ module.exports = {
       '@Constants': path.join(SOURCE_PATH, 'const/globalConst'),
       '@Contexts': path.join(SOURCE_PATH, 'contexts'),
       '@Utils': path.join(SOURCE_PATH, 'utils/'),
+      '@Interfaces': path.join(SOURCE_PATH, 'interfaces'),
     },
   },
   plugins: [HtmlWebpackPluginConf, EnvironmentPluginConf],

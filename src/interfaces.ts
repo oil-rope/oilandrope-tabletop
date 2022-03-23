@@ -46,7 +46,7 @@ export interface ISession {
   id: number;
   name: string;
   players: Array<number>;
-  chat: IChat;
+  chat: number;
   next_game: string;
   system: number;
   world: number;
