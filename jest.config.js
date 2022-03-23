@@ -23,6 +23,7 @@ module.exports = {
     '^@Constants$': '<rootDir>/src/const/globalConst',
     '^@Contexts$': '<rootDir>/src/contexts',
     '^@Utils/(.*)$': '<rootDir>/src/utils/$1',
+    '^@Interfaces': '<rootDir>/src/interfaces',
     '^.+\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
