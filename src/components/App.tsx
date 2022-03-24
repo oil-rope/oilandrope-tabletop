@@ -15,8 +15,7 @@ const App: FC = () => {
   const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    if (user === null) loadUser(setUser);
-    if (user instanceof Error) throw new Error(user.message);
+    if (user === null) loadUser().then(setUser).catch(alert);
   }, [user]);
 
   return (

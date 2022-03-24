@@ -21,8 +21,9 @@ const Tabletop = () => {
   const [session, setSession] = useState<ISession | null>(null);
 
   useEffect(() => {
-    if (session !== null) return;
-    loadSession(Number(sessionID) || 0, setSession);
+    if (session) return;
+    if (!sessionID) return;
+    loadSession(Number(sessionID)).then(setSession).catch(alert);
   }, [session, sessionID]);
 
   return (
