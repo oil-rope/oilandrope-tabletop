@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom';
 
 import { AuthContext } from '@Contexts';
 
@@ -10,8 +9,6 @@ import Message from '@Components/Chat/Message';
 
 const MessageMockedProps = {
   message: MessageMock,
-  colWidthMD: 10,
-  colWidthXS: 8,
 };
 
 describe('Message suite', () => {

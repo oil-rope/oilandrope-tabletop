@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
-import Message from './Message';
+import Message from '@Components/Chat/Message';
 
 const MessagesContainerProps = {
   messages: PropTypes.arrayOf(
@@ -26,24 +26,22 @@ type MessagesContainerTypes = InferProps<typeof MessagesContainerProps>;
 const MessagesContainer: FC<MessagesContainerTypes> = ({ messages }) => {
   return (
     <>
-      {messages.map((message, index) => {
-        return (
-          <Message
-            key={index}
-            message={{
-              id: message.id,
-              chat: message.chat,
-              entry_created_at: message.entry_created_at,
-              entry_updated_at: message.entry_updated_at,
-              message: message.message,
-              author: {
-                id: message.author.id,
-                username: message.author.username,
-              },
-            }}
-          />
-        );
-      })}
+      {messages.map((message, index) => (
+        <Message
+          key={index}
+          message={{
+            id: message.id,
+            chat: message.chat,
+            entry_created_at: message.entry_created_at,
+            entry_updated_at: message.entry_updated_at,
+            message: message.message,
+            author: {
+              id: message.author.id,
+              username: message.author.username,
+            },
+          }}
+        />
+      ))}
     </>
   );
 };

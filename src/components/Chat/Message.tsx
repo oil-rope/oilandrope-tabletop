@@ -6,8 +6,8 @@ import PropTypes, { InferProps } from 'prop-types';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import { IUser } from '@Interfaces';
 import { AuthContext } from '@Contexts';
-import { IUser } from '@/interfaces';
 
 const MessageProps = {
   message: PropTypes.shape({
@@ -25,13 +25,8 @@ const MessageProps = {
   colWidthMD: PropTypes.number,
 };
 
-const MessageDefaults = {
-  colWidthXS: 10,
-  colWidthMD: 8,
-};
-
 type MessageTypes = InferProps<typeof MessageProps>;
-const Message: FC<MessageTypes> = ({ message, colWidthXS, colWidthMD }) => {
+const Message: FC<MessageTypes> = ({ message }) => {
   const user = useContext(AuthContext);
 
   /**
@@ -74,8 +69,8 @@ const Message: FC<MessageTypes> = ({ message, colWidthXS, colWidthMD }) => {
       style={{ minHeight: '50px' }}
     >
       <Col
-        xs={colWidthXS || 0}
-        md={colWidthMD || 0}
+        xs={10}
+        md={8}
         className={`bg-${isAuthor(user) ? 'secondary' : 'primary'} border`}
         style={{ borderRadius: '10px' }}
         role="container"
@@ -87,6 +82,5 @@ const Message: FC<MessageTypes> = ({ message, colWidthXS, colWidthMD }) => {
 };
 
 Message.propTypes = MessageProps;
-Message.defaultProps = MessageDefaults;
 
 export default Message;

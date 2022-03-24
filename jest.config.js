@@ -14,7 +14,7 @@ module.exports = {
   ],
   errorOnDeprecated: true,
   preset: 'ts-jest',
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-environment-jsdom',
   moduleDirectories: [...defaults.moduleDirectories, 'src'],
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'scss', 'css'],
   moduleNameMapper: {
