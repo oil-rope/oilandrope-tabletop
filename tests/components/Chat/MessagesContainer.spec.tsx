@@ -3,7 +3,7 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import WS from 'jest-websocket-mock';
 
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { WS_TYPES } from '@Constants';
 
@@ -63,7 +63,7 @@ describe('MessagesContainer suite', () => {
     const chatMock = Object.assign({}, ChatMock);
     chatMock.chat_message_set = [MessageMock, messageMock];
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
-    const { getAllByText } = render(
+    render(
       <AuthContext.Provider value={UserMock}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
@@ -72,7 +72,7 @@ describe('MessagesContainer suite', () => {
     );
 
     expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();
-    expect(getAllByText(MessageMock.author.username).length).toEqual(2);
+    expect(screen.getAllByText(MessageMock.author.username).length).toEqual(2);
   });
 
   it('adds new message on WebSocket send', async () => {
@@ -83,16 +83,15 @@ describe('MessagesContainer suite', () => {
 
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
+    render(
+      <AuthContext.Provider value={UserMock}>
+        <SessionContext.Provider value={SessionMock}>
+          <MessagesContainer {...mockedProps} />
+        </SessionContext.Provider>
+      </AuthContext.Provider>,
+    );
     // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning
-    await act(async () => {
-      render(
-        <AuthContext.Provider value={UserMock}>
-          <SessionContext.Provider value={SessionMock}>
-            <MessagesContainer {...mockedProps} />
-          </SessionContext.Provider>
-        </AuthContext.Provider>,
-      );
-    });
+    expect(await screen.findByRole('mesagges-container'));
 
     const messageToSend = JSON.stringify({
       type: WS_TYPES.SEND_MESSAGE,
@@ -112,16 +111,15 @@ describe('MessagesContainer suite', () => {
 
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
+    render(
+      <AuthContext.Provider value={UserMock}>
+        <SessionContext.Provider value={SessionMock}>
+          <MessagesContainer {...mockedProps} />
+        </SessionContext.Provider>
+      </AuthContext.Provider>,
+    );
     // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning
-    await act(async () => {
-      render(
-        <AuthContext.Provider value={UserMock}>
-          <SessionContext.Provider value={SessionMock}>
-            <MessagesContainer {...mockedProps} />
-          </SessionContext.Provider>
-        </AuthContext.Provider>,
-      );
-    });
+    expect(await screen.findByRole('mesagges-container'));
 
     const messageToSend = JSON.stringify({
       type: faker.lorem.word(),

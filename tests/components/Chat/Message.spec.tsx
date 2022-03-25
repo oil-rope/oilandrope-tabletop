@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { AuthContext } from '@Contexts';
 
@@ -19,13 +19,13 @@ describe('Message suite', () => {
   });
 
   it('renders message correctly', () => {
-    const { getByText } = render(
+    render(
       <AuthContext.Provider value={UserMock}>
         <Message {...MessageMockedProps} />
       </AuthContext.Provider>,
     );
 
-    expect(getByText(MessageMock.message)).toBeInTheDocument();
+    expect(screen.getByText(MessageMock.message)).toBeInTheDocument();
   });
 
   it("doesn't render message if user is not declared", () => {
@@ -39,12 +39,12 @@ describe('Message suite', () => {
     mockedProps.message.author.id = 1;
     const mockedUser = Object.assign({}, UserMock);
     mockedUser.id = 1;
-    const { getByRole } = render(
+    render(
       <AuthContext.Provider value={mockedUser}>
         <Message {...mockedProps} />
       </AuthContext.Provider>,
     );
-    const messageContainer = getByRole('container');
+    const messageContainer = screen.getByRole('message');
 
     expect(messageContainer).toHaveClass('bg-secondary');
   });
@@ -54,12 +54,12 @@ describe('Message suite', () => {
     mockedProps.message.author.id = 1;
     const mockedUser = Object.assign({}, UserMock);
     mockedUser.id = 2;
-    const { getByRole } = render(
+    render(
       <AuthContext.Provider value={mockedUser}>
         <Message {...mockedProps} />
       </AuthContext.Provider>,
     );
-    const messageContainer = getByRole('container');
+    const messageContainer = screen.getByRole('message');
 
     expect(messageContainer).toHaveClass('bg-primary');
   });

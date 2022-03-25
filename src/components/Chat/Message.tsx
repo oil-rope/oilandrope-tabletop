@@ -73,7 +73,7 @@ const Message: FC<MessageTypes> = ({ message }) => {
         md={8}
         className={`bg-${isAuthor(user) ? 'secondary' : 'primary'} border`}
         style={{ borderRadius: '10px' }}
-        role="container"
+        role="message"
       >
         {renderMessage()}
       </Col>

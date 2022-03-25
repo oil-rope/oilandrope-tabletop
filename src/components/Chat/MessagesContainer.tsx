@@ -1,6 +1,6 @@
 import { loadChat } from '@Utils/apiCalls';
 
-import React, { FC, Fragment, useState, useContext, useEffect } from 'react';
+import React, { FC, useState, useContext, useEffect } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
 import { WS_TYPES } from '@Constants';
@@ -38,7 +38,7 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({ chatWebSocket }) => {
   }, [chatWebSocket]);
 
   return (
-    <Fragment>
+    <div role="mesagges-container">
       {messages.map((message, index) => (
         <Message
           key={index}
@@ -55,7 +55,7 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({ chatWebSocket }) => {
           }}
         />
       ))}
-    </Fragment>
+    </div>
   );
 };
 

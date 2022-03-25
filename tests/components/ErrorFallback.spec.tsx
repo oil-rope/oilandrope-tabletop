@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { emptyFunc } from '../__mocks__/helper';
 
@@ -24,8 +24,8 @@ describe('ErrorFallback suite', () => {
     const mockedProps = ErrorFallbackMockedProps;
     mockedProps.resetErrorBoundary = resetErrorMock;
 
-    const { getByText } = render(<ErrorFallback {...mockedProps} />);
-    fireEvent.click(getByText('Try again'));
+    render(<ErrorFallback {...mockedProps} />);
+    fireEvent.click(screen.getByText('Try again'));
 
     expect(resetErrorMock).toHaveBeenCalledTimes(1);
   });

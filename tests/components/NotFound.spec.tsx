@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import NotFound from '@Components/NotFound';
 
@@ -11,10 +11,10 @@ describe('NotFound suite', () => {
   });
 
   it('renders with default text', () => {
-    const { getByText } = render(<NotFound />);
+    render(<NotFound />);
 
     expect(
-      getByText('The element you are looking for does not exist.'),
+      screen.getByText('The element you are looking for does not exist.'),
     ).toBeInTheDocument();
   });
 });
