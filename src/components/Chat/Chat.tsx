@@ -11,33 +11,17 @@ import Loader from '@Components/Loader';
 
 import ChatInput from './ChatInput';
 import MessagesContainer from './MessagesContainer';
-import { IMessage } from '@/interfaces';
-import { loadChat } from '@/utils/apiCalls';
 
 const Chat = () => {
   const user = useContext(AuthContext);
   const session = useContext(SessionContext);
   const [chatWS, setChatWS] = useState<WebSocket | null>(null);
-  const [messages, setMessages] = useState<Array<IMessage>>([]);
   const reconnectMessage = "You've been disconnected. Reconnect?";
   const canvasContainer = document.getElementById('tabletopCanvasContainer');
   const height = canvasContainer?.offsetHeight || 720;
 
   useEffect(() => {
-    if (!session) return;
-    loadChat(session.chat).then((data) => setMessages(data.chat_message_set));
-  }, [session]);
-
-  useEffect(() => {
     if (!chatWS) return;
-    if (!chatWS.onmessage) {
-      chatWS.onmessage = (ev: MessageEvent) => {
-        const data = JSON.parse(ev.data);
-        if (data.type !== WS_TYPES.SEND_MESSAGE) return;
-        const message = Object.assign({}, data.content);
-        setMessages((messages) => [...messages, message]);
-      };
-    }
     if (!chatWS.onclose) {
       chatWS.onclose = (ev: CloseEvent) => {
         if (ev.wasClean) return;
@@ -94,7 +78,7 @@ const Chat = () => {
           style={{ maxHeight: `${height - height / 8}px`, overflowY: 'scroll' }}
         >
           <Col>
-            <MessagesContainer messages={messages} />
+            <MessagesContainer chatWebSocket={chatWS} />
           </Col>
         </Row>
         <Row className="pt-3">
