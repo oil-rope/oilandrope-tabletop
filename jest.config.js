@@ -26,6 +26,7 @@ module.exports = {
     '^@Interfaces': '<rootDir>/src/interfaces',
     '^.+\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
+  setupFiles: ['dotenv/config'],
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   verbose: true,
 };

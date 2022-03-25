@@ -23,7 +23,11 @@ const Tabletop = () => {
   useEffect(() => {
     if (session) return;
     if (!sessionID) return;
-    loadSession(Number(sessionID)).then(setSession).catch(alert);
+    const fetchData = async () => {
+      const sessionJSON = await loadSession(Number(sessionID));
+      setSession(sessionJSON);
+    };
+    fetchData();
   }, [session, sessionID]);
 
   return (

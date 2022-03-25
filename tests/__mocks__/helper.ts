@@ -34,17 +34,6 @@ export const UserMock: IUser = {
   },
 };
 
-export const SessionMock: ISession = {
-  id: faker.datatype.number(),
-  name: faker.lorem.words(),
-  players: [],
-  chat: faker.datatype.number(),
-  next_game: dayjs(faker.date.future()).format('YYYY-MM-DDTHH:mm:ssZ[Z]'),
-  system: faker.datatype.number(),
-  world: faker.datatype.number(),
-  game_masters: [],
-};
-
 export const MessageMock: IMessage = {
   id: faker.datatype.number(),
   chat: faker.datatype.number(),
@@ -65,4 +54,15 @@ export const ChatMock: IChat = {
   entry_updated_at: dayjs(faker.date.recent()).format(
     'YYYY-MM-DDTHH:mm:ssZ[Z]',
   ),
+};
+
+export const SessionMock: ISession = {
+  id: faker.datatype.number(),
+  name: faker.lorem.words(),
+  players: [],
+  chat: ChatMock.id,
+  next_game: dayjs(faker.date.future()).format('YYYY-MM-DDTHH:mm:ssZ[Z]'),
+  system: faker.datatype.number(),
+  world: faker.datatype.number(),
+  game_masters: [],
 };

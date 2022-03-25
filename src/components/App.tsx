@@ -15,7 +15,12 @@ const App: FC = () => {
   const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    if (user === null) loadUser().then(setUser).catch(alert);
+    if (user !== null) return;
+    const fetchData = async () => {
+      const userJSON = await loadUser();
+      setUser(userJSON);
+    };
+    fetchData();
   }, [user]);
 
   return (

@@ -59,6 +59,7 @@
     "eslint-plugin-prettier": "^4.0",
     "eslint-plugin-react": "^7.28",
     "eslint-plugin-react-hooks": "^4.3",
+    "eslint-plugin-testing-library": "^5.1",
     "html-webpack-plugin": "^5.5",
     "if-env": "^1.0",
     "jest": "^27.4",

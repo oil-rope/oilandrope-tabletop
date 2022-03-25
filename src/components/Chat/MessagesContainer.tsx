@@ -7,7 +7,7 @@ import { WS_TYPES } from '@Constants';
 import { SessionContext } from '@Contexts';
 import { IMessage } from '@Interfaces';
 
-import Message from '@Components/Chat/Message';
+import Message from './Message';
 
 const MessagesContainerProps = {
   chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
@@ -21,8 +21,8 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({ chatWebSocket }) => {
   useEffect(() => {
     if (!session) return;
     const fetchData = async () => {
-      const chat = await loadChat(session.chat);
-      setMessages(chat.chat_message_set);
+      const chatJSON = await loadChat(session.chat);
+      setMessages(chatJSON.chat_message_set);
     };
     fetchData();
   }, [session]);

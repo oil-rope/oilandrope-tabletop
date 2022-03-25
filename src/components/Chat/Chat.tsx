@@ -18,7 +18,10 @@ const Chat = () => {
   const [chatWS, setChatWS] = useState<WebSocket | null>(null);
   const reconnectMessage = "You've been disconnected. Reconnect?";
   const canvasContainer = document.getElementById('tabletopCanvasContainer');
-  const height = canvasContainer?.offsetHeight || 720;
+  let height = 720;
+  if (canvasContainer) {
+    height = canvasContainer.offsetHeight || 720;
+  }
 
   useEffect(() => {
     if (!chatWS) return;
@@ -65,30 +68,30 @@ const Chat = () => {
         <Loader text="Connecting chat..." />
       </Container>
     );
-  } else {
-    return (
-      <Container
-        fluid={true}
-        className="bg-light pb-4 h-100"
-        style={{
-          maxHeight: `${height}px`,
-        }}
-      >
-        <Row
-          style={{ maxHeight: `${height - height / 8}px`, overflowY: 'scroll' }}
-        >
-          <Col>
-            <MessagesContainer chatWebSocket={chatWS} />
-          </Col>
-        </Row>
-        <Row className="pt-3">
-          <Col>
-            <ChatInput chatWebSocket={chatWS} />
-          </Col>
-        </Row>
-      </Container>
-    );
   }
+
+  return (
+    <Container
+      fluid={true}
+      className="bg-light pb-4 h-100"
+      style={{
+        maxHeight: `${height}px`,
+      }}
+    >
+      <Row
+        style={{ maxHeight: `${height - height / 8}px`, overflowY: 'scroll' }}
+      >
+        <Col>
+          <MessagesContainer chatWebSocket={chatWS} />
+        </Col>
+      </Row>
+      <Row className="pt-3">
+        <Col>
+          <ChatInput chatWebSocket={chatWS} />
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
 export default Chat;

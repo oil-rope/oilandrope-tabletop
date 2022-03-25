@@ -1,7 +1,7 @@
+import faker from '@faker-js/faker';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import { loadUser, loadSession, loadChat, loadData } from '@Utils/apiCalls';
-import faker from '@faker-js/faker';
 
 beforeAll(() => {
   enableFetchMocks();
