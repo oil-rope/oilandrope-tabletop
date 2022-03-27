@@ -12,7 +12,8 @@
       "@Components/*": ["components/*"],
       "@Constants": ["const/globalConst"],
       "@Contexts": ["contexts"],
-      "@Utils/*": ["utils/*"]
+      "@Utils/*": ["utils/*"],
+      "@Interfaces": ["interfaces"]
     },
     "newLine": "lf",
     "esModuleInterop": true,

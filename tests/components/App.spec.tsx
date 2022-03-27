@@ -1,38 +1,40 @@
-import React from 'react';
-import { render } from '@testing-library/react';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { IAuthUserContext } from '@Contexts';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+
 import App from '@Components/App';
 
-const userMock: IAuthUserContext = {
-  id: 1,
-  username: 'Oil & Rope Bot',
-  email: 'oilandropeteam@gmail.com',
-  is_active: true,
-  is_premium: false,
-  first_name: '',
-  last_name: '',
-  last_login: new Date('2022-02-22T10:18:58.560468Z'),
-  profile: {
-    alias: '',
-    bio: null,
-    birthday: null,
-    language: 'en',
-    image: null,
-    web: '',
-  },
-};
+import { UserMock } from '../__mocks__/helper';
 
 beforeAll(() => {
   enableFetchMocks();
+  window.alert = jest.fn();
+});
+
+afterEach(() => {
+  fetchMock.resetMocks();
 });
 
 describe('App suite', () => {
   it('renders correctly', () => {
-    fetchMock.mockResponseOnce(JSON.stringify(userMock));
-
     const { container } = render(<App />);
+
     expect(container).toBeInTheDocument();
+  });
+
+  it('gets user on load', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify(UserMock));
+
+    render(<App />);
+    expect(
+      await screen.findByText(
+        'The element you are looking for does not exist.',
+      ),
+    ).toBeInTheDocument();
+
+    expect(fetchMock).toBeCalledTimes(1);
+    // NOTE: Not given user credentials so alert is called
+    expect(window.alert).toBeCalledTimes(1);
   });
 });
