@@ -52,7 +52,7 @@ describe('Chat suite', () => {
     const elementsRendered = screen.getAllByText('Connecting chat...');
 
     // There should be 2, one for user and one for visually-hidden
-    expect(elementsRendered.length).toEqual(2);
+    expect(elementsRendered).toHaveLength(2);
   });
 
   it('gets loading if session is not given (but user is)', () => {
@@ -64,7 +64,7 @@ describe('Chat suite', () => {
     const elementsRendered = screen.getAllByText('Connecting chat...');
 
     // There should be 2, one for user and one for visually-hidden
-    expect(elementsRendered.length).toEqual(2);
+    expect(elementsRendered).toHaveLength(2);
   });
 
   it('renders correctly', async () => {

@@ -72,7 +72,7 @@ describe('MessagesContainer suite', () => {
     );
 
     expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();
-    expect(screen.getAllByText(MessageMock.author.username).length).toEqual(2);
+    expect(screen.getAllByText(MessageMock.author.username)).toHaveLength(2);
   });
 
   it('adds new message on WebSocket send', async () => {
