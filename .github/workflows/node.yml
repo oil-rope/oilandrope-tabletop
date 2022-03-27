@@ -37,6 +37,7 @@ jobs:
         
       - name: Build
         run: |
+          cp .env.example .env
           npm run build:prod
 
       - name: Linter

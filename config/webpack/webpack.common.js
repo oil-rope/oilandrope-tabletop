@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { EnvironmentPlugin } = require('webpack');
+require('dotenv').config();
 
 const BASE_PATH = path.resolve(__dirname, '../../');
 const SOURCE_PATH = path.join(BASE_PATH, 'src/');
 const PUBLIC_PATH = path.join(BASE_PATH, 'public/');
 
 const HtmlWebpackPluginConf = new HtmlWebpackPlugin({
-  template: path.join(SOURCE_PATH, 'index.html'),
-  title: 'Oil &amp; Rope Tabletop',
-  filename: path.join(PUBLIC_PATH, 'index.html'),
+  template: path.join(PUBLIC_PATH, 'index.html'),
+  filename: path.join(PUBLIC_PATH, 'vendor/index.html'),
 });
+const EnvironmentPluginConf = new EnvironmentPlugin(['API_URL', 'WS_URL']);
 
 module.exports = {
   entry: {
@@ -48,7 +50,11 @@ module.exports = {
     alias: {
       '@': SOURCE_PATH,
       '@Components': path.join(SOURCE_PATH, 'components/'),
+      '@Constants': path.join(SOURCE_PATH, 'const/globalConst'),
+      '@Contexts': path.join(SOURCE_PATH, 'contexts'),
+      '@Utils': path.join(SOURCE_PATH, 'utils/'),
+      '@Interfaces': path.join(SOURCE_PATH, 'interfaces'),
     },
   },
-  plugins: [HtmlWebpackPluginConf],
+  plugins: [HtmlWebpackPluginConf, EnvironmentPluginConf],
 };
