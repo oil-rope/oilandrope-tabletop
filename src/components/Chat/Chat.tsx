@@ -20,7 +20,7 @@ const Chat = () => {
   const canvasContainer = document.getElementById('tabletopCanvasContainer');
   let height = 720;
   if (canvasContainer) {
-    height = canvasContainer.offsetHeight || 720;
+    height = canvasContainer.offsetHeight;
   }
 
   useEffect(() => {
@@ -29,8 +29,7 @@ const Chat = () => {
       chatWS.onclose = (ev: CloseEvent) => {
         if (ev.wasClean) return;
         const reconnect = confirm(reconnectMessage);
-        if (!reconnect) return;
-        setChatWS(new WebSocket(CHAT_WEBSOCKET));
+        if (reconnect) setChatWS(new WebSocket(CHAT_WEBSOCKET));
       };
     }
   }, [chatWS]);

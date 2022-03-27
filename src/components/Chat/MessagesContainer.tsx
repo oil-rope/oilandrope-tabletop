@@ -24,7 +24,7 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({ chatWebSocket }) => {
       const chatJSON = await loadChat(session.chat);
       setMessages(chatJSON.chat_message_set);
     };
-    fetchData();
+    fetchData().catch(alert);
   }, [session]);
 
   useEffect(() => {

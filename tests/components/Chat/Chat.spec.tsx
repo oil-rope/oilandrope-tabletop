@@ -1,8 +1,10 @@
+import WS from 'jest-websocket-mock';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
+import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
 import { AuthContext, SessionContext } from '@Contexts';
 
 import Chat from '@Components/Chat/Chat';
@@ -38,6 +40,13 @@ afterEach(() => {
 });
 
 describe('Chat suite', () => {
+  it('gets canvas height', () => {
+    const canvas = document.createElement('body');
+    canvas.setAttribute('id', 'tabletopCanvasContainer');
+    document.body.appendChild(canvas);
+    render(<Chat />);
+  });
+
   it('gets loading if user is not given', () => {
     render(<Chat />);
     const elementsRendered = screen.getAllByText('Connecting chat...');
@@ -96,5 +105,78 @@ describe('Chat suite', () => {
     );
 
     expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();
+  });
+});
+
+describe('Chat WebSocket suite', () => {
+  let server: WS;
+
+  beforeAll(() => {
+    ChatMock.chat_message_set = [MessageMock];
+  });
+
+  beforeEach(async () => {
+    server = new WS(CHAT_WEBSOCKET);
+    // NOTE: Dummy client to make sure server is reachable
+    new WebSocket(CHAT_WEBSOCKET);
+    await server.connected;
+  });
+
+  afterEach(() => {
+    server.close();
+  });
+
+  it('calls WebSocket on load', async () => {
+    render(
+      <AuthContext.Provider value={UserMock}>
+        <SessionContext.Provider value={SessionMock}>
+          <Chat />
+        </SessionContext.Provider>
+      </AuthContext.Provider>,
+    );
+    expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();
+
+    await expect(server).toReceiveMessage(
+      JSON.stringify({
+        type: WS_TYPES.SETUP_CHANNEL,
+        token: UserMock.token,
+        chat: SessionMock.chat,
+      }),
+    );
+  });
+
+  it("doesn't call confirm on WebSocket clean close", async () => {
+    window.confirm = jest.fn().mockResolvedValueOnce(false);
+
+    render(
+      <AuthContext.Provider value={UserMock}>
+        <SessionContext.Provider value={SessionMock}>
+          <Chat />
+        </SessionContext.Provider>
+      </AuthContext.Provider>,
+    );
+    expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();
+    await server.connected;
+    server.close({ code: 1006, reason: '', wasClean: true });
+    await server.closed;
+
+    expect(window.confirm).toBeCalledTimes(0);
+  });
+
+  it('calls confirm on WebSocket close', async () => {
+    window.confirm = jest.fn().mockResolvedValueOnce(false);
+
+    render(
+      <AuthContext.Provider value={UserMock}>
+        <SessionContext.Provider value={SessionMock}>
+          <Chat />
+        </SessionContext.Provider>
+      </AuthContext.Provider>,
+    );
+    expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();
+    server.close({ code: 1006, reason: '', wasClean: false });
+    await server.closed;
+
+    expect(window.confirm).toBeCalledTimes(1);
   });
 });

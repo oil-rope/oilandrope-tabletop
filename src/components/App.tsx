@@ -20,7 +20,7 @@ const App: FC = () => {
       const userJSON = await loadUser();
       setUser(userJSON);
     };
-    fetchData();
+    fetchData().catch(alert);
   }, [user]);
 
   return (

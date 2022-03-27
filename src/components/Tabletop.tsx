@@ -27,7 +27,7 @@ const Tabletop = () => {
       const sessionJSON = await loadSession(Number(sessionID));
       setSession(sessionJSON);
     };
-    fetchData();
+    fetchData().catch(alert);
   }, [session, sessionID]);
 
   return (
