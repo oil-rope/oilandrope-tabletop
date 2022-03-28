@@ -123,10 +123,13 @@ describe('Chat WebSocket suite', () => {
   });
 
   afterEach(() => {
+    // Every test should close dangling connections
     server.close();
   });
 
   it('calls WebSocket on load', async () => {
+    window.confirm = jest.fn().mockReturnValue(false);
+
     render(
       <AuthContext.Provider value={UserMock}>
         <SessionContext.Provider value={SessionMock}>
@@ -143,6 +146,9 @@ describe('Chat WebSocket suite', () => {
         chat: SessionMock.chat,
       }),
     );
+
+    server.close();
+    await server.closed;
   });
 
   it("doesn't call confirm on WebSocket clean close", async () => {
