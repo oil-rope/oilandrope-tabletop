@@ -39,11 +39,15 @@ const Tabletop = () => {
             md={8}
             lg={9}
             xxl={10}
-            className="mx-0 px-0"
+            className="m-0 p-0"
             id="tabletopCanvasContainer"
           >
             <canvas
-              style={{ backgroundColor: 'darkgrey', width: '100%' }}
+              style={{
+                backgroundColor: 'darkgrey',
+                width: '100%',
+                height: '100%',
+              }}
             ></canvas>
           </Col>
           <Col className="px-0 mx-0">

@@ -21,6 +21,7 @@ import {
 const dummyURL = `ws://${faker.internet.domainName()}`;
 const MessagesContainerMockedProps = {
   chatWebSocket: new WebSocket('ws://no.url'),
+  height: 720,
 };
 
 beforeAll(() => {
@@ -91,7 +92,7 @@ describe('MessagesContainer suite', () => {
       </AuthContext.Provider>,
     );
     // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning
-    expect(await screen.findByRole('mesagges-container'));
+    expect(await screen.findByRole('messages-container'));
 
     const messageToSend = JSON.stringify({
       type: WS_TYPES.SEND_MESSAGE,
@@ -119,7 +120,7 @@ describe('MessagesContainer suite', () => {
       </AuthContext.Provider>,
     );
     // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning
-    expect(await screen.findByRole('mesagges-container'));
+    expect(await screen.findByRole('messages-container'));
 
     const messageToSend = JSON.stringify({
       type: faker.lorem.word(),
