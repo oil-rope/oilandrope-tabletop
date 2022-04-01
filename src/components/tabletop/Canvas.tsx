@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  MouseEvent,
-  MutableRefObject,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
 const CanvasPropTypes = {
@@ -15,14 +8,13 @@ const CanvasPropTypes = {
 
 type CanvasTypes = InferProps<typeof CanvasPropTypes>;
 const Canvas: FC<CanvasTypes> = (props) => {
-  const canvasDOM: MutableRefObject<HTMLCanvasElement | null> = useRef(null);
-  const [context, setContext] = useState<
-    CanvasRenderingContext2D | null | undefined
-  >(null);
+  const canvasDOM = useRef<HTMLCanvasElement>(null);
+  const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const [painting, setPainting] = useState<boolean>(false);
 
   useEffect(() => {
-    setContext(canvasDOM.current?.getContext('2d'));
+    if (!canvasDOM.current) return;
+    setContext(canvasDOM.current.getContext('2d'));
   }, [context]);
 
   /**
@@ -37,7 +29,8 @@ const Canvas: FC<CanvasTypes> = (props) => {
    * Sets painting to false and resets draw path.
    */
   const handleMouseUp = () => {
-    context?.beginPath();
+    if (!context) return;
+    context.beginPath();
   };
 
   /**
@@ -47,16 +40,15 @@ const Canvas: FC<CanvasTypes> = (props) => {
    */
   const handleDraw = (e: MouseEvent) => {
     if (!painting) return;
+    if (!context) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    context!.lineWidth = 20;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    context!.lineCap = 'round';
+    context.lineWidth = 20;
+    context.lineCap = 'round';
 
-    context?.lineTo(e.clientX, e.clientY);
-    context?.stroke();
-    context?.beginPath();
-    context?.moveTo(e.clientX, e.clientY);
+    context.lineTo(e.clientX, e.clientY);
+    context.stroke();
+    context.beginPath();
+    context.moveTo(e.clientX, e.clientY);
   };
 
   return (

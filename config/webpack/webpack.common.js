@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { EnvironmentPlugin } = require('webpack');
 require('dotenv').config();
 
@@ -34,11 +33,6 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(css|sass|scss)$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-        exclude: /node_modules/,
-      },
-      {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
         generator: {
@@ -63,9 +57,5 @@ module.exports = {
       '@Interfaces': path.join(SOURCE_PATH, 'interfaces'),
     },
   },
-  plugins: [
-    HtmlWebpackPluginConf,
-    MiniCssExtractPluginConf,
-    EnvironmentPluginConf,
-  ],
+  plugins: [HtmlWebpackPluginConf, EnvironmentPluginConf],
 };
