@@ -13,6 +13,7 @@ import { SessionContext } from '@Contexts';
 
 import { ISession } from '@Interfaces';
 
+const Canvas = lazy(() => import('@Components/tabletop/Canvas'));
 const Chat = lazy(() => import('@Components/Chat/Chat'));
 
 const Tabletop = () => {
@@ -42,9 +43,9 @@ const Tabletop = () => {
             className="mx-0 px-0"
             id="tabletopCanvasContainer"
           >
-            <canvas
-              style={{ backgroundColor: 'darkgrey', width: '100%' }}
-            ></canvas>
+            <Suspense fallback={<Loader text="Loading tabletop..." />}>
+              <Canvas />
+            </Suspense>
           </Col>
           <Col className="px-0 mx-0">
             <Suspense fallback={<Loader text="Loading chat..." />}>

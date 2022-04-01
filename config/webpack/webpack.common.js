@@ -42,7 +42,8 @@ module.exports = {
     ],
   },
   performance: {
-    assetFilter: (assetFilename) => !/\.(map|png)$/.test(assetFilename),
+    assetFilter: (assetFilename) =>
+      !/\.(map|png|scss|css)$/.test(assetFilename),
     hints: 'error',
   },
   resolve: {
