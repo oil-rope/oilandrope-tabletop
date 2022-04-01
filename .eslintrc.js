@@ -13,7 +13,20 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
   ],
-  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'jest'],
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'react-hooks',
+    'jest',
+    'testing-library',
+  ],
+  // 'eslint-testing-library only for tests
+  overrides: [
+    {
+      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+      extends: ['plugin:testing-library/react'],
+    },
+  ],
   rules: {
     'prettier/prettier': 'warn',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],

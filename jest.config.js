@@ -14,7 +14,7 @@ module.exports = {
   ],
   errorOnDeprecated: true,
   preset: 'ts-jest',
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-environment-jsdom',
   moduleDirectories: [...defaults.moduleDirectories, 'src'],
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'scss', 'css'],
   moduleNameMapper: {
@@ -23,8 +23,10 @@ module.exports = {
     '^@Constants$': '<rootDir>/src/const/globalConst',
     '^@Contexts$': '<rootDir>/src/contexts',
     '^@Utils/(.*)$': '<rootDir>/src/utils/$1',
+    '^@Interfaces': '<rootDir>/src/interfaces',
     '^.+\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
+  setupFiles: ['dotenv/config'],
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   verbose: true,
 };
