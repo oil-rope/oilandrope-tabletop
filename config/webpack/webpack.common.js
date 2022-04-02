@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { EnvironmentPlugin } = require('webpack');
+const { EnvironmentPlugin, DefinePlugin } = require('webpack');
 require('dotenv').config();
 
 const BASE_PATH = path.resolve(__dirname, '../../');
@@ -12,7 +12,17 @@ const HtmlWebpackPluginConf = new HtmlWebpackPlugin({
   template: path.join(PUBLIC_PATH, 'index.html'),
   filename: path.join(PUBLIC_PATH, 'vendor/index.html'),
 });
-const EnvironmentPluginConf = new EnvironmentPlugin(['API_URL', 'WS_URL']);
+let EnvironmentPluginConf;
+
+if (process.env.NODE_ENV == 'production') {
+  EnvironmentPluginConf = new DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    'process.env.API_URL': JSON.stringify('https://oilandrope-project.com'),
+    'process.env.WS_URL': JSON.stringify('wss://live.oilandrope-project.com'),
+  });
+} else {
+  EnvironmentPluginConf = new EnvironmentPlugin(['API_URL', 'WS_URL']);
+}
 
 module.exports = {
   entry: {
