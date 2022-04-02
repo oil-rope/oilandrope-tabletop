@@ -77,13 +77,7 @@ const Chat = () => {
         maxHeight: `${height}px`,
       }}
     >
-      <Row
-        style={{ maxHeight: `${height - height / 8}px`, overflowY: 'scroll' }}
-      >
-        <Col>
-          <MessagesContainer chatWebSocket={chatWS} />
-        </Col>
-      </Row>
+      <MessagesContainer chatWebSocket={chatWS} height={height} />
       <Row className="pt-3">
         <Col>
           <ChatInput chatWebSocket={chatWS} />
