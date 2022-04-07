@@ -6,8 +6,10 @@ import PropTypes, { InferProps } from 'prop-types';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import { IUser } from '@Interfaces';
+import { IMessage, IUser } from '@Interfaces';
 import { AuthContext } from '@Contexts';
+import { MESSAGE_COLORS } from './const';
+import { ChatContext } from './context';
 
 const MessageProps = {
   message: PropTypes.shape({
@@ -28,6 +30,7 @@ const MessageProps = {
 type MessageTypes = InferProps<typeof MessageProps>;
 export const Message: FC<MessageTypes> = ({ message }) => {
   const user = useContext(AuthContext);
+  const { colorMap, setColorMap } = useContext(ChatContext);
 
   /**
    * Checks if the person whom message belongs to is user.
@@ -39,10 +42,38 @@ export const Message: FC<MessageTypes> = ({ message }) => {
     return message.author.id === user.id;
   };
 
+  /**
+   * Checks for usable colors and picks a random.
+   *
+   * @returns {String} Message color.
+   */
+  const randomColor = () => {
+    return MESSAGE_COLORS[Math.floor(Math.random() * MESSAGE_COLORS.length)];
+  };
+
+  /**
+   * This function checks if user id has a color in colorMap otherwise it returns
+   * a random color from type BOOTSTRAP_COLORS.
+   *
+   * @param {IMessage} message Given user to set color.
+   * @returns {string} The color assigned to the user.
+   */
+  const getColor = (
+    message: IMessage,
+  ): typeof MESSAGE_COLORS[number] | 'light' => {
+    if (!user) return 'light';
+    if (!colorMap) return 'light';
+    if (colorMap[message.author.id]) return colorMap[message.author.id];
+    if (isAuthor(user)) return 'light';
+    const color = randomColor();
+    setColorMap({ ...colorMap, [message.author.id]: color });
+    return color;
+  };
+
   const renderMessage = () => (
     <Fragment>
       <p className="mb-0">
-        <small className="text-white font-weight-bold">
+        <small className={`text-${getColor(message as IMessage)} fw-bold`}>
           <u>{message.author.username}</u>
         </small>
         <br />

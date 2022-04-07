@@ -7,9 +7,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { WS_TYPES } from '@Constants';
-import { SessionContext } from '@Contexts';
 import { IMessage } from '@Interfaces';
+import { SessionContext } from '@Contexts';
 import { IWebSocketMessage } from './interfaces';
+import { ChatContext, ColorMapTypes } from './context';
 
 import { Message } from '.';
 
@@ -26,6 +27,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
   const container = useRef<HTMLDivElement>(null);
   const session = useContext(SessionContext);
   const [messages, setMessages] = useState<Array<IMessage>>([]);
+  const [colorMap, setColorMap] = useState<ColorMapTypes>({});
 
   useEffect(() => {
     if (!session) return;
@@ -79,22 +81,24 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       ref={container}
     >
       <Col role="messages-container">
-        {messages.map((message, index) => (
-          <Message
-            key={index}
-            message={{
-              id: message.id,
-              chat: message.chat,
-              entry_created_at: message.entry_created_at,
-              entry_updated_at: message.entry_updated_at,
-              message: message.message,
-              author: {
-                id: message.author.id,
-                username: message.author.username,
-              },
-            }}
-          />
-        ))}
+        <ChatContext.Provider value={{ colorMap, setColorMap }}>
+          {messages.map((message, index) => (
+            <Message
+              key={index}
+              message={{
+                id: message.id,
+                chat: message.chat,
+                entry_created_at: message.entry_created_at,
+                entry_updated_at: message.entry_updated_at,
+                message: message.message,
+                author: {
+                  id: message.author.id,
+                  username: message.author.username,
+                },
+              }}
+            />
+          ))}
+        </ChatContext.Provider>
       </Col>
     </Row>
   );
