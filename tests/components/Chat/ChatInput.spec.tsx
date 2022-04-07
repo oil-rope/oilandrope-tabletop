@@ -5,11 +5,12 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { BOT_COMMAND_PREFIX } from '@Constants';
 import { SessionContext } from '@Contexts';
 
 import { SessionMock } from '../../__mocks__/helper';
 
-import ChatInput from '@Components/Chat/ChatInput';
+import { ChatInput } from '@Components/Chat';
 
 const WebSocketURL = 'ws://dummy.url/';
 const ChatInputMockedProps = {
@@ -93,7 +94,6 @@ describe('ChatInput suite', () => {
       </SessionContext.Provider>,
     );
     const inputElement = screen.getByPlaceholderText('Start typing...');
-    const submitButton = screen.getByRole('button', { name: /send/i });
     const message = faker.lorem.words();
     const expectedJSONToBeSent = JSON.stringify({
       type: 'send_message',
@@ -101,9 +101,35 @@ describe('ChatInput suite', () => {
       chat: SessionMock.chat,
     });
 
-    userEvent.type(inputElement, message);
-    userEvent.click(submitButton);
+    userEvent.type(inputElement, `${message}{enter}`);
 
     await expect(server).toReceiveMessage(expectedJSONToBeSent);
+  });
+
+  it('submit input with roll calls webSocket', async () => {
+    const mockedProps = Object.assign({}, ChatInputMockedProps);
+    mockedProps.chatWebSocket = client;
+    render(
+      <SessionContext.Provider value={SessionMock}>
+        <ChatInput {...mockedProps} />,
+      </SessionContext.Provider>,
+    );
+    const inputElement = screen.getByPlaceholderText('Start typing...');
+    const message = `${BOT_COMMAND_PREFIX}roll 1d20`;
+    const expectedFirstMessage = JSON.stringify({
+      type: 'send_message',
+      message: message,
+      chat: SessionMock.chat,
+    });
+    const expectedSecondMessage = JSON.stringify({
+      type: 'make_roll',
+      message: message,
+      chat: SessionMock.chat,
+    });
+    userEvent.type(inputElement, `${message}{enter}`);
+
+    // NOTE: We need to wait for the first message to be sent, since it the actual message not roll
+    await expect(server).toReceiveMessage(expectedFirstMessage);
+    await expect(server).toReceiveMessage(expectedSecondMessage);
   });
 });

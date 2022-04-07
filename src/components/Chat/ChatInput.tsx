@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-import { WS_TYPES } from '@Constants';
+import { BOT_COMMAND_PREFIX, WS_TYPES } from '@Constants';
 import { SessionContext } from '@Contexts';
 
 const ChatInputProps = {
@@ -13,9 +13,19 @@ const ChatInputProps = {
 };
 
 type ChatInputTypes = InferProps<typeof ChatInputProps>;
-const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
+export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
   const session = useContext(SessionContext);
   const [message, setMessage] = useState('');
+
+  /**
+   * Checks if received message is a command to roll dice.
+   *
+   * @param {string} message The message received.
+   * @returns {boolean} True if the message is a command for rolling dice, false otherwise
+   */
+  const isDiceRoll = (message: string): boolean => {
+    return message.startsWith(`${BOT_COMMAND_PREFIX}roll`);
+  };
 
   const handleSubmit = (ev: FormEvent) => {
     ev.preventDefault();
@@ -28,6 +38,15 @@ const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
         chat: session.chat,
       }),
     );
+    if (isDiceRoll(message)) {
+      chatWebSocket.send(
+        JSON.stringify({
+          type: WS_TYPES.MAKE_ROLL,
+          message,
+          chat: session.chat,
+        }),
+      );
+    }
     ev.currentTarget.dispatchEvent(new Event('reset'));
   };
 
@@ -57,5 +76,3 @@ const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
 };
 
 ChatInput.propTypes = ChatInputProps;
-
-export default ChatInput;

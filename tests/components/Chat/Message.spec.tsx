@@ -5,7 +5,7 @@ import { AuthContext } from '@Contexts';
 
 import { MessageMock, UserMock } from '../../__mocks__/helper';
 
-import Message from '@Components/Chat/Message';
+import { Message } from '@Components/Chat';
 
 const MessageMockedProps = {
   message: MessageMock,

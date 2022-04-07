@@ -9,8 +9,9 @@ import Col from 'react-bootstrap/Col';
 import { WS_TYPES } from '@Constants';
 import { SessionContext } from '@Contexts';
 import { IMessage } from '@Interfaces';
+import { IWebSocketMessage } from './interfaces';
 
-import Message from './Message';
+import { Message } from '.';
 
 const MessagesContainerProps = {
   chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
@@ -18,7 +19,7 @@ const MessagesContainerProps = {
 };
 
 type MessagesContainerTypes = InferProps<typeof MessagesContainerProps>;
-const MessagesContainer: FC<MessagesContainerTypes> = ({
+export const MessagesContainer: FC<MessagesContainerTypes> = ({
   chatWebSocket,
   height,
 }) => {
@@ -38,10 +39,9 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({
   useEffect(() => {
     if (chatWebSocket.readyState !== WebSocket.OPEN) return;
     chatWebSocket.onmessage = (ev: MessageEvent) => {
-      const data = JSON.parse(ev.data);
-      if (data.type !== WS_TYPES.SEND_MESSAGE) return;
-      const message = Object.assign({}, data.content);
-      setMessages((messages) => [...messages, message]);
+      const data: IWebSocketMessage = JSON.parse(ev.data);
+      if (data.type === WS_TYPES.SEND_MESSAGE) sendMessageAction(data.content);
+      if (data.type === WS_TYPES.MAKE_ROLL) makeRollAction(data.content);
     };
   }, [chatWebSocket, chatWebSocket.readyState]);
 
@@ -52,6 +52,26 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({
       container.current.scrollTop = height - clientHeight;
     }
   }, [container, messages]);
+
+  /**
+   * Perform action when message is sent.
+   *
+   * @param {IMessage} data Message received from WebSocket.
+   */
+  const sendMessageAction = (data: IMessage) => {
+    const message = Object.assign(data);
+    setMessages((messages) => [...messages, message]);
+  };
+
+  /**
+   * Perform action when message is sent and it's a roll.
+   *
+   * @param {IMessage} data Message received from WebSocket.
+   */
+  const makeRollAction = (data: IMessage) => {
+    const message = Object.assign(data);
+    setMessages((messages) => [...messages, message]);
+  };
 
   return (
     <Row
@@ -81,5 +101,3 @@ const MessagesContainer: FC<MessagesContainerTypes> = ({
 };
 
 MessagesContainer.propTypes = MessagesContainerProps;
-
-export default MessagesContainer;

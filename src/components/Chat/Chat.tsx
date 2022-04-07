@@ -9,8 +9,7 @@ import { AuthContext, SessionContext } from '@Contexts';
 
 import Loader from '@Components/Loader';
 
-import ChatInput from './ChatInput';
-import MessagesContainer from './MessagesContainer';
+import { ChatInput, MessagesContainer } from '.';
 
 const Chat = () => {
   const user = useContext(AuthContext);

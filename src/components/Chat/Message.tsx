@@ -26,7 +26,7 @@ const MessageProps = {
 };
 
 type MessageTypes = InferProps<typeof MessageProps>;
-const Message: FC<MessageTypes> = ({ message }) => {
+export const Message: FC<MessageTypes> = ({ message }) => {
   const user = useContext(AuthContext);
 
   /**
@@ -82,5 +82,3 @@ const Message: FC<MessageTypes> = ({ message }) => {
 };
 
 Message.propTypes = MessageProps;
-
-export default Message;

@@ -1,19 +1,12 @@
-import { ISimpleUser } from '@Interfaces';
+import { IMessage } from '@Interfaces';
 
-export interface IChat {
-  id: number;
-  name: string;
-  users: Array<number>;
-  chat_message_set: Array<IMessage>;
-  entry_created_at: string;
-  entry_updated_at: string;
-}
-
-export interface IMessage {
-  id: number;
-  chat: number;
-  message: string;
-  author: ISimpleUser | number;
-  entry_created_at: string;
-  entry_updated_at: string;
+/**
+ * This interface allows us to handle WebSocket messages **just** for the chat.
+ * It is not a generic interface for the whole application.
+ */
+export interface IWebSocketMessage {
+  type: string;
+  content: IMessage;
+  chat?: number;
+  roll?: Record<string, number[]>;
 }
