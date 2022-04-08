@@ -13,7 +13,7 @@ jobs:
     name: Node Build
     runs-on: ubuntu-latest
     env:
-      NODE_ENV: development
+      NODE_ENV: production
 
     strategy:
       max-parallel: 4
