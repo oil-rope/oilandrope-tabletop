@@ -1,9 +1,10 @@
-name: Node.js Checker
+name: (Dev) Node.js Checker
 
 on:
   push:
     branches:
       - feature/*
+      - develop
   pull_request:
     branches:
       - develop
