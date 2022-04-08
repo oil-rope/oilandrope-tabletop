@@ -104,9 +104,7 @@ describe('Message suite', () => {
     mockedUser.id = 2;
     render(
       <AuthContext.Provider value={mockedUser}>
-        <ChatContext.Provider
-          value={{ colorMap: { 1: 'success' }, setColorMap: () => null }}
-        >
+        <ChatContext.Provider value={{ colorMap: { 1: 'success' } }}>
           <Message {...mockedProps} />
         </ChatContext.Provider>
       </AuthContext.Provider>,
@@ -117,20 +115,32 @@ describe('Message suite', () => {
     expect(messageContainer).not.toHaveClass('text-light');
   });
 
-  it('calls setColorMap when user ID is not in colorMap', () => {
+  it('set new colorMap when user ID is not in colorMap', () => {
     const mockedProps = Object.assign({}, MessageMockedProps);
     mockedProps.message.author.id = 1;
     const mockedUser = Object.assign({}, UserMock);
     mockedUser.id = 2;
-    const setColorMap = jest.fn();
+    const colorMap = {};
     render(
       <AuthContext.Provider value={mockedUser}>
-        <ChatContext.Provider value={{ colorMap: {}, setColorMap }}>
+        <ChatContext.Provider value={{ colorMap }}>
           <Message {...mockedProps} />
         </ChatContext.Provider>
       </AuthContext.Provider>,
     );
 
-    expect(setColorMap).toHaveBeenCalled();
+    expect(colorMap).toHaveProperty('1');
+  });
+
+  it('sets title if roll if given on message props', () => {
+    const mockedProps = Object.assign({}, MessageMockedProps);
+    mockedProps.message.roll = { '1d20': [12], '4d6': [2, 1, 4, 3] };
+    render(
+      <AuthContext.Provider value={UserMock}>
+        <Message {...mockedProps} />
+      </AuthContext.Provider>,
+    );
+
+    expect(screen.getByTitle('1d20: [12], 4d6: [2,1,4,3]')).toBeInTheDocument();
   });
 });

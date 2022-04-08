@@ -66,6 +66,7 @@ export const messageFactory = (): IMessage => {
     author: simpleUserFactory(),
     entry_created_at: dayjs(faker.date.recent()).toISOString(),
     entry_updated_at: dayjs(faker.date.past()).toISOString(),
+    roll: null,
   };
   return message;
 };

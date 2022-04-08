@@ -49,7 +49,7 @@ jobs:
       - name: Update Codecov (coverage)
         # Using GitHub Actions context
         # https://docs.github.com/es/actions/learn-github-actions/contexts#github-context
-        if: ${{ github.event_name == 'pull_request' && success() }}
+        if: ${{ success() && matrix.node-version == '16.x' }}
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

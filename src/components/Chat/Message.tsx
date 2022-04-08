@@ -7,8 +7,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { AuthContext } from '@Contexts';
-import { MESSAGE_COLORS } from './const';
 import { ChatContext } from './context';
+import { MESSAGE_COLORS } from './const';
 
 const MessageProps = {
   message: PropTypes.shape({
@@ -21,6 +21,7 @@ const MessageProps = {
     message: PropTypes.string.isRequired,
     entry_created_at: PropTypes.string.isRequired,
     entry_updated_at: PropTypes.string.isRequired,
+    roll: PropTypes.any,
   }).isRequired,
   colWidthXS: PropTypes.number,
   colWidthMD: PropTypes.number,
@@ -29,7 +30,7 @@ const MessageProps = {
 type MessageTypes = InferProps<typeof MessageProps>;
 export const Message: FC<MessageTypes> = ({ message }) => {
   const user = useContext(AuthContext);
-  const { colorMap, setColorMap } = useContext(ChatContext);
+  const { colorMap } = useContext(ChatContext);
 
   // If user is not loaded don't even bother about rendering or logic
   if (!user) return <></>;
@@ -64,8 +65,21 @@ export const Message: FC<MessageTypes> = ({ message }) => {
     if (!colorMap) return 'light';
     if (colorMap[message.author.id]) return colorMap[message.author.id];
     const color = randomColor();
-    setColorMap({ ...colorMap, [message.author.id]: color });
+    colorMap[message.author.id] = color;
     return color;
+  };
+
+  /**
+   * This function will return a formatted dice roll.
+   * The format will be 'xDy: [result x times], zDy: [result z times]'.
+   *
+   * @returns {string} The roll if given.
+   */
+  const getTitle = (): string => {
+    if (!message.roll) return '';
+    return Object.entries(message.roll)
+      .map(([key, value]) => `${key}: [${value}]`)
+      .join(', ');
   };
 
   return (
@@ -80,7 +94,7 @@ export const Message: FC<MessageTypes> = ({ message }) => {
         style={{ borderRadius: '10px' }}
         role="message"
       >
-        <p className="mb-0">
+        <p className="mb-0" title={getTitle()}>
           <small
             className={`text-${getColor()} text-decoration-underline fw-bold`}
           >

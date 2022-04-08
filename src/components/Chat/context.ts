@@ -6,8 +6,8 @@ type BOOTSTRAP_COLORS_TYPE = typeof MESSAGE_COLORS[number];
 export type ColorMapTypes = Record<number, BOOTSTRAP_COLORS_TYPE>;
 interface IChatContext {
   colorMap: ColorMapTypes;
-  setColorMap: (colorMap: Record<number, BOOTSTRAP_COLORS_TYPE>) => void;
 }
+
 /**
  * This context is intended to store all user's colors for chat.
  * This color should be retrieved from Bootstrap colors.

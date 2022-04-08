@@ -40,6 +40,7 @@ export interface IMessage {
   author: ISimpleUser;
   entry_created_at: string;
   entry_updated_at: string;
+  roll: Record<string, Array<number>> | null;
 }
 
 export interface ISession {

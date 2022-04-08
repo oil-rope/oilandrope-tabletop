@@ -27,7 +27,8 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
   const container = useRef<HTMLDivElement>(null);
   const session = useContext(SessionContext);
   const [messages, setMessages] = useState<Array<IMessage>>([]);
-  const [colorMap, setColorMap] = useState<ColorMapTypes>({});
+  // NOTE: This is needed to make sure that the messages are always the same color.
+  const colorMap = useRef<ColorMapTypes>({});
 
   useEffect(() => {
     if (!session) return;
@@ -81,7 +82,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       ref={container}
     >
       <Col role="messages-container">
-        <ChatContext.Provider value={{ colorMap, setColorMap }}>
+        <ChatContext.Provider value={{ colorMap: colorMap.current }}>
           {messages.map((message, index) => (
             <Message
               key={index}
