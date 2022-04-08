@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import { AuthContext } from '@Contexts';
+import { ChatContext } from '@Components/Chat/context';
 
 import { MessageMock, UserMock } from '../../__mocks__/helper';
 
@@ -62,5 +63,74 @@ describe('Message suite', () => {
     const messageContainer = screen.getByRole('message');
 
     expect(messageContainer).toHaveClass('bg-primary');
+  });
+
+  it('renders username with text-light class if is author', () => {
+    const mockedProps = Object.assign({}, MessageMockedProps);
+    mockedProps.message.author.id = 1;
+    const mockedUser = Object.assign({}, UserMock);
+    mockedUser.id = 1;
+    render(
+      <AuthContext.Provider value={mockedUser}>
+        <Message {...mockedProps} />
+      </AuthContext.Provider>,
+    );
+    const username = MessageMockedProps.message.author.username;
+    const messageContainer = screen.getByText(username);
+
+    expect(messageContainer).toHaveClass('text-light');
+  });
+
+  it('renders username with text-light class if colorMap is not declared', () => {
+    const mockedProps = Object.assign({}, MessageMockedProps);
+    mockedProps.message.author.id = 1;
+    const mockedUser = Object.assign({}, UserMock);
+    mockedUser.id = 2;
+    render(
+      <AuthContext.Provider value={mockedUser}>
+        <Message {...mockedProps} />
+      </AuthContext.Provider>,
+    );
+    const username = MessageMockedProps.message.author.username;
+    const messageContainer = screen.getByText(username);
+
+    expect(messageContainer).toHaveClass('text-light');
+  });
+
+  it('renders username without text-light class if colorMap is declared', () => {
+    const mockedProps = Object.assign({}, MessageMockedProps);
+    mockedProps.message.author.id = 1;
+    const mockedUser = Object.assign({}, UserMock);
+    mockedUser.id = 2;
+    render(
+      <AuthContext.Provider value={mockedUser}>
+        <ChatContext.Provider
+          value={{ colorMap: { 1: 'success' }, setColorMap: () => null }}
+        >
+          <Message {...mockedProps} />
+        </ChatContext.Provider>
+      </AuthContext.Provider>,
+    );
+    const username = MessageMockedProps.message.author.username;
+    const messageContainer = screen.getByText(username);
+
+    expect(messageContainer).not.toHaveClass('text-light');
+  });
+
+  it('calls setColorMap when user ID is not in colorMap', () => {
+    const mockedProps = Object.assign({}, MessageMockedProps);
+    mockedProps.message.author.id = 1;
+    const mockedUser = Object.assign({}, UserMock);
+    mockedUser.id = 2;
+    const setColorMap = jest.fn();
+    render(
+      <AuthContext.Provider value={mockedUser}>
+        <ChatContext.Provider value={{ colorMap: {}, setColorMap }}>
+          <Message {...mockedProps} />
+        </ChatContext.Provider>
+      </AuthContext.Provider>,
+    );
+
+    expect(setColorMap).toHaveBeenCalled();
   });
 });

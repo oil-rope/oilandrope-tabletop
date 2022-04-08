@@ -1,12 +1,11 @@
 import dayjs from 'dayjs';
 
-import React, { FC, Fragment, useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import { IMessage, IUser } from '@Interfaces';
 import { AuthContext } from '@Contexts';
 import { MESSAGE_COLORS } from './const';
 import { ChatContext } from './context';
@@ -32,13 +31,16 @@ export const Message: FC<MessageTypes> = ({ message }) => {
   const user = useContext(AuthContext);
   const { colorMap, setColorMap } = useContext(ChatContext);
 
+  // If user is not loaded don't even bother about rendering or logic
+  if (!user) return <></>;
+
   /**
    * Checks if the person whom message belongs to is user.
+   * Object @interface IUser is got from context.
    *
-   * @param {IUser} user Logged user.
    * @returns {Boolean} User is author.
    */
-  const isAuthor = (user: IUser) => {
+  const isAuthor = (): boolean => {
     return message.author.id === user.id;
   };
 
@@ -55,58 +57,45 @@ export const Message: FC<MessageTypes> = ({ message }) => {
    * This function checks if user id has a color in colorMap otherwise it returns
    * a random color from type BOOTSTRAP_COLORS.
    *
-   * @param {IMessage} message Given user to set color.
    * @returns {string} The color assigned to the user.
    */
-  const getColor = (
-    message: IMessage,
-  ): typeof MESSAGE_COLORS[number] | 'light' => {
-    if (!user) return 'light';
+  const getColor = (): typeof MESSAGE_COLORS[number] | 'light' => {
+    if (isAuthor()) return 'light';
     if (!colorMap) return 'light';
     if (colorMap[message.author.id]) return colorMap[message.author.id];
-    if (isAuthor(user)) return 'light';
     const color = randomColor();
     setColorMap({ ...colorMap, [message.author.id]: color });
     return color;
   };
 
-  const renderMessage = () => (
-    <Fragment>
-      <p className="mb-0">
-        <small className={`text-${getColor(message as IMessage)} fw-bold`}>
-          <u>{message.author.username}</u>
-        </small>
-        <br />
-        {message.message}
-      </p>
-      <p className="text-right mb-0">
-        <small style={{ fontSize: '0.5rem' }} className="text-muted">
-          {dayjs(message.entry_created_at).format(
-            '[Sent on] DD/MM/YYYY [at] HH:mm',
-          )}
-        </small>
-      </p>
-    </Fragment>
-  );
-
-  if (!user) {
-    // If user is not loaded yet we don't even bother about rendering
-    return <></>;
-  }
-
   return (
     <Row
-      className={`justify-content-${isAuthor(user) ? 'end' : 'start'} m-0 mb-2`}
+      className={`justify-content-${isAuthor() ? 'end' : 'start'} m-0 mb-2`}
       style={{ minHeight: '50px' }}
     >
       <Col
         xs={10}
         md={8}
-        className={`bg-${isAuthor(user) ? 'secondary' : 'primary'} border`}
+        className={`bg-${isAuthor() ? 'secondary' : 'primary'} border`}
         style={{ borderRadius: '10px' }}
         role="message"
       >
-        {renderMessage()}
+        <p className="mb-0">
+          <small
+            className={`text-${getColor()} text-decoration-underline fw-bold`}
+          >
+            {message.author.username}
+          </small>
+          <br />
+          {message.message}
+        </p>
+        <p className="text-right mb-0">
+          <small style={{ fontSize: '0.5rem' }} className="text-muted">
+            {dayjs(message.entry_created_at).format(
+              '[Sent on] DD/MM/YYYY [at] HH:mm',
+            )}
+          </small>
+        </p>
       </Col>
     </Row>
   );

@@ -1,11 +1,9 @@
-const API_URL = `${
-  process.env.API_URL || 'https://oilandrope-project.com'
-}/en/api`;
+const API_URL = `${process.env.API_URL}/en/api`;
 export const CURRENT_USER_API = `${API_URL}/registration/user/@me/`;
 export const SESSION_API = `${API_URL}/roleplay/session`;
 export const CHAT_API = `${API_URL}/chat/chat`;
 
-const WS_URL = `${process.env.WS_URL || 'https://live.oilandrope-project.com'}`;
+const WS_URL = `${process.env.WS_URL}`;
 export const CHAT_WEBSOCKET = `${WS_URL}/ws/chat/`;
 // WebSocket functions
 export const WS_TYPES = {
@@ -14,4 +12,4 @@ export const WS_TYPES = {
   MAKE_ROLL: 'make_roll',
 };
 
-export const BOT_COMMAND_PREFIX = process.env.BOT_COMMAND_PREFIX || '..';
+export const BOT_COMMAND_PREFIX = process.env.BOT_COMMAND_PREFIX;
