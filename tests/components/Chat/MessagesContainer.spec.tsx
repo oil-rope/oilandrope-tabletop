@@ -12,8 +12,10 @@ import { AuthContext, SessionContext } from '@Contexts';
 import { MessagesContainer } from '@Components/Chat';
 
 import {
+  BotMock,
   ChatMock,
   MessageMock,
+  messageWithRollFactory,
   SessionMock,
   UserMock,
 } from '../../__mocks__/helper';
@@ -85,7 +87,7 @@ describe('MessagesContainer suite', () => {
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
+      <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
         </SessionContext.Provider>
@@ -112,22 +114,24 @@ describe('MessagesContainer suite', () => {
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
+      <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
         </SessionContext.Provider>
       </AuthContext.Provider>,
     );
+    const messageMock = messageWithRollFactory();
+    messageMock.author.id = BotMock.id;
     // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning
     expect(await screen.findByRole('messages-container'));
 
     const messageToSend = JSON.stringify({
-      type: WS_TYPES.MAKE_ROLL,
-      content: MessageMock,
+      type: WS_TYPES.SEND_MESSAGE,
+      content: messageMock,
     });
     server.send(messageToSend);
 
-    expect(screen.getByText(MessageMock.message)).toBeInTheDocument();
+    expect(screen.getByText(messageMock.message)).toBeInTheDocument();
   });
 
   it("doesn't add new message if type is incorrect", async () => {
