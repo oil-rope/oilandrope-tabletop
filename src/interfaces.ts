@@ -15,6 +15,14 @@ export interface IUser extends ISimpleUser {
   token: string;
 }
 
+export interface IBot {
+  id: number;
+  username: string;
+  email: string;
+  command_prefix: string;
+  description: string;
+}
+
 export interface IProfile {
   user: number;
   bio: string | null;
@@ -40,6 +48,7 @@ export interface IMessage {
   author: ISimpleUser;
   entry_created_at: string;
   entry_updated_at: string;
+  roll: Record<string, Array<number>> | null;
 }
 
 export interface ISession {

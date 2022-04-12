@@ -1,21 +1,19 @@
-name: Node.js Checker
+name: (Prod) Node.js Checker
 
 on:
   push:
     branches:
       - master
-      - develop
   pull_request:
     branches:
       - master
-      - develop
 
 jobs:
   node:
     name: Node Build
     runs-on: ubuntu-latest
     env:
-      NODE_ENV: development
+      NODE_ENV: production
 
     strategy:
       max-parallel: 4

@@ -16,12 +16,16 @@ let EnvironmentPluginConf;
 
 if (process.env.NODE_ENV == 'production') {
   EnvironmentPluginConf = new DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    'process.env.NODE_ENV': JSON.stringify('production'),
     'process.env.API_URL': JSON.stringify('https://oilandrope-project.com'),
     'process.env.WS_URL': JSON.stringify('wss://live.oilandrope-project.com'),
   });
 } else {
-  EnvironmentPluginConf = new EnvironmentPlugin(['API_URL', 'WS_URL']);
+  EnvironmentPluginConf = new EnvironmentPlugin([
+    'API_URL',
+    'WS_URL',
+    'NODE_ENV',
+  ]);
 }
 
 module.exports = {

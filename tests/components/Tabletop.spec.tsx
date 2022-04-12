@@ -43,6 +43,6 @@ describe('Tabletop suite', () => {
     );
     expect(await screen.findAllByText('Connecting chat...')).toHaveLength(2);
 
-    expect(fetchMock).toBeCalledTimes(1);
+    expect(fetchMock).toBeCalledTimes(2);
   });
 });

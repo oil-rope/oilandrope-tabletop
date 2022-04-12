@@ -9,11 +9,13 @@ import { WS_TYPES } from '@Constants';
 
 import { AuthContext, SessionContext } from '@Contexts';
 
-import MessagesContainer from '@Components/Chat/MessagesContainer';
+import { MessagesContainer } from '@Components/Chat';
 
 import {
+  BotMock,
   ChatMock,
   MessageMock,
+  messageWithRollFactory,
   SessionMock,
   UserMock,
 } from '../../__mocks__/helper';
@@ -48,7 +50,7 @@ describe('MessagesContainer suite', () => {
     chatMock.chat_message_set = [MessageMock];
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
         </SessionContext.Provider>
@@ -65,7 +67,7 @@ describe('MessagesContainer suite', () => {
     chatMock.chat_message_set = [MessageMock, messageMock];
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
         </SessionContext.Provider>
@@ -76,7 +78,7 @@ describe('MessagesContainer suite', () => {
     expect(screen.getAllByText(MessageMock.author.username)).toHaveLength(2);
   });
 
-  it('adds new message on WebSocket send', async () => {
+  it('adds new message on WebSocket sent', async () => {
     const server = new WS(dummyURL);
     const client = new WebSocket(dummyURL);
     await server.connected;
@@ -85,7 +87,7 @@ describe('MessagesContainer suite', () => {
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
         </SessionContext.Provider>
@@ -97,11 +99,39 @@ describe('MessagesContainer suite', () => {
     const messageToSend = JSON.stringify({
       type: WS_TYPES.SEND_MESSAGE,
       content: MessageMock,
-      status: 'ok',
     });
     server.send(messageToSend);
 
     expect(screen.getByText(MessageMock.message)).toBeInTheDocument();
+  });
+
+  it('adds new message on WebSocket type make_roll sent', async () => {
+    const server = new WS(dummyURL);
+    const client = new WebSocket(dummyURL);
+    await server.connected;
+    fetchMock.mockResponseOnce(JSON.stringify(ChatMock));
+
+    const mockedProps = Object.assign({}, MessagesContainerMockedProps);
+    mockedProps.chatWebSocket = client;
+    render(
+      <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
+        <SessionContext.Provider value={SessionMock}>
+          <MessagesContainer {...mockedProps} />
+        </SessionContext.Provider>
+      </AuthContext.Provider>,
+    );
+    const messageMock = messageWithRollFactory();
+    messageMock.author.id = BotMock.id;
+    // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning
+    expect(await screen.findByRole('messages-container'));
+
+    const messageToSend = JSON.stringify({
+      type: WS_TYPES.SEND_MESSAGE,
+      content: messageMock,
+    });
+    server.send(messageToSend);
+
+    expect(screen.getByText(messageMock.message)).toBeInTheDocument();
   });
 
   it("doesn't add new message if type is incorrect", async () => {
@@ -113,7 +143,7 @@ describe('MessagesContainer suite', () => {
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
         </SessionContext.Provider>

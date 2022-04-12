@@ -1,9 +1,10 @@
-name: Node.js Checker
+name: (Dev) Node.js Checker
 
 on:
   push:
     branches:
       - feature/*
+      - develop
   pull_request:
     branches:
       - develop
@@ -18,7 +19,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        node-version: [14.x, 16.x, 17.x]
+        node-version: [16.x, 17.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -36,7 +37,7 @@ jobs:
       - name: Build
         run: |
           cp .env.example .env
-          npm run build:prod
+          npm run build:dev
 
       - name: Linter
         run: |
@@ -44,3 +45,13 @@ jobs:
 
       - name: Test
         run: npm run test:coverage
+
+      - name: Update Codecov (coverage)
+        # Using GitHub Actions context
+        # https://docs.github.com/es/actions/learn-github-actions/contexts#github-context
+        if: ${{ success() && matrix.node-version == '16.x' }}
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          file: ./coverage/clover.xml

@@ -1,13 +1,14 @@
 import dayjs from 'dayjs';
 
-import React, { FC, Fragment, useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import { IUser } from '@Interfaces';
 import { AuthContext } from '@Contexts';
+import { ChatContext } from './context';
+import { MESSAGE_COLORS } from './const';
 
 const MessageProps = {
   message: PropTypes.shape({
@@ -20,67 +21,96 @@ const MessageProps = {
     message: PropTypes.string.isRequired,
     entry_created_at: PropTypes.string.isRequired,
     entry_updated_at: PropTypes.string.isRequired,
+    roll: PropTypes.any,
   }).isRequired,
-  colWidthXS: PropTypes.number,
-  colWidthMD: PropTypes.number,
 };
 
 type MessageTypes = InferProps<typeof MessageProps>;
-const Message: FC<MessageTypes> = ({ message }) => {
-  const user = useContext(AuthContext);
+export const Message: FC<MessageTypes> = ({ message }) => {
+  const { user } = useContext(AuthContext);
+  const { colorMap } = useContext(ChatContext);
+
+  // If user is not loaded don't even bother about rendering or logic
+  if (!user) return <></>;
 
   /**
    * Checks if the person whom message belongs to is user.
+   * Object @interface IUser is got from context.
    *
-   * @param {IUser} user Logged user.
    * @returns {Boolean} User is author.
    */
-  const isAuthor = (user: IUser) => {
+  const isAuthor = (): boolean => {
     return message.author.id === user.id;
   };
 
-  const renderMessage = () => (
-    <Fragment>
-      <p className="mb-0">
-        <small className="text-white font-weight-bold">
-          <u>{message.author.username}</u>
-        </small>
-        <br />
-        {message.message}
-      </p>
-      <p className="text-right mb-0">
-        <small style={{ fontSize: '0.5rem' }} className="text-muted">
-          {dayjs(message.entry_created_at).format(
-            '[Sent on] DD/MM/YYYY [at] HH:mm',
-          )}
-        </small>
-      </p>
-    </Fragment>
-  );
+  /**
+   * Checks for usable colors and picks a random.
+   *
+   * @returns {String} Message color.
+   */
+  const randomColor = () => {
+    return MESSAGE_COLORS[Math.floor(Math.random() * MESSAGE_COLORS.length)];
+  };
 
-  if (!user) {
-    // If user is not loaded yet we don't even bother about rendering
-    return <></>;
-  }
+  /**
+   * This function checks if user id has a color in colorMap otherwise it returns
+   * a random color from type BOOTSTRAP_COLORS.
+   *
+   * @returns {string} The color assigned to the user.
+   */
+  const getColor = (): typeof MESSAGE_COLORS[number] | 'light' => {
+    if (isAuthor()) return 'light';
+    if (!colorMap) return 'light';
+    if (colorMap[message.author.id]) return colorMap[message.author.id];
+    const color = randomColor();
+    colorMap[message.author.id] = color;
+    return color;
+  };
+
+  /**
+   * This function will return a formatted dice roll.
+   * The format will be 'xDy: [result x times], zDy: [result z times]'.
+   *
+   * @returns {string} The roll if given.
+   */
+  const getTitle = (): string => {
+    if (!message.roll) return '';
+    return Object.entries(message.roll as Record<string, Array<number>>)
+      .map(([key, value]) => `${key}: [${value}]`)
+      .join(', ');
+  };
 
   return (
     <Row
-      className={`justify-content-${isAuthor(user) ? 'end' : 'start'} m-0 mb-2`}
+      className={`justify-content-${isAuthor() ? 'end' : 'start'} m-0 mb-2`}
       style={{ minHeight: '50px' }}
     >
       <Col
         xs={10}
         md={8}
-        className={`bg-${isAuthor(user) ? 'secondary' : 'primary'} border`}
+        className={`bg-${isAuthor() ? 'secondary' : 'primary'} border`}
         style={{ borderRadius: '10px' }}
         role="message"
       >
-        {renderMessage()}
+        <p className="mb-0" title={getTitle()}>
+          <small
+            className={`text-${getColor()} text-decoration-underline fw-bold`}
+          >
+            {message.author.username}
+          </small>
+          <br />
+          {message.message}
+        </p>
+        <p className="text-right mb-0">
+          <small style={{ fontSize: '0.5rem' }} className="text-muted">
+            {dayjs(message.entry_created_at).format(
+              '[Sent on] DD/MM/YYYY [at] HH:mm',
+            )}
+          </small>
+        </p>
       </Col>
     </Row>
   );
 };
 
 Message.propTypes = MessageProps;
-
-export default Message;
