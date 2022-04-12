@@ -23,13 +23,11 @@ const MessageProps = {
     entry_updated_at: PropTypes.string.isRequired,
     roll: PropTypes.any,
   }).isRequired,
-  colWidthXS: PropTypes.number,
-  colWidthMD: PropTypes.number,
 };
 
 type MessageTypes = InferProps<typeof MessageProps>;
 export const Message: FC<MessageTypes> = ({ message }) => {
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { colorMap } = useContext(ChatContext);
 
   // If user is not loaded don't even bother about rendering or logic
@@ -77,7 +75,7 @@ export const Message: FC<MessageTypes> = ({ message }) => {
    */
   const getTitle = (): string => {
     if (!message.roll) return '';
-    return Object.entries(message.roll)
+    return Object.entries(message.roll as Record<string, Array<number>>)
       .map(([key, value]) => `${key}: [${value}]`)
       .join(', ');
   };

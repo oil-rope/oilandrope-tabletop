@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 
 import { WS_TYPES } from '@Constants';
 import { IMessage } from '@Interfaces';
-import { SessionContext } from '@Contexts';
+import { AuthContext, SessionContext } from '@Contexts';
 import { IWebSocketMessage } from './interfaces';
 import { ChatContext, ColorMapTypes } from './context';
 
@@ -25,6 +25,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
   height,
 }) => {
   const container = useRef<HTMLDivElement>(null);
+  const { bot } = useContext(AuthContext);
   const session = useContext(SessionContext);
   const [messages, setMessages] = useState<Array<IMessage>>([]);
   // NOTE: This is needed to make sure that the messages are always the same color.
@@ -40,13 +41,18 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
   }, [session]);
 
   useEffect(() => {
+    if (!bot) return;
     if (chatWebSocket.readyState !== WebSocket.OPEN) return;
     chatWebSocket.onmessage = (ev: MessageEvent) => {
       const data: IWebSocketMessage = JSON.parse(ev.data);
-      if (data.type === WS_TYPES.SEND_MESSAGE) sendMessageAction(data.content);
-      if (data.type === WS_TYPES.MAKE_ROLL) makeRollAction(data.content);
+      if (data.type === WS_TYPES.SEND_MESSAGE) {
+        if (data.content.author.id === bot.id) {
+          return makeRollAction(data.content);
+        }
+        return sendMessageAction(data.content);
+      }
     };
-  }, [chatWebSocket, chatWebSocket.readyState]);
+  }, [chatWebSocket, chatWebSocket.readyState, bot]);
 
   useEffect(() => {
     if (container.current) {
@@ -84,20 +90,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       <Col role="messages-container">
         <ChatContext.Provider value={{ colorMap: colorMap.current }}>
           {messages.map((message, index) => (
-            <Message
-              key={index}
-              message={{
-                id: message.id,
-                chat: message.chat,
-                entry_created_at: message.entry_created_at,
-                entry_updated_at: message.entry_updated_at,
-                message: message.message,
-                author: {
-                  id: message.author.id,
-                  username: message.author.username,
-                },
-              }}
-            />
+            <Message key={index} message={message} />
           ))}
         </ChatContext.Provider>
       </Col>

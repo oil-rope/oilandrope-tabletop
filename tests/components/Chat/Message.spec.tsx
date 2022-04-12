@@ -4,7 +4,11 @@ import { render, screen } from '@testing-library/react';
 import { AuthContext } from '@Contexts';
 import { ChatContext } from '@Components/Chat/context';
 
-import { MessageMock, UserMock } from '../../__mocks__/helper';
+import {
+  MessageMock,
+  MessageWithRollMock,
+  UserMock,
+} from '../../__mocks__/helper';
 
 import { Message } from '@Components/Chat';
 
@@ -21,7 +25,7 @@ describe('Message suite', () => {
 
   it('renders message correctly', () => {
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <Message {...MessageMockedProps} />
       </AuthContext.Provider>,
     );
@@ -41,7 +45,7 @@ describe('Message suite', () => {
     const mockedUser = Object.assign({}, UserMock);
     mockedUser.id = 1;
     render(
-      <AuthContext.Provider value={mockedUser}>
+      <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <Message {...mockedProps} />
       </AuthContext.Provider>,
     );
@@ -56,7 +60,7 @@ describe('Message suite', () => {
     const mockedUser = Object.assign({}, UserMock);
     mockedUser.id = 2;
     render(
-      <AuthContext.Provider value={mockedUser}>
+      <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <Message {...mockedProps} />
       </AuthContext.Provider>,
     );
@@ -71,7 +75,7 @@ describe('Message suite', () => {
     const mockedUser = Object.assign({}, UserMock);
     mockedUser.id = 1;
     render(
-      <AuthContext.Provider value={mockedUser}>
+      <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <Message {...mockedProps} />
       </AuthContext.Provider>,
     );
@@ -87,7 +91,7 @@ describe('Message suite', () => {
     const mockedUser = Object.assign({}, UserMock);
     mockedUser.id = 2;
     render(
-      <AuthContext.Provider value={mockedUser}>
+      <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <Message {...mockedProps} />
       </AuthContext.Provider>,
     );
@@ -103,7 +107,7 @@ describe('Message suite', () => {
     const mockedUser = Object.assign({}, UserMock);
     mockedUser.id = 2;
     render(
-      <AuthContext.Provider value={mockedUser}>
+      <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <ChatContext.Provider value={{ colorMap: { 1: 'success' } }}>
           <Message {...mockedProps} />
         </ChatContext.Provider>
@@ -122,7 +126,7 @@ describe('Message suite', () => {
     mockedUser.id = 2;
     const colorMap = {};
     render(
-      <AuthContext.Provider value={mockedUser}>
+      <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <ChatContext.Provider value={{ colorMap }}>
           <Message {...mockedProps} />
         </ChatContext.Provider>
@@ -133,14 +137,17 @@ describe('Message suite', () => {
   });
 
   it('sets title if roll if given on message props', () => {
-    const mockedProps = Object.assign({}, MessageMockedProps);
-    mockedProps.message.roll = { '1d20': [12], '4d6': [2, 1, 4, 3] };
+    const mockedProps = { message: MessageWithRollMock };
+    const diceRoll = MessageWithRollMock.roll || {};
+    const titleFromDiceRoll = Object.entries(diceRoll)
+      .map(([key, value]) => `${key}: [${value}]`)
+      .join(', ');
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <Message {...mockedProps} />
       </AuthContext.Provider>,
     );
 
-    expect(screen.getByTitle('1d20: [12], 4d6: [2,1,4,3]')).toBeInTheDocument();
+    expect(screen.getByTitle(titleFromDiceRoll)).toBeInTheDocument();
   });
 });

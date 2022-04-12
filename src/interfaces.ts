@@ -15,6 +15,14 @@ export interface IUser extends ISimpleUser {
   token: string;
 }
 
+export interface IBot {
+  id: number;
+  username: string;
+  email: string;
+  command_prefix: string;
+  description: string;
+}
+
 export interface IProfile {
   user: number;
   bio: string | null;

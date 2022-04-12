@@ -48,7 +48,7 @@ describe('MessagesContainer suite', () => {
     chatMock.chat_message_set = [MessageMock];
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
         </SessionContext.Provider>
@@ -65,7 +65,7 @@ describe('MessagesContainer suite', () => {
     chatMock.chat_message_set = [MessageMock, messageMock];
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
         </SessionContext.Provider>
@@ -85,7 +85,7 @@ describe('MessagesContainer suite', () => {
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
         </SessionContext.Provider>
@@ -112,7 +112,7 @@ describe('MessagesContainer suite', () => {
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
         </SessionContext.Provider>
@@ -139,7 +139,7 @@ describe('MessagesContainer suite', () => {
     const mockedProps = Object.assign({}, MessagesContainerMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
         </SessionContext.Provider>

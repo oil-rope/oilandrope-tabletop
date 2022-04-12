@@ -1,5 +1,6 @@
 const API_URL = `${process.env.API_URL}/en/api`;
 export const CURRENT_USER_API = `${API_URL}/registration/user/@me/`;
+export const BOT_API = `${API_URL}/registration/bot/`;
 export const SESSION_API = `${API_URL}/roleplay/session`;
 export const CHAT_API = `${API_URL}/chat/chat`;
 
@@ -11,5 +12,3 @@ export const WS_TYPES = {
   SEND_MESSAGE: 'send_message',
   MAKE_ROLL: 'make_roll',
 };
-
-export const BOT_COMMAND_PREFIX = process.env.BOT_COMMAND_PREFIX;

@@ -57,7 +57,7 @@ describe('Chat suite', () => {
 
   it('gets loading if session is not given (but user is)', () => {
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <Chat />
       </AuthContext.Provider>,
     );
@@ -69,7 +69,7 @@ describe('Chat suite', () => {
 
   it('renders correctly', async () => {
     const { container } = render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <Chat />
         </SessionContext.Provider>
@@ -97,7 +97,7 @@ describe('Chat suite', () => {
       return Promise.resolve({ body: 'Not found', status: 404 });
     });
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <Chat />
         </SessionContext.Provider>
@@ -131,7 +131,7 @@ describe('Chat WebSocket suite', () => {
     window.confirm = jest.fn().mockReturnValue(false);
 
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <Chat />
         </SessionContext.Provider>
@@ -155,7 +155,7 @@ describe('Chat WebSocket suite', () => {
     window.confirm = jest.fn().mockResolvedValueOnce(false);
 
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <Chat />
         </SessionContext.Provider>
@@ -173,7 +173,7 @@ describe('Chat WebSocket suite', () => {
     window.confirm = jest.fn().mockResolvedValueOnce(false);
 
     render(
-      <AuthContext.Provider value={UserMock}>
+      <AuthContext.Provider value={{ user: UserMock, bot: null }}>
         <SessionContext.Provider value={SessionMock}>
           <Chat />
         </SessionContext.Provider>

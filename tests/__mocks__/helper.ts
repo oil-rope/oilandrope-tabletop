@@ -1,7 +1,14 @@
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
-import { IChat, IMessage, ISession, ISimpleUser, IUser } from '@Interfaces';
+import {
+  IBot,
+  IChat,
+  IMessage,
+  ISession,
+  ISimpleUser,
+  IUser,
+} from '@Interfaces';
 
 export const emptyFunc = () => null;
 
@@ -54,6 +61,20 @@ export const userFactory = (): IUser => {
 export const UserMock: IUser = userFactory();
 
 /**
+ * Creates a bot object with random data.
+ *
+ * @returns {IBot} Bot created.
+ */
+export const botFactory = (): IBot => ({
+  id: faker.datatype.number(),
+  username: faker.internet.userName(),
+  email: faker.internet.email(),
+  command_prefix: faker.random.word(),
+  description: faker.lorem.paragraph(),
+});
+export const BotMock: IBot = botFactory();
+
+/**
  * Creates a message object with random data. This also creates a fake author.
  *
  * @returns {IMessage} Message created.
@@ -71,6 +92,26 @@ export const messageFactory = (): IMessage => {
   return message;
 };
 export const MessageMock: IMessage = messageFactory();
+
+export const messageWithRollFactory = (): IMessage => {
+  const nDices: number = faker.datatype.number({ min: 1, max: 4 });
+  const diceSides: number = faker.datatype.number({ min: 2, max: 20 });
+  const rollKey = `${nDices}d${diceSides}`;
+  return {
+    id: faker.datatype.number(),
+    chat: faker.datatype.number(),
+    message: faker.lorem.paragraph(),
+    author: simpleUserFactory(),
+    entry_created_at: dayjs(faker.date.recent()).toISOString(),
+    entry_updated_at: dayjs(faker.date.past()).toISOString(),
+    roll: {
+      [rollKey]: Array.from({ length: nDices }, () =>
+        faker.datatype.number({ min: 1, max: diceSides }),
+      ),
+    },
+  };
+};
+export const MessageWithRollMock: IMessage = messageWithRollFactory();
 
 export const chatFactory = (): IChat => {
   const chat: IChat = {

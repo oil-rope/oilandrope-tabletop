@@ -5,8 +5,8 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-import { BOT_COMMAND_PREFIX, WS_TYPES } from '@Constants';
-import { SessionContext } from '@Contexts';
+import { WS_TYPES } from '@Constants';
+import { AuthContext, SessionContext } from '@Contexts';
 
 const ChatInputProps = {
   chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
@@ -14,6 +14,7 @@ const ChatInputProps = {
 
 type ChatInputTypes = InferProps<typeof ChatInputProps>;
 export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
+  const { bot } = useContext(AuthContext);
   const session = useContext(SessionContext);
   const [message, setMessage] = useState('');
 
@@ -24,7 +25,7 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
    * @returns {boolean} True if the message is a command for rolling dice, false otherwise
    */
   const isDiceRoll = (message: string): boolean => {
-    return message.startsWith(`${BOT_COMMAND_PREFIX}roll`);
+    return message.startsWith(`${bot?.command_prefix}roll`);
   };
 
   const handleSubmit = (ev: FormEvent) => {

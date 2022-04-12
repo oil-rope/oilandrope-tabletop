@@ -12,7 +12,7 @@ import Loader from '@Components/Loader';
 import { ChatInput, MessagesContainer } from '.';
 
 const Chat = () => {
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const session = useContext(SessionContext);
   const [chatWS, setChatWS] = useState<WebSocket | null>(null);
   const reconnectMessage = "You've been disconnected. Reconnect?";

@@ -1,6 +1,11 @@
 import { createContext } from 'react';
 
-import { ISession, IUser } from '@Interfaces';
+import { IBot, ISession, IUser } from '@Interfaces';
 
-export const AuthContext = createContext<IUser | null>(null);
+interface IAuthContext {
+  user: IUser | null;
+  bot: IBot | null;
+}
+
+export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 export const SessionContext = createContext<ISession | null>(null);

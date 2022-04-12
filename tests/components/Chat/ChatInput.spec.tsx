@@ -5,10 +5,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { BOT_COMMAND_PREFIX } from '@Constants';
-import { SessionContext } from '@Contexts';
+import { AuthContext, SessionContext } from '@Contexts';
 
-import { SessionMock } from '../../__mocks__/helper';
+import { BotMock, SessionMock } from '../../__mocks__/helper';
 
 import { ChatInput } from '@Components/Chat';
 
@@ -110,12 +109,14 @@ describe('ChatInput suite', () => {
     const mockedProps = Object.assign({}, ChatInputMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <SessionContext.Provider value={SessionMock}>
-        <ChatInput {...mockedProps} />,
-      </SessionContext.Provider>,
+      <AuthContext.Provider value={{ user: null, bot: BotMock }}>
+        <SessionContext.Provider value={SessionMock}>
+          <ChatInput {...mockedProps} />
+        </SessionContext.Provider>
+      </AuthContext.Provider>,
     );
     const inputElement = screen.getByPlaceholderText('Start typing...');
-    const message = `${BOT_COMMAND_PREFIX}roll 1d20`;
+    const message = `${BotMock.command_prefix}roll 1d20`;
     const expectedFirstMessage = JSON.stringify({
       type: 'send_message',
       message: message,
