@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 
 import App from '@Components/App';
 
-import { UserMock } from '../__mocks__/helper';
+import { UserMock, BotMock } from '../__mocks__/helper';
 
 beforeAll(() => {
   enableFetchMocks();
@@ -24,8 +24,16 @@ describe('App suite', () => {
   });
 
   it('gets user on load', async () => {
-    fetchMock.mockResponseOnce(JSON.stringify(UserMock));
-
+    fetchMock.mockResponse((req) => {
+      if (req.url.match(/https?:\/.+\/en\/api\/registration\/bot\/$/)) {
+        return Promise.resolve(JSON.stringify(BotMock));
+      } else if (
+        req.url.match(/https?:\/.+\/en\/api\/registration\/user\/@me\/$/)
+      ) {
+        return Promise.resolve(JSON.stringify(UserMock));
+      }
+      return Promise.resolve({ body: 'Not found', status: 404 });
+    });
     render(<App />);
     expect(
       await screen.findByText(
@@ -33,8 +41,6 @@ describe('App suite', () => {
       ),
     ).toBeInTheDocument();
 
-    expect(fetchMock).toBeCalledTimes(1);
-    // NOTE: Not given user credentials so alert is called
-    expect(window.alert).toBeCalledTimes(1);
+    expect(fetchMock).toBeCalledTimes(2);
   });
 });

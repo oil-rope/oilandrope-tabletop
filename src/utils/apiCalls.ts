@@ -1,5 +1,5 @@
-import { CHAT_API, CURRENT_USER_API, SESSION_API } from '@Constants';
-import { IChat, ISession, IUser } from '@Interfaces';
+import { BOT_API, CHAT_API, CURRENT_USER_API, SESSION_API } from '@Constants';
+import { IBot, IChat, ISession, IUser } from '@Interfaces';
 
 /**
  * Since there's a lot of logic that will be used all the time the correct
@@ -27,6 +27,18 @@ export const loadUser = (): Promise<IUser> => {
   return loadData<IUser>(
     CURRENT_USER_API,
     "We couldn't authenticate you user. Have you login on Oil & Rope?",
+  );
+};
+
+/**
+ * Calls Bot API to retrieve Oil & Rope bot.
+ *
+ * @returns {Promise<IBot>} Promise with given result.
+ */
+export const loadBot = (): Promise<IBot> => {
+  return loadData<IBot>(
+    BOT_API,
+    "We couldn't retrieve bot data. Have you login on Oil & Rope?",
   );
 };
 
