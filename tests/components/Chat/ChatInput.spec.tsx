@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 
 import { AuthContext, CampaignContext } from '@Contexts';
 
-import { BotMock, SessionMock } from '../../__mocks__/helper';
+import { BotMock, CampaignMock } from '../../__mocks__/helper';
 
 import { ChatInput } from '@Components/Chat';
 
@@ -62,7 +62,7 @@ describe('ChatInput suite', () => {
     const mockedProps = Object.assign({}, ChatInputMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <CampaignContext.Provider value={SessionMock}>
+      <CampaignContext.Provider value={CampaignMock}>
         <ChatInput {...mockedProps} />
       </CampaignContext.Provider>,
     );
@@ -88,7 +88,7 @@ describe('ChatInput suite', () => {
     const mockedProps = Object.assign({}, ChatInputMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <CampaignContext.Provider value={SessionMock}>
+      <CampaignContext.Provider value={CampaignMock}>
         <ChatInput {...mockedProps} />,
       </CampaignContext.Provider>,
     );
@@ -97,7 +97,7 @@ describe('ChatInput suite', () => {
     const expectedJSONToBeSent = JSON.stringify({
       type: 'send_message',
       message: message,
-      chat: SessionMock.chat,
+      chat: CampaignMock.chat,
     });
 
     userEvent.type(inputElement, `${message}{enter}`);
@@ -110,7 +110,7 @@ describe('ChatInput suite', () => {
     mockedProps.chatWebSocket = client;
     render(
       <AuthContext.Provider value={{ user: null, bot: BotMock }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <ChatInput {...mockedProps} />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -120,12 +120,12 @@ describe('ChatInput suite', () => {
     const expectedFirstMessage = JSON.stringify({
       type: 'send_message',
       message: message,
-      chat: SessionMock.chat,
+      chat: CampaignMock.chat,
     });
     const expectedSecondMessage = JSON.stringify({
       type: 'make_roll',
       message: message,
-      chat: SessionMock.chat,
+      chat: CampaignMock.chat,
     });
     userEvent.type(inputElement, `${message}{enter}`);
 

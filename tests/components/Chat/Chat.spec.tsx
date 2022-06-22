@@ -11,7 +11,7 @@ import Chat from '@Components/Chat/Chat';
 
 import {
   UserMock,
-  SessionMock,
+  CampaignMock,
   ChatMock,
   MessageMock,
 } from '../../__mocks__/helper';
@@ -70,7 +70,7 @@ describe('Chat suite', () => {
   it('renders correctly', async () => {
     const { container } = render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <Chat />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -98,7 +98,7 @@ describe('Chat suite', () => {
     });
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <Chat />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -132,7 +132,7 @@ describe('Chat WebSocket suite', () => {
 
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <Chat />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -143,7 +143,7 @@ describe('Chat WebSocket suite', () => {
       JSON.stringify({
         type: WS_TYPES.SETUP_CHANNEL,
         token: UserMock.token,
-        chat: SessionMock.chat,
+        chat: CampaignMock.chat,
       }),
     );
 
@@ -156,7 +156,7 @@ describe('Chat WebSocket suite', () => {
 
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <Chat />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -174,7 +174,7 @@ describe('Chat WebSocket suite', () => {
 
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <Chat />
         </CampaignContext.Provider>
       </AuthContext.Provider>,

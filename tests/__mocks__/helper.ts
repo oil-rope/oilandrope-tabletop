@@ -130,8 +130,8 @@ export const chatFactory = (): IChat => {
 };
 export const ChatMock: IChat = chatFactory();
 
-export const sessionFactory = (): ICampaign => {
-  const session: ICampaign = {
+export const campaignFactory = (): ICampaign => {
+  const campaign: ICampaign = {
     id: faker.datatype.number(),
     name: faker.lorem.words(),
     owner: faker.datatype.number(),
@@ -141,6 +141,6 @@ export const sessionFactory = (): ICampaign => {
     entry_created_at: dayjs(faker.date.past()).toISOString(),
     entry_updated_at: dayjs(faker.date.recent()).toISOString(),
   };
-  return session;
+  return campaign;
 };
-export const SessionMock: ICampaign = sessionFactory();
+export const CampaignMock: ICampaign = campaignFactory();

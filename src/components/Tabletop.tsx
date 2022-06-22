@@ -18,20 +18,16 @@ const Chat = lazy(() => import('@Components/Chat/Chat'));
 const Tabletop = () => {
   const { campaignID } = useParams();
 
-  const [session, setSession] = useState<ICampaign | null>(null);
+  const [campaign, setCampaign] = useState<ICampaign | null>(null);
 
   useEffect(() => {
-    if (session) return;
+    if (campaign) return;
     if (!campaignID) return;
-    const fetchData = async () => {
-      const sessionJSON = await loadCampaign(Number(campaignID));
-      setSession(sessionJSON);
-    };
-    fetchData().catch(alert);
-  }, [session, campaignID]);
+    loadCampaign(Number(campaignID)).then(setCampaign).catch(alert);
+  }, [campaign, campaignID]);
 
   return (
-    <CampaignContext.Provider value={session}>
+    <CampaignContext.Provider value={campaign}>
       <Container fluid={true}>
         <Row>
           <Col

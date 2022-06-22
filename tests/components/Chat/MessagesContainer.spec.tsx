@@ -16,7 +16,7 @@ import {
   ChatMock,
   MessageMock,
   messageWithRollFactory,
-  SessionMock,
+  CampaignMock,
   UserMock,
 } from '../../__mocks__/helper';
 
@@ -51,7 +51,7 @@ describe('MessagesContainer suite', () => {
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -68,7 +68,7 @@ describe('MessagesContainer suite', () => {
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -88,7 +88,7 @@ describe('MessagesContainer suite', () => {
     mockedProps.chatWebSocket = client;
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <MessagesContainer {...mockedProps} />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -115,7 +115,7 @@ describe('MessagesContainer suite', () => {
     mockedProps.chatWebSocket = client;
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <MessagesContainer {...mockedProps} />
         </CampaignContext.Provider>
       </AuthContext.Provider>,
@@ -143,7 +143,7 @@ describe('MessagesContainer suite', () => {
     mockedProps.chatWebSocket = client;
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <CampaignContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={CampaignMock}>
           <MessagesContainer {...mockedProps} />
         </CampaignContext.Provider>
       </AuthContext.Provider>,

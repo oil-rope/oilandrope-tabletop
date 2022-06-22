@@ -30,6 +30,8 @@
   },
   "homepage": "https://github.com/oil-rope/oilandrope-tabletop#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-typescript": "^7.17.12",
     "@faker-js/faker": "^6.0.0-alpha.7",
     "@jest/types": "^28.1.1",
     "@testing-library/dom": "^8.11",

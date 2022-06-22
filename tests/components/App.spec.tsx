@@ -17,8 +17,9 @@ afterEach(() => {
 });
 
 describe('App suite', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { container } = render(<App />);
+    await screen.findByText('Authentication required');
 
     expect(container).toBeInTheDocument();
   });
@@ -36,11 +37,9 @@ describe('App suite', () => {
     });
     render(<App />);
     expect(
-      await screen.findByText(
-        'The element you are looking for does not exist.',
-      ),
+      await screen.findByText('Authentication required'),
     ).toBeInTheDocument();
 
-    expect(fetchMock).toBeCalledTimes(2);
+    expect(fetchMock).toBeCalledTimes(1);
   });
 });

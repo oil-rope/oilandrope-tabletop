@@ -8,7 +8,7 @@ import { CampaignContext } from '@Contexts';
 
 import Tabletop from '@Components/Tabletop';
 
-import { SessionMock } from '../__mocks__/helper';
+import { CampaignMock } from '../__mocks__/helper';
 
 beforeAll(() => {
   enableFetchMocks();
@@ -32,17 +32,15 @@ describe('Tabletop suite', () => {
   });
 
   it('gets session on load', async () => {
-    fetchMock.mockResponseOnce(JSON.stringify(SessionMock));
+    fetchMock.mockResponseOnce(JSON.stringify(CampaignMock));
 
     render(
-      <MemoryRouter initialEntries={[`/sessions/${SessionMock.id}`]}>
+      <MemoryRouter initialEntries={[`/sessions/${CampaignMock.id}`]}>
         <Routes>
           <Route path="/sessions/:sessionID" element={<Tabletop />} />
         </Routes>
       </MemoryRouter>,
     );
     expect(await screen.findAllByText('Connecting chat...')).toHaveLength(2);
-
-    expect(fetchMock).toBeCalledTimes(2);
   });
 });
