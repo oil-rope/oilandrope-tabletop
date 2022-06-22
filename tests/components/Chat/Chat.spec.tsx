@@ -5,7 +5,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
-import { AuthContext, SessionContext } from '@Contexts';
+import { AuthContext, CampaignContext } from '@Contexts';
 
 import Chat from '@Components/Chat/Chat';
 
@@ -24,7 +24,7 @@ beforeEach(() => {
   fetchMock.mockResponse((req) => {
     if (req.url.match(/https?:\/.+\/en\/api\/chat\/chat\/.+\/$/)) {
       const chatMock = Object.assign({}, ChatMock);
-      chatMock.chat_message_set = [MessageMock];
+      chatMock.chat_message_set = [MessageMock.id];
       return Promise.resolve(JSON.stringify(chatMock));
     } else if (
       req.url.match(/https?:\/.+\/en\/api\/registration\/user\/@me\/$/)
@@ -70,9 +70,9 @@ describe('Chat suite', () => {
   it('renders correctly', async () => {
     const { container } = render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <Chat />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
     // NOTE: There are no messages, this is just a work-around
@@ -87,7 +87,7 @@ describe('Chat suite', () => {
     fetchMock.mockResponse((req) => {
       if (req.url.match(/https?:\/.+\/en\/api\/chat\/chat\/.+\/$/)) {
         const chatMock = Object.assign({}, ChatMock);
-        chatMock.chat_message_set = [MessageMock];
+        chatMock.chat_message_set = [MessageMock.id];
         return Promise.resolve(JSON.stringify(chatMock));
       } else if (
         req.url.match(/https?:\/.+\/en\/api\/registration\/user\/@me\/$/)
@@ -98,9 +98,9 @@ describe('Chat suite', () => {
     });
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <Chat />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
 
@@ -112,7 +112,7 @@ describe('Chat WebSocket suite', () => {
   let server: WS;
 
   beforeAll(() => {
-    ChatMock.chat_message_set = [MessageMock];
+    ChatMock.chat_message_set = [MessageMock.id];
   });
 
   beforeEach(async () => {
@@ -132,9 +132,9 @@ describe('Chat WebSocket suite', () => {
 
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <Chat />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
     expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();
@@ -156,9 +156,9 @@ describe('Chat WebSocket suite', () => {
 
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <Chat />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
     expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();
@@ -174,9 +174,9 @@ describe('Chat WebSocket suite', () => {
 
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <Chat />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
     expect(await screen.findByText(MessageMock.message)).toBeInTheDocument();

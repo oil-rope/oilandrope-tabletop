@@ -1,4 +1,9 @@
-import { IMessage } from '@Interfaces';
+import { IChatMessage } from '@Interfaces';
+
+/**
+ * This interface represents a roll object.
+ */
+export type IRoll = Record<string, number[]>;
 
 /**
  * This interface allows us to handle WebSocket messages **just** for the chat.
@@ -6,7 +11,7 @@ import { IMessage } from '@Interfaces';
  */
 export interface IWebSocketMessage {
   type: string;
-  content: IMessage;
+  content: IChatMessage;
   chat?: number;
-  roll?: Record<string, number[]>;
+  roll?: IRoll;
 }

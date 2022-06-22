@@ -1,63 +1,114 @@
-export interface ISimpleUser {
-  id: number;
-  username: string;
-  first_name: string | null;
-  last_name: string | null;
-  email: string;
+interface IPaginated {
+  count: number;
+  next?: string;
+  previous?: string;
+  results: Array<unknown>;
 }
 
-export interface IUser extends ISimpleUser {
-  last_login: string;
-  is_active: boolean;
-  date_joined: string;
-  is_premium: boolean;
-  profile: IProfile;
-  token: string;
+export interface IApiVersion {
+  version: string;
+  powered_by: string;
+  drf_version: string;
+  using_version: string | null;
+}
+
+export interface IAuthTokenRequest {
+  username: string;
+  password: string;
+}
+
+export interface IAuthTokenResponse {
+  readonly token: string;
 }
 
 export interface IBot {
-  id: number;
+  readonly id: number;
   username: string;
   email: string;
-  command_prefix: string;
-  description: string;
+  readonly command_prefix: string;
+  readonly description: string;
+}
+
+export interface ICampaign {
+  readonly id: number;
+  name: string;
+  description?: string;
+  summary?: string;
+  cover_image?: string;
+  owner: number;
+  users: Array<number>;
+  place: number;
+  start_date?: string;
+  end_date?: string;
+  readonly discord_channel?: string;
+  chat: number;
+  readonly entry_created_at: string;
+  readonly entry_updated_at: string;
+}
+
+export interface IChat {
+  readonly id: number;
+  name: string;
+  users: Array<number>;
+  chat_message_set: Array<number>;
+  readonly entry_created_at: string;
+  readonly entry_updated_at: string;
+}
+
+export interface IChatMessage {
+  readonly id: number;
+  chat: number;
+  message: string;
+  author: ISimpleUser;
+  readonly entry_created_at: string;
+  readonly entry_updated_at: string;
+  // This is used by us in order to get roll into messages
+  roll?: Record<string, Array<number>>;
+}
+
+export interface IPaginatedCampaignList extends IPaginated {
+  results: Array<ICampaign>;
+}
+
+export interface IPaginatedChatList extends IPaginated {
+  results: Array<IChat>;
+}
+
+export interface IPaginatedChatMessageList extends IPaginated {
+  results: Array<IChatMessage>;
 }
 
 export interface IProfile {
   user: number;
-  bio: string | null;
-  birthday: string | null;
-  language: string | null;
-  web: string | null;
-  image: string | null;
+  bio?: string;
+  birthday?: string;
+  language?: 'es' | 'en';
+  web?: string;
+  image?: string;
 }
 
-export interface IChat {
-  id: number;
-  name: string;
-  users: Array<number>;
-  chat_message_set: Array<IMessage>;
-  entry_created_at: string;
-  entry_updated_at: string;
+export interface ISimpleUser {
+  readonly id: number;
+  username: string;
+  first_name?: string;
+  last_name?: string;
+  email: string;
 }
 
-export interface IMessage {
-  id: number;
-  chat: number;
-  message: string;
-  author: ISimpleUser;
-  entry_created_at: string;
-  entry_updated_at: string;
-  roll: Record<string, Array<number>> | null;
+export interface URLResolverRequest {
+  resolver: string;
+  params?: Record<string, string>;
 }
 
-export interface ISession {
-  id: number;
-  name: string;
-  players: Array<number>;
-  chat: number;
-  next_game: string;
-  system: number;
-  world: number;
-  game_masters: Array<number>;
+export interface URLResolverResponse {
+  url: string;
+}
+
+export interface IUser extends ISimpleUser {
+  last_login?: string;
+  is_active: boolean;
+  date_joined: string;
+  is_premium: boolean;
+  profile: IProfile;
+  readonly token: string;
 }

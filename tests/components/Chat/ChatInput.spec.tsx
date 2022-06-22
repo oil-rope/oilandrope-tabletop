@@ -5,7 +5,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { AuthContext, SessionContext } from '@Contexts';
+import { AuthContext, CampaignContext } from '@Contexts';
 
 import { BotMock, SessionMock } from '../../__mocks__/helper';
 
@@ -62,9 +62,9 @@ describe('ChatInput suite', () => {
     const mockedProps = Object.assign({}, ChatInputMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <SessionContext.Provider value={SessionMock}>
+      <CampaignContext.Provider value={SessionMock}>
         <ChatInput {...mockedProps} />
-      </SessionContext.Provider>,
+      </CampaignContext.Provider>,
     );
     const submitButton = screen.getByRole('button', { name: /send/i });
 
@@ -88,9 +88,9 @@ describe('ChatInput suite', () => {
     const mockedProps = Object.assign({}, ChatInputMockedProps);
     mockedProps.chatWebSocket = client;
     render(
-      <SessionContext.Provider value={SessionMock}>
+      <CampaignContext.Provider value={SessionMock}>
         <ChatInput {...mockedProps} />,
-      </SessionContext.Provider>,
+      </CampaignContext.Provider>,
     );
     const inputElement = screen.getByPlaceholderText('Start typing...');
     const message = faker.lorem.words();
@@ -110,9 +110,9 @@ describe('ChatInput suite', () => {
     mockedProps.chatWebSocket = client;
     render(
       <AuthContext.Provider value={{ user: null, bot: BotMock }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <ChatInput {...mockedProps} />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
     const inputElement = screen.getByPlaceholderText('Start typing...');

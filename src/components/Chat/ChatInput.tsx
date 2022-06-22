@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { WS_TYPES } from '@Constants';
-import { AuthContext, SessionContext } from '@Contexts';
+import { AuthContext, CampaignContext } from '@Contexts';
 
 const ChatInputProps = {
   chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
@@ -15,7 +15,7 @@ const ChatInputProps = {
 type ChatInputTypes = InferProps<typeof ChatInputProps>;
 export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
   const { bot } = useContext(AuthContext);
-  const session = useContext(SessionContext);
+  const session = useContext(CampaignContext);
   const [message, setMessage] = useState('');
 
   /**

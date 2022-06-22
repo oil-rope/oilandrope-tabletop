@@ -1,4 +1,4 @@
-import { loadSession } from '@Utils/apiCalls';
+import { loadCampaign } from '@Utils/apiCalls';
 
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useParams } from 'react-router';
@@ -9,29 +9,29 @@ import Container from 'react-bootstrap/Container';
 
 import Loader from '@Components/Loader';
 
-import { SessionContext } from '@Contexts';
+import { CampaignContext } from '@Contexts';
 
-import { ISession } from '@Interfaces';
+import { ICampaign } from '@Interfaces';
 
 const Chat = lazy(() => import('@Components/Chat/Chat'));
 
 const Tabletop = () => {
-  const { sessionID } = useParams();
+  const { campaignID } = useParams();
 
-  const [session, setSession] = useState<ISession | null>(null);
+  const [session, setSession] = useState<ICampaign | null>(null);
 
   useEffect(() => {
     if (session) return;
-    if (!sessionID) return;
+    if (!campaignID) return;
     const fetchData = async () => {
-      const sessionJSON = await loadSession(Number(sessionID));
+      const sessionJSON = await loadCampaign(Number(campaignID));
       setSession(sessionJSON);
     };
     fetchData().catch(alert);
-  }, [session, sessionID]);
+  }, [session, campaignID]);
 
   return (
-    <SessionContext.Provider value={session}>
+    <CampaignContext.Provider value={session}>
       <Container fluid={true}>
         <Row>
           <Col
@@ -57,7 +57,7 @@ const Tabletop = () => {
           </Col>
         </Row>
       </Container>
-    </SessionContext.Provider>
+    </CampaignContext.Provider>
   );
 };
 

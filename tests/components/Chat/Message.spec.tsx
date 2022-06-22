@@ -40,10 +40,8 @@ describe('Message suite', () => {
   });
 
   it('have secondary color if author is user', () => {
-    const mockedProps = Object.assign({}, MessageMockedProps);
-    mockedProps.message.author.id = 1;
-    const mockedUser = Object.assign({}, UserMock);
-    mockedUser.id = 1;
+    const mockedProps = Object.assign(MessageMockedProps, { id: 1 });
+    const mockedUser = Object.assign(UserMock, { id: 1 });
     render(
       <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <Message {...mockedProps} />
@@ -55,10 +53,8 @@ describe('Message suite', () => {
   });
 
   it('have primary color if author is not user', () => {
-    const mockedProps = Object.assign({}, MessageMockedProps);
-    mockedProps.message.author.id = 1;
-    const mockedUser = Object.assign({}, UserMock);
-    mockedUser.id = 2;
+    const mockedProps = Object.assign(MessageMockedProps, { id: 1 });
+    const mockedUser = Object.assign(UserMock, { id: 2 });
     render(
       <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <Message {...mockedProps} />
@@ -70,10 +66,8 @@ describe('Message suite', () => {
   });
 
   it('renders username with text-light class if is author', () => {
-    const mockedProps = Object.assign({}, MessageMockedProps);
-    mockedProps.message.author.id = 1;
-    const mockedUser = Object.assign({}, UserMock);
-    mockedUser.id = 1;
+    const mockedProps = Object.assign(MessageMockedProps, { id: 1 });
+    const mockedUser = Object.assign(UserMock, { id: 1 });
     render(
       <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <Message {...mockedProps} />
@@ -86,10 +80,8 @@ describe('Message suite', () => {
   });
 
   it('renders username with text-light class if colorMap is not declared', () => {
-    const mockedProps = Object.assign({}, MessageMockedProps);
-    mockedProps.message.author.id = 1;
-    const mockedUser = Object.assign({}, UserMock);
-    mockedUser.id = 2;
+    const mockedProps = Object.assign(MessageMockedProps, { id: 1 });
+    const mockedUser = Object.assign(UserMock, { id: 2 });
     render(
       <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <Message {...mockedProps} />
@@ -102,10 +94,8 @@ describe('Message suite', () => {
   });
 
   it('renders username without text-light class if colorMap is declared', () => {
-    const mockedProps = Object.assign({}, MessageMockedProps);
-    mockedProps.message.author.id = 1;
-    const mockedUser = Object.assign({}, UserMock);
-    mockedUser.id = 2;
+    const mockedProps = Object.assign(MessageMockedProps, { id: 1 });
+    const mockedUser = Object.assign(UserMock, { id: 2 });
     render(
       <AuthContext.Provider value={{ user: mockedUser, bot: null }}>
         <ChatContext.Provider value={{ colorMap: { 1: 'success' } }}>
@@ -120,10 +110,8 @@ describe('Message suite', () => {
   });
 
   it('set new colorMap when user ID is not in colorMap', () => {
-    const mockedProps = Object.assign({}, MessageMockedProps);
-    mockedProps.message.author.id = 1;
-    const mockedUser = Object.assign({}, UserMock);
-    mockedUser.id = 2;
+    const mockedProps = Object.assign(MessageMockedProps, { id: 1 });
+    const mockedUser = Object.assign(UserMock, { id: 2 });
     const colorMap = {};
     render(
       <AuthContext.Provider value={{ user: mockedUser, bot: null }}>

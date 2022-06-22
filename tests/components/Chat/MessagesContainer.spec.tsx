@@ -7,7 +7,7 @@ import { render, screen } from '@testing-library/react';
 
 import { WS_TYPES } from '@Constants';
 
-import { AuthContext, SessionContext } from '@Contexts';
+import { AuthContext, CampaignContext } from '@Contexts';
 
 import { MessagesContainer } from '@Components/Chat';
 
@@ -47,13 +47,13 @@ describe('MessagesContainer suite', () => {
 
   it('renders messages', async () => {
     const chatMock = Object.assign({}, ChatMock);
-    chatMock.chat_message_set = [MessageMock];
+    chatMock.chat_message_set = [MessageMock.id];
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
 
@@ -64,13 +64,13 @@ describe('MessagesContainer suite', () => {
     const messageMock = Object.assign({}, MessageMock);
     messageMock.message = faker.lorem.words();
     const chatMock = Object.assign({}, ChatMock);
-    chatMock.chat_message_set = [MessageMock, messageMock];
+    chatMock.chat_message_set = [MessageMock.id, messageMock.id];
     fetchMock.mockResponseOnce(JSON.stringify(chatMock));
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <MessagesContainer {...MessagesContainerMockedProps} />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
 
@@ -88,9 +88,9 @@ describe('MessagesContainer suite', () => {
     mockedProps.chatWebSocket = client;
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
     // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning
@@ -115,13 +115,12 @@ describe('MessagesContainer suite', () => {
     mockedProps.chatWebSocket = client;
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
-    const messageMock = messageWithRollFactory();
-    messageMock.author.id = BotMock.id;
+    const messageMock = messageWithRollFactory({ id: BotMock.id });
     // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning
     expect(await screen.findByRole('messages-container'));
 
@@ -144,9 +143,9 @@ describe('MessagesContainer suite', () => {
     mockedProps.chatWebSocket = client;
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <SessionContext.Provider value={SessionMock}>
+        <CampaignContext.Provider value={SessionMock}>
           <MessagesContainer {...mockedProps} />
-        </SessionContext.Provider>
+        </CampaignContext.Provider>
       </AuthContext.Provider>,
     );
     // NOTE: This wrapper doesn't actually do nothing. It just avoid `act` wrapper warning

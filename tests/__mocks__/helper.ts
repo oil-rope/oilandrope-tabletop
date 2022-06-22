@@ -4,11 +4,11 @@ import dayjs from 'dayjs';
 import {
   IBot,
   IChat,
-  IMessage,
-  ISession,
+  IChatMessage,
+  ICampaign,
   ISimpleUser,
   IUser,
-} from '@Interfaces';
+} from '../../src/interfaces';
 
 export const emptyFunc = () => null;
 
@@ -51,7 +51,7 @@ export const userFactory = (): IUser => {
       user: userId,
       bio: faker.lorem.paragraphs(),
       birthday: dayjs(faker.date.past()).toISOString(),
-      language: faker.random.locale(),
+      language: 'en',
       image: faker.image.imageUrl(),
       web: faker.internet.url(),
     },
@@ -77,27 +77,27 @@ export const BotMock: IBot = botFactory();
 /**
  * Creates a message object with random data. This also creates a fake author.
  *
- * @returns {IMessage} Message created.
+ * @returns {IChatMessage} Message created.
  */
-export const messageFactory = (): IMessage => {
-  const message: IMessage = {
+export const messageFactory = (): IChatMessage => {
+  const message: IChatMessage = {
     id: faker.datatype.number(),
     chat: faker.datatype.number(),
     message: faker.lorem.paragraph(),
     author: simpleUserFactory(),
     entry_created_at: dayjs(faker.date.recent()).toISOString(),
     entry_updated_at: dayjs(faker.date.past()).toISOString(),
-    roll: null,
+    roll: undefined,
   };
   return message;
 };
-export const MessageMock: IMessage = messageFactory();
+export const MessageMock: IChatMessage = messageFactory();
 
-export const messageWithRollFactory = (): IMessage => {
+export const messageWithRollFactory = (params = {}): IChatMessage => {
   const nDices: number = faker.datatype.number({ min: 1, max: 4 });
   const diceSides: number = faker.datatype.number({ min: 2, max: 20 });
   const rollKey = `${nDices}d${diceSides}`;
-  return {
+  let mockedObj = {
     id: faker.datatype.number(),
     chat: faker.datatype.number(),
     message: faker.lorem.paragraph(),
@@ -110,8 +110,10 @@ export const messageWithRollFactory = (): IMessage => {
       ),
     },
   };
+  mockedObj = Object.assign(mockedObj, params);
+  return mockedObj;
 };
-export const MessageWithRollMock: IMessage = messageWithRollFactory();
+export const MessageWithRollMock: IChatMessage = messageWithRollFactory();
 
 export const chatFactory = (): IChat => {
   const chat: IChat = {
@@ -120,7 +122,7 @@ export const chatFactory = (): IChat => {
     users: [...Array<number>(faker.datatype.number())],
     chat_message_set: [
       ...Array<number>(faker.datatype.number({ min: 1, max: 10 })),
-    ].map(() => messageFactory()),
+    ].map(() => faker.datatype.number()),
     entry_created_at: dayjs(faker.date.recent()).toISOString(),
     entry_updated_at: dayjs(faker.date.past()).toISOString(),
   };
@@ -128,19 +130,17 @@ export const chatFactory = (): IChat => {
 };
 export const ChatMock: IChat = chatFactory();
 
-export const sessionFactory = (): ISession => {
-  const session: ISession = {
+export const sessionFactory = (): ICampaign => {
+  const session: ICampaign = {
     id: faker.datatype.number(),
     name: faker.lorem.words(),
-    players: [...Array<number>(faker.datatype.number({ min: 1, max: 10 }))],
+    owner: faker.datatype.number(),
+    users: [...Array<number>(faker.datatype.number({ min: 1, max: 10 }))],
+    place: faker.datatype.number(),
     chat: faker.datatype.number(),
-    next_game: dayjs(faker.date.future()).toISOString(),
-    system: faker.datatype.number(),
-    world: faker.datatype.number(),
-    game_masters: [
-      ...Array<number>(faker.datatype.number({ min: 1, max: 10 })),
-    ],
+    entry_created_at: dayjs(faker.date.past()).toISOString(),
+    entry_updated_at: dayjs(faker.date.recent()).toISOString(),
   };
   return session;
 };
-export const SessionMock: ISession = sessionFactory();
+export const SessionMock: ICampaign = sessionFactory();

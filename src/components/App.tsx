@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Loader from '@Components/Loader';
+import LoginModal from '@Components/LoginModal';
 import NotFound from '@Components/NotFound';
 
 import { AuthContext } from '@Contexts';
@@ -14,34 +15,52 @@ const Tabletop = lazy(() => import('@Components/Tabletop'));
 const App: FC = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const [bot, setBot] = useState<IBot | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleUserLogin = () => {
+    loadUser()
+      .then(setUser)
+      .catch(() => {
+        setIsAuthenticated(false);
+        setShowModal(true);
+      });
+  };
 
   useEffect(() => {
     if (user !== null) return;
-    const fetchData = async () => {
-      const userJSON = await loadUser();
-      setUser(userJSON);
-    };
-    fetchData().catch(alert);
+    handleUserLogin();
   }, [user]);
 
   useEffect(() => {
-    if (bot !== null) return;
+    if (user === null || bot !== null) return;
     const fetchData = async () => {
       const botJSON = await loadBot();
       setBot(botJSON);
     };
     fetchData().catch(alert);
-  }, [bot]);
+  }, [bot, user]);
 
-  if (!user) return <Loader text="Loading user..." />;
-  if (!bot) return <Loader text="Loading bot..." />;
+  if (user === null && !isAuthenticated)
+    return (
+      <>
+        <Loader text="Loading user..." />
+        {showModal && (
+          <LoginModal
+            onLogin={handleUserLogin}
+            onFail={() => alert('Credentials incorrect.')}
+          />
+        )}
+      </>
+    );
+  if (bot === null && user !== null) return <Loader text="Loading bot..." />;
 
   return (
     <Suspense fallback={<Loader text="Loading..." />}>
       <BrowserRouter>
         <AuthContext.Provider value={{ user, bot }}>
           <Routes>
-            <Route path="/session/:sessionID" element={<Tabletop />} />
+            <Route path="/campaign/:campaignID" element={<Tabletop />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthContext.Provider>

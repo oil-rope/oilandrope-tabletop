@@ -4,7 +4,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { SessionContext } from '@Contexts';
+import { CampaignContext } from '@Contexts';
 
 import Tabletop from '@Components/Tabletop';
 
@@ -23,9 +23,9 @@ describe('Tabletop suite', () => {
 
   it('renders correctly with null session', () => {
     const { container } = render(
-      <SessionContext.Provider value={null}>
+      <CampaignContext.Provider value={null}>
         <Tabletop />
-      </SessionContext.Provider>,
+      </CampaignContext.Provider>,
     );
 
     expect(container).toBeInTheDocument();

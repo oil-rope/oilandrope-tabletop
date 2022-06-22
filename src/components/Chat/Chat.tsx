@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
-import { AuthContext, SessionContext } from '@Contexts';
+import { AuthContext, CampaignContext } from '@Contexts';
 
 import Loader from '@Components/Loader';
 
@@ -13,7 +13,7 @@ import { ChatInput, MessagesContainer } from '.';
 
 const Chat = () => {
   const { user } = useContext(AuthContext);
-  const session = useContext(SessionContext);
+  const session = useContext(CampaignContext);
   const [chatWS, setChatWS] = useState<WebSocket | null>(null);
   const reconnectMessage = "You've been disconnected. Reconnect?";
   const canvasContainer = document.getElementById('tabletopCanvasContainer');

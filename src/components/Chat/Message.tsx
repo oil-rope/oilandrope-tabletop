@@ -27,7 +27,7 @@ const MessageProps = {
 
 type MessageTypes = InferProps<typeof MessageProps>;
 export const Message: FC<MessageTypes> = ({ message }) => {
-  const { user } = useContext(AuthContext);
+  const { user, bot } = useContext(AuthContext);
   const { colorMap } = useContext(ChatContext);
 
   // If user is not loaded don't even bother about rendering or logic
@@ -80,6 +80,12 @@ export const Message: FC<MessageTypes> = ({ message }) => {
       .join(', ');
   };
 
+  const getBackgroundColorClass = (): string => {
+    if (isAuthor()) return 'secondary';
+    if (!bot || message.author.id !== bot.id) return 'primary';
+    return 'light';
+  };
+
   return (
     <Row
       className={`justify-content-${isAuthor() ? 'end' : 'start'} m-0 mb-2`}
@@ -88,7 +94,7 @@ export const Message: FC<MessageTypes> = ({ message }) => {
       <Col
         xs={10}
         md={8}
-        className={`bg-${isAuthor() ? 'secondary' : 'primary'} border`}
+        className={`bg-${getBackgroundColorClass()} border`}
         style={{ borderRadius: '10px' }}
         role="message"
       >
