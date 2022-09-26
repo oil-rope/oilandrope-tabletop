@@ -49,6 +49,12 @@ jobs:
         run: |
           npm ci
       
+      - name: Playground
+        shell: bash
+        run: |
+          echo ${{ needs }}
+
+      
       - name: Build project
         run: |
           npm run build:prod

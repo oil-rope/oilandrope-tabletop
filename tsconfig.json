@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES3",
-    "lib": ["dom", "es2021"],
-    "jsx": "react",
-    "module": "ESNext",
-    "rootDir": ".",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "src",
-    "moduleResolution": "node",
+    "jsx": "react",
+    "module": "ES2022",
+    "moduleResolution": "Node",
+    "noImplicitAny": true,
     "paths": {
       "@/*": ["*"],
       "@Components/*": ["components/*"],
@@ -15,10 +15,8 @@
       "@Utils/*": ["utils/*"],
       "@Interfaces": ["interfaces"]
     },
-    "newLine": "lf",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "resolveJsonModule": true
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "target": "ES5"
   }
 }
