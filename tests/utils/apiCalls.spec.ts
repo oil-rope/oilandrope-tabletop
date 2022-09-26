@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import {

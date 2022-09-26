@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 
 import {
   IBot,
@@ -10,7 +10,7 @@ import {
   IUser,
 } from '../../src/interfaces';
 
-export const emptyFunc = () => null;
+export const emptyFunc = (): null => null;
 
 /**
  * Creates a simple user object with random data.

@@ -3,8 +3,8 @@ name: Oil & Rope Tabletop CI
 on: [push]
 
 jobs:
-  run-test:
-    name: Run Tests and Linter
+  test-and-build:
+    name: Test and Build
     runs-on: ubuntu-latest
     env:
       NODE_ENV: development
@@ -20,41 +20,53 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
 
-      - name: Install dependencies
+      - name: '[PROD] Install dependencies and build'
+        env:
+          NODE_ENV: production
         run: |
           npm ci
+          npm run build
+
+      - name: '[DEV] Install dependencies'
+        run: |
+          npm ci
+
+      - name: Linter
+        run: |
+          npm run lint
 
       - name: Test
         run: |
           npm test
 
-  build:
-    name: Build Oil & Rope Tabletop
+  build-and-push:
+    name: Build Image and Push
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
+    needs: test-and-build
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          node-version: 18.x
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: |
-          npm ci
-      
-      - name: Playground
-        shell: bash
-        run: |
-          echo ${{ needs }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      
-      - name: Build project
-        run: |
-          npm run build:prod
+      # Since the format `developmentType/Code` is invalid we need to replace it
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]${{ github.ref_name }}" | sed -e 's/\//-/g'
+        id: extra_branch_name
+
+      - name: Build & Push Image
+        if: ${{ success() }}
+        uses: docker/build-push-action@v3
+        env:
+          DOCKERFILE: docker/Dockerfile
+          TAG: ${{ steps.extra_branch_name.outputs.branch }}
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tabletop:${{ env.TAG }}
+          file: ${{ env.DOCKERFILE }}
