@@ -3,5 +3,5 @@
   "compilerOptions": {
     "noImplicitAny": false,
   },
-  "exclude": ["src/**/__tests__/", "node_modules"]
+  "exclude": ["src/**/__tests__/", "src/**/__mocks__", "node_modules"]
 }

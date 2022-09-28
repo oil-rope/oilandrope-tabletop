@@ -2,17 +2,16 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "baseUrl": "src",
     "jsx": "react",
-    "lib": [
-      "DOM",
-      "ES2015"
-    ],
+    "lib": ["DOM", "ES2015"],
     "module": "ES2022",
     "moduleResolution": "Node",
     "noImplicitAny": true,
     "paths": {
       "@/*": ["*"],
+      "@Mocks": ["__mocks__"],
       "@Components/*": ["components/*"],
       "@Constants": ["const/globalConst"],
       "@Contexts": ["contexts"],
@@ -21,6 +20,6 @@
     },
     "outDir": "./dist/",
     "sourceMap": true,
-    "target": "ES5"
+    "target": "ES3"
   }
 }

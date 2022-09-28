@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col';
 import { AuthContext } from '@Contexts';
 import { ChatContext } from './context';
 import { MESSAGE_COLORS } from './const';
+import { IRoll } from '@Interfaces';
 
 const MessageProps = {
   message: PropTypes.shape({
@@ -75,7 +76,7 @@ export const Message: FC<MessageTypes> = ({ message }) => {
    */
   const getTitle = (): string => {
     if (!message.roll) return '';
-    return Object.entries(message.roll as Record<string, Array<number>>)
+    return Object.entries(message.roll as IRoll)
       .map(([key, value]) => `${key}: [${value}]`)
       .join(', ');
   };
