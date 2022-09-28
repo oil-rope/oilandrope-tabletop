@@ -4,6 +4,7 @@ const { defaults } = require('jest-config');
 const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tsconfig.json');
 
+/** @type {import('jest').Config} */
 module.exports = {
   automock: false,
   collectCoverage: true,

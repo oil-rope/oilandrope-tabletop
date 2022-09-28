@@ -4,8 +4,8 @@
   "description": "The logic under movement and interactions in Oil &amp; Rope's tabletop.",
   "main": "src/index.tsx",
   "scripts": {
-    "start": "webpack-dev-server --progress --config=./config/webpack/webpack.common.js",
-    "build": "webpack build --progress --config=./config/webpack/webpack.common.js",
+    "start": "webpack-dev-server --mode=development --progress --config=./config/webpack/webpack.common.js",
+    "build": "webpack build --mode=production --progress --config=./config/webpack/webpack.common.js",
     "lint": "eslint --color .",
     "lint:fix": "npm run lint -- --fix .",
     "test": "jest"

@@ -1,3 +1,4 @@
+/** @type {import('eslint').ESLint.ConfigData} */
 module.exports = {
   env: {
     browser: true,
@@ -20,7 +21,7 @@ module.exports = {
     'jest',
     'testing-library',
   ],
-  // 'eslint-testing-library only for tests
+  // 'eslint-testing-library' only for tests
   overrides: [
     {
       files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
@@ -33,7 +34,7 @@ module.exports = {
   },
   settings: {
     react: {
-      version: '17.0.2',
+      version: '18.2.0',
     },
   },
   parserOptions: {

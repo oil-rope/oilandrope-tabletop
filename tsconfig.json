@@ -4,6 +4,10 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src",
     "jsx": "react",
+    "lib": [
+      "DOM",
+      "ES2015"
+    ],
     "module": "ES2022",
     "moduleResolution": "Node",
     "noImplicitAny": true,

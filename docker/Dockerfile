@@ -4,6 +4,10 @@ COPY . /app/
 
 WORKDIR /app/
 
+ENV NODE_ENV=production
+ENV API_URL=https://oilandrope-project.com
+ENV WS_URL=https://live.oilandrope-project.com
+
 RUN npm ci
 RUN npm run build
 
