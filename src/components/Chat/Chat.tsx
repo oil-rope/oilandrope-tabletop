@@ -28,7 +28,7 @@ const Chat = () => {
       chatWS.onclose = (ev: CloseEvent) => {
         if (ev.wasClean) return;
         const reconnect = confirm(reconnectMessage);
-        if (reconnect) setChatWS(new WebSocket(CHAT_WEBSOCKET));
+        if (reconnect) setChatWS(new WebSocket(`${CHAT_WEBSOCKET}`));
       };
     }
   }, [chatWS]);
@@ -39,7 +39,7 @@ const Chat = () => {
     if (session === null) return;
     // For some reason if we declare the WebSocket object on top it would connect at least 5 times
     if (chatWS === null) {
-      setChatWS(new WebSocket(CHAT_WEBSOCKET));
+      setChatWS(new WebSocket(`${CHAT_WEBSOCKET}`));
       return;
     }
 

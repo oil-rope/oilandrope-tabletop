@@ -145,7 +145,7 @@ export const loadChatMessages = (
   id: number,
 ): Promise<IPaginatedChatMessageList> => {
   return getData<IPaginatedChatMessageList>(
-    `${CHAT_API}/${id}/messages/?nested=true`,
+    `${CHAT_API}/${id}/messages/`,
     "We couldn't get the chat.",
   );
 };
