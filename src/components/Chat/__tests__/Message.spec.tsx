@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import { messageMock, userMock, botMock } from '@Mocks';
+import { faker } from '@faker-js/faker';
+import { botMock, messageMock, userMock } from '@Mocks';
 
 import { IBot, IChatMessage, IRoll, IUser } from '@Interfaces';
 import { AuthContext } from '@Contexts';
 import { ChatContext, ColorMapTypes } from '../context';
 
-import { Message } from '@Components/Chat';
-import { faker } from '@faker-js/faker';
+import { Message } from '..';
 
 let BotMock: IBot;
 let UserMock: IUser;
@@ -21,14 +21,14 @@ let BotMessageMock: IChatMessage;
 beforeEach(() => {
   BotMock = botMock();
   UserMock = userMock();
-  AuthorMessageMock = messageMock(UserMock);
+  AuthorMessageMock = messageMock({ author: UserMock });
   MessageMock = messageMock();
   const roll: IRoll = {
     '1d20': [faker.datatype.number({ min: 1, max: 20 })],
     '+4': [4],
     '-1': [-1],
   };
-  BotMessageMock = messageMock(BotMock, roll);
+  BotMessageMock = messageMock({ author: BotMock, roll: roll });
 });
 
 describe('Chat/Message Test Suite', () => {

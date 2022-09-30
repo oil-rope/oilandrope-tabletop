@@ -1,6 +1,6 @@
 import { loadCampaign } from '@Utils/apiCalls';
 
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 
 import Row from 'react-bootstrap/Row';

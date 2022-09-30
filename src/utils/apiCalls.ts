@@ -1,17 +1,17 @@
 import {
   BOT_API,
+  CAMPAIGN_API,
   CHAT_API,
   CURRENT_USER_API,
-  CAMPAIGN_API,
   TOKEN_API,
 } from '@Constants';
 import {
-  IBot,
-  IPaginatedChatMessageList,
-  ICampaign,
-  IUser,
   IAuthTokenRequest,
   IAuthTokenResponse,
+  IBot,
+  ICampaign,
+  IPaginatedChatMessageList,
+  IUser,
 } from '@Interfaces';
 
 export const COMMON_HEADERS = new Headers({

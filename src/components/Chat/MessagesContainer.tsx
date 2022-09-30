@@ -1,6 +1,6 @@
 import { loadChatMessages } from '@Utils/apiCalls';
 
-import React, { FC, useState, useContext, useEffect, useRef } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
 import Row from 'react-bootstrap/Row';
@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 import { WS_TYPES } from '@Constants';
 import { IChatMessage } from '@Interfaces';
 import { AuthContext, CampaignContext } from '@Contexts';
-import { IWebSocketMessage, IRoll } from './interfaces';
+import { IRoll, IWebSocketMessage } from './interfaces';
 import { ChatContext, ColorMapTypes } from './context';
 
 import { Message } from '.';
@@ -37,7 +37,9 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       .then((paginatedMessages) => {
         setMessages(paginatedMessages.results);
       })
-      .catch(() => alert("Could't load messages"));
+      .catch(() => {
+        alert("Could't load messages");
+      });
   }, [campaign]);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       const clientHeight = container.current.clientHeight;
       container.current.scrollTop = height - clientHeight;
     }
-  }, [container, messages]);
+  }, [container]);
 
   /**
    * Perform action when message is sent.

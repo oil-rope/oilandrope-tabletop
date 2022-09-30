@@ -6,6 +6,8 @@ import PropTypes, { InferProps } from 'prop-types';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import Loader from '@Components/Loader';
+
 import { AuthContext } from '@Contexts';
 import { ChatContext } from './context';
 import { MESSAGE_COLORS } from './const';
@@ -32,7 +34,7 @@ export const Message: FC<MessageTypes> = ({ message }) => {
   const { colorMap } = useContext(ChatContext);
 
   // If user is not loaded don't even bother about rendering or logic
-  if (!user) return <></>;
+  if (!user) return <Loader text="Loading user..." />;
 
   /**
    * Checks if the person whom message belongs to is user.

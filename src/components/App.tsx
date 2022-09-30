@@ -1,5 +1,5 @@
-import React, { FC, useState, useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Loader from '@Components/Loader';
 import LoginModal from '@Components/LoginModal';
