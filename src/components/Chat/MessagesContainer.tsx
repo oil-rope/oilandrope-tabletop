@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 import { WS_TYPES } from '@Constants';
 import { IChatMessage } from '@Interfaces';
 import { AuthContext, CampaignContext } from '@Contexts';
-import { IRoll, IWebSocketMessage } from './interfaces';
+import { IRoll, IWSReceiveChatMessage } from './interfaces';
 import { ChatContext, ColorMapTypes } from './context';
 
 import { Message } from '.';
@@ -46,7 +46,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
     if (!bot) return;
     if (chatWebSocket.readyState !== WebSocket.OPEN) return;
     chatWebSocket.onmessage = (ev: MessageEvent) => {
-      const data: IWebSocketMessage = JSON.parse(ev.data);
+      const data: IWSReceiveChatMessage = JSON.parse(ev.data);
       if (data.type === WS_TYPES.SEND_MESSAGE) {
         if (data.content.author.id === bot.id) {
           return makeRollAction(data.content, data.roll || {});

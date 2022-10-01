@@ -2,24 +2,22 @@ import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { tabletopRender } from '@Components/testUtils';
+import { tabletopRender, UserMock } from '@Components/testUtils';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
+import WS from 'jest-websocket-mock';
 
 import { faker } from '@faker-js/faker';
-import { campaignMock, paginatedMessagesMock } from '@/__mocks__';
+import { campaignMock, messageMock, paginatedMessagesMock } from '@/__mocks__';
 
+import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
 import { CampaignContext } from '@Contexts';
 import { IPaginatedChatMessageList } from '@Interfaces';
+import { IWSReceiveChatMessage, IWSSendChatMessage } from '../interfaces';
 
 import { MessagesContainer } from '..';
 
 let divContainer: HTMLElement | null = null;
-let WebSocketMock: jest.Mock;
-
-beforeAll(() => {
-  WebSocketMock = jest.fn();
-});
 
 beforeEach(() => {
   divContainer = document.createElement('div');
@@ -37,7 +35,7 @@ describe('MessagesContainer without Contexts suite', () => {
     render(
       <MessagesContainer
         height={faker.datatype.number()}
-        chatWebSocket={new WebSocketMock()}
+        chatWebSocket={new (jest.fn())()}
       />,
       { container: divContainer },
     );
@@ -67,7 +65,7 @@ describe('MessagesContainer with CampaignContext suite', () => {
     render(
       <MessagesContainer
         height={faker.datatype.number()}
-        chatWebSocket={new WebSocketMock()}
+        chatWebSocket={new (jest.fn())()}
       />,
       { container: divContainer },
     );
@@ -80,7 +78,7 @@ describe('MessagesContainer with CampaignContext suite', () => {
       <CampaignContext.Provider value={campaignMock()}>
         <MessagesContainer
           height={faker.datatype.number()}
-          chatWebSocket={new WebSocketMock()}
+          chatWebSocket={new (jest.fn())()}
         />
       </CampaignContext.Provider>,
       { container: divContainer },
@@ -92,30 +90,30 @@ describe('MessagesContainer with CampaignContext suite', () => {
     expect(screen.queryByText(msgText)).not.toBeInTheDocument();
   });
 
-  test("raise an alert if messages can't be retrieved", () => {
+  test("raise an alert if messages can't be retrieved", async () => {
     fetchMock.resetMocks();
     fetchMock.mockResponseOnce(JSON.stringify({}), { status: 404 });
 
-    jest.spyOn(global, 'alert').mockImplementation((msg) => {
-      console.log(msg);
-    });
+    window.alert = jest.fn();
 
     tabletopRender(
       <MessagesContainer
         height={faker.datatype.number()}
-        chatWebSocket={new WebSocketMock()}
+        chatWebSocket={new (jest.fn())()}
       />,
       { container: divContainer },
     );
 
-    expect(screen.queryByRole('message')).not.toBeInTheDocument();
+    await waitFor(() => expect(alert).toBeCalledTimes(1));
+
+    (window.alert as jest.Mock).mockReset();
   });
 
   test('renders messages if campaign and user are given', async () => {
     tabletopRender(
       <MessagesContainer
         height={faker.datatype.number()}
-        chatWebSocket={new WebSocketMock()}
+        chatWebSocket={new (jest.fn())()}
       />,
       { container: divContainer },
     );
@@ -126,5 +124,59 @@ describe('MessagesContainer with CampaignContext suite', () => {
 
     const messagesContainerElement = await screen.findByText(msgText);
     expect(messagesContainerElement).toBeInTheDocument();
+  });
+});
+
+describe('MessagesContainer with WebSocket', () => {
+  let server: WS;
+  let chatWebSocket: WebSocket;
+
+  beforeAll(() => {
+    window.alert = jest.fn();
+  });
+
+  afterAll(() => {
+    (window.alert as jest.Mock).mockReset();
+  });
+
+  beforeEach(async () => {
+    server = new WS(CHAT_WEBSOCKET);
+    chatWebSocket = new WebSocket(CHAT_WEBSOCKET);
+    await server.connected;
+  });
+
+  afterEach(() => {
+    WS.clean();
+  });
+
+  test('messages are appended to container on send', async () => {
+    tabletopRender(
+      <MessagesContainer
+        height={faker.datatype.number()}
+        chatWebSocket={chatWebSocket}
+      />,
+      { container: divContainer },
+    );
+
+    const msgText = faker.lorem.paragraph();
+    const MessageMock = messageMock({ author: UserMock, message: msgText });
+
+    const wsSendMsg = JSON.stringify({
+      type: WS_TYPES.SEND_MESSAGE,
+      message: msgText,
+      chat: MessageMock.chat,
+    } as IWSSendChatMessage);
+    chatWebSocket.send(wsSendMsg);
+    await expect(server).toReceiveMessage(wsSendMsg);
+
+    const wsReceiveMsg = JSON.stringify({
+      type: WS_TYPES.SEND_MESSAGE,
+      content: MessageMock,
+      chat: MessageMock.chat,
+    } as IWSReceiveChatMessage);
+    server.send(wsReceiveMsg);
+
+    const messageElement = await screen.findByText(msgText);
+    expect(messageElement).toBeInTheDocument();
   });
 });

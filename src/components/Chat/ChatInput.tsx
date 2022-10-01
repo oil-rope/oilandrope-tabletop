@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 
 import { WS_TYPES } from '@Constants';
 import { AuthContext, CampaignContext } from '@Contexts';
+import { IWSSendChatMessage } from './interfaces';
 
 const ChatInputProps = {
   chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
@@ -37,7 +38,7 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
         type: WS_TYPES.SEND_MESSAGE,
         message,
         chat: session.chat,
-      }),
+      } as IWSSendChatMessage),
     );
     if (isDiceRoll(message)) {
       chatWebSocket.send(
@@ -45,7 +46,7 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
           type: WS_TYPES.MAKE_ROLL,
           message,
           chat: session.chat,
-        }),
+        } as IWSSendChatMessage),
       );
     }
     ev.currentTarget.dispatchEvent(new Event('reset'));
