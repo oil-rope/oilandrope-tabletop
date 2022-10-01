@@ -12,6 +12,7 @@ const jestConfig = {
   preset: 'ts-jest',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.js'],
   testEnvironment: 'jsdom',
+  testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
 };
 
 module.exports = jestConfig;

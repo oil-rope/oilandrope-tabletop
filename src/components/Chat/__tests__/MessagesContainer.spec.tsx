@@ -2,7 +2,11 @@ import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { tabletopRender, UserMock, BotMock } from '@Components/testUtils';
+import {
+  tabletopRender,
+  UserMock,
+  BotMock,
+} from '@Components/__tests__/testUtils';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import WS from 'jest-websocket-mock';
@@ -18,6 +22,7 @@ import { IWSReceiveChatMessage, IWSSendChatMessage } from '../interfaces';
 import { MessagesContainer } from '..';
 
 let divContainer: HTMLElement | null = null;
+const DummyWS = new WebSocket('ws://dummy.url.com');
 
 beforeEach(() => {
   divContainer = document.createElement('div');
@@ -35,7 +40,7 @@ describe('MessagesContainer without Contexts suite', () => {
     render(
       <MessagesContainer
         height={faker.datatype.number()}
-        chatWebSocket={new (jest.fn())()}
+        chatWebSocket={DummyWS}
       />,
       { container: divContainer },
     );
@@ -65,7 +70,7 @@ describe('MessagesContainer with CampaignContext suite', () => {
     render(
       <MessagesContainer
         height={faker.datatype.number()}
-        chatWebSocket={new (jest.fn())()}
+        chatWebSocket={DummyWS}
       />,
       { container: divContainer },
     );
@@ -78,7 +83,7 @@ describe('MessagesContainer with CampaignContext suite', () => {
       <CampaignContext.Provider value={campaignMock()}>
         <MessagesContainer
           height={faker.datatype.number()}
-          chatWebSocket={new (jest.fn())()}
+          chatWebSocket={DummyWS}
         />
       </CampaignContext.Provider>,
       { container: divContainer },
@@ -99,7 +104,7 @@ describe('MessagesContainer with CampaignContext suite', () => {
     tabletopRender(
       <MessagesContainer
         height={faker.datatype.number()}
-        chatWebSocket={new (jest.fn())()}
+        chatWebSocket={DummyWS}
       />,
       { container: divContainer },
     );
@@ -113,7 +118,7 @@ describe('MessagesContainer with CampaignContext suite', () => {
     tabletopRender(
       <MessagesContainer
         height={faker.datatype.number()}
-        chatWebSocket={new (jest.fn())()}
+        chatWebSocket={DummyWS}
       />,
       { container: divContainer },
     );

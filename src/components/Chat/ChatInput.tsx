@@ -16,7 +16,7 @@ const ChatInputProps = {
 type ChatInputTypes = InferProps<typeof ChatInputProps>;
 export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
   const { bot } = useContext(AuthContext);
-  const session = useContext(CampaignContext);
+  const campaign = useContext(CampaignContext);
   const [message, setMessage] = useState('');
 
   /**
@@ -32,12 +32,12 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
   const handleSubmit = (ev: FormEvent) => {
     ev.preventDefault();
     if (!message) return;
-    if (!session) return;
+    if (!campaign) return;
     chatWebSocket.send(
       JSON.stringify({
         type: WS_TYPES.SEND_MESSAGE,
         message,
-        chat: session.chat,
+        chat: campaign.chat,
       } as IWSSendChatMessage),
     );
     if (isDiceRoll(message)) {
@@ -45,7 +45,7 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
         JSON.stringify({
           type: WS_TYPES.MAKE_ROLL,
           message,
-          chat: session.chat,
+          chat: campaign.chat,
         } as IWSSendChatMessage),
       );
     }
