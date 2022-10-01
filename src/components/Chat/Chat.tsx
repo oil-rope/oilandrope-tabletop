@@ -13,7 +13,7 @@ import { ChatInput, MessagesContainer } from '.';
 
 const Chat = () => {
   const { user } = useContext(AuthContext);
-  const session = useContext(CampaignContext);
+  const campaign = useContext(CampaignContext);
   const [chatWS, setChatWS] = useState<WebSocket | null>(null);
   const reconnectMessage = "You've been disconnected. Reconnect?";
   const canvasContainer = document.getElementById('tabletopCanvasContainer');
@@ -36,7 +36,7 @@ const Chat = () => {
   useEffect(() => {
     // Do nothing until user is loaded
     if (user === null) return;
-    if (session === null) return;
+    if (campaign === null) return;
     // For some reason if we declare the WebSocket object on top it would connect at least 5 times
     if (chatWS === null) {
       setChatWS(new WebSocket(`${CHAT_WEBSOCKET}`));
@@ -48,11 +48,11 @@ const Chat = () => {
         JSON.stringify({
           type: WS_TYPES.SETUP_CHANNEL,
           token: user.token,
-          chat: session.chat,
+          chat: campaign.chat,
         }),
       );
     };
-  }, [user, chatWS, session]);
+  }, [user, chatWS, campaign]);
 
   if (chatWS === null) {
     return (

@@ -9,7 +9,8 @@ export type IRoll = Record<string, number[]>;
 /**
  * Allowed type of messages to be received from WebSocket.
  */
-type WebSocketTypes = keyof typeof WS_TYPES;
+type WebSocketTypesKeys = keyof typeof WS_TYPES;
+type WebSocketTypes = typeof WS_TYPES[WebSocketTypesKeys];
 
 /**
  * This interface allows us to handle WebSocket messages **just** for the chat.

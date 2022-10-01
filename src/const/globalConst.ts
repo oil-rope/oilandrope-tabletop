@@ -19,4 +19,4 @@ export const WS_TYPES = {
   SETUP_CHANNEL: 'setup_channel_layer',
   SEND_MESSAGE: 'send_message',
   MAKE_ROLL: 'make_roll',
-};
+} as const;
