@@ -2,7 +2,7 @@ import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { tabletopRender, UserMock } from '@Components/testUtils';
+import { tabletopRender, UserMock, BotMock } from '@Components/testUtils';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import WS from 'jest-websocket-mock';
@@ -12,7 +12,7 @@ import { campaignMock, messageMock, paginatedMessagesMock } from '@/__mocks__';
 
 import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
 import { CampaignContext } from '@Contexts';
-import { IPaginatedChatMessageList } from '@Interfaces';
+import { IPaginatedChatMessageList, IRoll } from '@Interfaces';
 import { IWSReceiveChatMessage, IWSSendChatMessage } from '../interfaces';
 
 import { MessagesContainer } from '..';
@@ -177,6 +177,36 @@ describe('MessagesContainer with WebSocket', () => {
     server.send(wsReceiveMsg);
 
     const messageElement = await screen.findByText(msgText);
+    expect(messageElement).toBeInTheDocument();
+  });
+
+  test('messages from bot (roll) are appended to container on send', async () => {
+    tabletopRender(
+      <MessagesContainer
+        height={faker.datatype.number()}
+        chatWebSocket={chatWebSocket}
+      />,
+      { container: divContainer },
+    );
+
+    const roll: IRoll = { '2d6': [4, 1], '+3': [3], '-1': [-1] };
+    const RollMessageMock = messageMock({
+      roll: roll,
+      author: BotMock,
+      message: '7',
+    });
+    const wsReceiveMsg = JSON.stringify({
+      type: WS_TYPES.SEND_MESSAGE,
+      content: RollMessageMock,
+      chat: RollMessageMock.chat,
+      roll: roll,
+    } as IWSReceiveChatMessage);
+    server.send(wsReceiveMsg);
+
+    const expectedAlt = Object.entries(RollMessageMock.roll)
+      .map(([key, value]) => `${key}: [${value}]`)
+      .join(', ');
+    const messageElement = await screen.findByTitle(expectedAlt);
     expect(messageElement).toBeInTheDocument();
   });
 });
