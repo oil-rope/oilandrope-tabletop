@@ -5,8 +5,8 @@ import { tabletopRender } from '@Components/__tests__/testUtils';
 
 import { ChatInput } from '..';
 
-let divContainer: HTMLDivElement;
 const DummyWS = new WebSocket('ws://dummy.url.com');
+let divContainer: HTMLDivElement;
 
 beforeEach(() => {
   divContainer = document.createElement('div');
@@ -21,13 +21,15 @@ afterEach(() => {
 
 describe('ChatInput suite without context', () => {
   test('renders correctly', () => {
-    render(<ChatInput chatWebSocket={DummyWS} />);
+    render(<ChatInput chatWebSocket={DummyWS} />, { container: divContainer });
   });
 });
 
 describe('ChatInput suite with ', () => {
   test('renders correctly', async () => {
-    tabletopRender(<ChatInput chatWebSocket={DummyWS} />);
+    tabletopRender(<ChatInput chatWebSocket={DummyWS} />, {
+      container: divContainer,
+    });
 
     const textInputEl = await screen.findByPlaceholderText('Start typing...');
     expect(textInputEl).toBeInTheDocument();
