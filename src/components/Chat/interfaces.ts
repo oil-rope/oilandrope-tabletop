@@ -16,7 +16,7 @@ type WebSocketTypes = typeof WS_TYPES[WebSocketTypesKeys];
  * This interface allows us to handle WebSocket messages **just** for the chat.
  * It is not a generic interface for the whole application.
  */
-export interface IWSReceiveChatMessage {
+export interface IWSServerChatMessage {
   type: WebSocketTypes;
   content: IChatMessage;
   chat?: number;
@@ -26,7 +26,7 @@ export interface IWSReceiveChatMessage {
 /**
  * This interface represents a message **sent** from the ChatInput but no the received item.
  */
-export interface IWSSendChatMessage {
+export interface IWSClientChatMessage {
   type: WebSocketTypes;
   message: string;
   chat: number;

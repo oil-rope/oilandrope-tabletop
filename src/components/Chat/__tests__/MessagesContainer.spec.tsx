@@ -2,27 +2,24 @@ import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import {
-  tabletopRender,
-  UserMock,
-  BotMock,
-} from '@Components/__tests__/testUtils';
+import { BotMock, chatRender, server, UserMock } from './testUtils';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
-import WS from 'jest-websocket-mock';
 
 import { faker } from '@faker-js/faker';
 import { campaignMock, messageMock, paginatedMessagesMock } from '@/__mocks__';
 
-import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
+import { WS_TYPES } from '@Constants';
+
+import { IPaginatedChatMessageList } from '@Interfaces';
+import { IWSServerChatMessage } from '../interfaces';
+
 import { CampaignContext } from '@Contexts';
-import { IPaginatedChatMessageList, IRoll } from '@Interfaces';
-import { IWSReceiveChatMessage, IWSSendChatMessage } from '../interfaces';
+import { ChatContext } from '../context';
 
 import { MessagesContainer } from '..';
 
 let divContainer: HTMLElement | null = null;
-const DummyWS = new WebSocket('ws://dummy.url.com');
 
 beforeEach(() => {
   divContainer = document.createElement('div');
@@ -35,19 +32,22 @@ afterEach(() => {
   divContainer = null;
 });
 
-describe('MessagesContainer without Contexts suite', () => {
+describe('MessagesContainer suite without Contexts suite', () => {
   test('renders correctly', () => {
     render(
-      <MessagesContainer
-        height={faker.datatype.number()}
-        chatWebSocket={DummyWS}
-      />,
-      { container: divContainer },
+      <ChatContext.Provider
+        value={{ colorMap: {}, chatWebSocket: new (jest.fn())() }}
+      >
+        <MessagesContainer height={faker.datatype.number()} />
+      </ChatContext.Provider>,
+      {
+        container: divContainer,
+      },
     );
   });
 });
 
-describe('MessagesContainer with CampaignContext suite', () => {
+describe('MessagesContainer suite with CampaignContext suite', () => {
   let MessagesListMock: IPaginatedChatMessageList;
 
   beforeAll(() => {
@@ -66,13 +66,16 @@ describe('MessagesContainer with CampaignContext suite', () => {
     fetchMock.resetMocks();
   });
 
-  test("doesn't retrieve messages if campaign not give", () => {
+  test("doesn't retrieve messages if campaign not given", () => {
     render(
-      <MessagesContainer
-        height={faker.datatype.number()}
-        chatWebSocket={DummyWS}
-      />,
-      { container: divContainer },
+      <ChatContext.Provider
+        value={{ colorMap: {}, chatWebSocket: new (jest.fn())() }}
+      >
+        <MessagesContainer height={faker.datatype.number()} />
+      </ChatContext.Provider>,
+      {
+        container: divContainer,
+      },
     );
 
     expect(fetchMock).toBeCalledTimes(0);
@@ -81,10 +84,11 @@ describe('MessagesContainer with CampaignContext suite', () => {
   test("doesn't render if campaign is given but user is not", async () => {
     render(
       <CampaignContext.Provider value={campaignMock()}>
-        <MessagesContainer
-          height={faker.datatype.number()}
-          chatWebSocket={DummyWS}
-        />
+        <ChatContext.Provider
+          value={{ colorMap: {}, chatWebSocket: new (jest.fn())() }}
+        >
+          <MessagesContainer height={faker.datatype.number()} />
+        </ChatContext.Provider>
       </CampaignContext.Provider>,
       { container: divContainer },
     );
@@ -101,13 +105,9 @@ describe('MessagesContainer with CampaignContext suite', () => {
 
     window.alert = jest.fn();
 
-    tabletopRender(
-      <MessagesContainer
-        height={faker.datatype.number()}
-        chatWebSocket={DummyWS}
-      />,
-      { container: divContainer },
-    );
+    chatRender(<MessagesContainer height={faker.datatype.number()} />, {
+      container: divContainer,
+    });
 
     await waitFor(() => expect(alert).toBeCalledTimes(1));
 
@@ -115,13 +115,9 @@ describe('MessagesContainer with CampaignContext suite', () => {
   });
 
   test('renders messages if campaign and user are given', async () => {
-    tabletopRender(
-      <MessagesContainer
-        height={faker.datatype.number()}
-        chatWebSocket={DummyWS}
-      />,
-      { container: divContainer },
-    );
+    chatRender(<MessagesContainer height={faker.datatype.number()} />, {
+      container: divContainer,
+    });
 
     const msgText = MessagesListMock.results[0].message;
 
@@ -132,10 +128,7 @@ describe('MessagesContainer with CampaignContext suite', () => {
   });
 });
 
-describe('MessagesContainer with WebSocket', () => {
-  let server: WS;
-  let chatWebSocket: WebSocket;
-
+describe('MessagesContainer suite with WebSocket', () => {
   beforeAll(() => {
     window.alert = jest.fn();
   });
@@ -145,68 +138,46 @@ describe('MessagesContainer with WebSocket', () => {
   });
 
   beforeEach(async () => {
-    server = new WS(CHAT_WEBSOCKET);
-    chatWebSocket = new WebSocket(CHAT_WEBSOCKET);
     await server.connected;
   });
 
-  afterEach(() => {
-    WS.clean();
-  });
-
   test('messages are appended to container on send', async () => {
-    tabletopRender(
-      <MessagesContainer
-        height={faker.datatype.number()}
-        chatWebSocket={chatWebSocket}
-      />,
-      { container: divContainer },
-    );
+    chatRender(<MessagesContainer height={faker.datatype.number()} />, {
+      container: divContainer,
+    });
 
     const msgText = faker.lorem.paragraph();
     const MessageMock = messageMock({ author: UserMock, message: msgText });
 
-    const wsSendMsg = JSON.stringify({
-      type: WS_TYPES.SEND_MESSAGE,
-      message: msgText,
-      chat: MessageMock.chat,
-    } as IWSSendChatMessage);
-    chatWebSocket.send(wsSendMsg);
-    await expect(server).toReceiveMessage(wsSendMsg);
-
-    const wsReceiveMsg = JSON.stringify({
+    const wsReceiveMsg: IWSServerChatMessage = {
       type: WS_TYPES.SEND_MESSAGE,
       content: MessageMock,
       chat: MessageMock.chat,
-    } as IWSReceiveChatMessage);
-    server.send(wsReceiveMsg);
+    };
+    server.send(JSON.stringify(wsReceiveMsg));
 
     const messageElement = await screen.findByText(msgText);
     expect(messageElement).toBeInTheDocument();
   });
 
   test('messages from bot (roll) are appended to container on send', async () => {
-    tabletopRender(
-      <MessagesContainer
-        height={faker.datatype.number()}
-        chatWebSocket={chatWebSocket}
-      />,
-      { container: divContainer },
-    );
+    chatRender(<MessagesContainer height={faker.datatype.number()} />, {
+      container: divContainer,
+    });
 
-    const roll: IRoll = { '2d6': [4, 1], '+3': [3], '-1': [-1] };
     const RollMessageMock = messageMock({
-      roll: roll,
+      roll: { '2d6': [4, 1], '+3': [3], '-1': [-1] },
       author: BotMock,
       message: '7',
     });
-    const wsReceiveMsg = JSON.stringify({
+
+    const wsReceiveMsg: IWSServerChatMessage = {
       type: WS_TYPES.SEND_MESSAGE,
       content: RollMessageMock,
       chat: RollMessageMock.chat,
-      roll: roll,
-    } as IWSReceiveChatMessage);
-    server.send(wsReceiveMsg);
+      roll: RollMessageMock.roll,
+    };
+    server.send(JSON.stringify(wsReceiveMsg));
 
     const expectedAlt = Object.entries(RollMessageMock.roll)
       .map(([key, value]) => `${key}: [${value}]`)

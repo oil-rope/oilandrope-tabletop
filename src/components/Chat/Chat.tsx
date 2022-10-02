@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 
 import { CHAT_WEBSOCKET, WS_TYPES } from '@Constants';
 import { AuthContext, CampaignContext } from '@Contexts';
+import { ChatContext, ColorMapTypes } from './context';
 
 import Loader from '@Components/Loader';
 
@@ -15,6 +16,9 @@ const Chat = () => {
   const { user } = useContext(AuthContext);
   const campaign = useContext(CampaignContext);
   const [chatWS, setChatWS] = useState<WebSocket | null>(null);
+  // NOTE: This is needed to make sure that the messages are always the same color.
+  const colorMap = useRef<ColorMapTypes>({});
+
   const reconnectMessage = "You've been disconnected. Reconnect?";
   const canvasContainer = document.getElementById('tabletopCanvasContainer');
   let height = 720;
@@ -69,20 +73,24 @@ const Chat = () => {
   }
 
   return (
-    <Container
-      fluid={true}
-      className="bg-light pb-4 h-100"
-      style={{
-        maxHeight: `${height}px`,
-      }}
+    <ChatContext.Provider
+      value={{ colorMap: colorMap.current, chatWebSocket: chatWS }}
     >
-      <MessagesContainer chatWebSocket={chatWS} height={height} />
-      <Row className="pt-3">
-        <Col>
-          <ChatInput chatWebSocket={chatWS} />
-        </Col>
-      </Row>
-    </Container>
+      <Container
+        fluid={true}
+        className="bg-light pb-4 h-100"
+        style={{
+          maxHeight: `${height}px`,
+        }}
+      >
+        <MessagesContainer height={height} />
+        <Row className="pt-3">
+          <Col>
+            <ChatInput />
+          </Col>
+        </Row>
+      </Container>
+    </ChatContext.Provider>
   );
 };
 

@@ -119,7 +119,9 @@ describe('Chat/Message Test Suite', () => {
   test('renders username with random color not light if message author is not user and colorMap is declared but empty', async () => {
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <ChatContext.Provider value={{ colorMap: {} }}>
+        <ChatContext.Provider
+          value={{ colorMap: {}, chatWebSocket: new (jest.fn())() }}
+        >
           <Message message={MessageMock} />
         </ChatContext.Provider>
       </AuthContext.Provider>,
@@ -138,7 +140,9 @@ describe('Chat/Message Test Suite', () => {
 
     render(
       <AuthContext.Provider value={{ user: UserMock, bot: null }}>
-        <ChatContext.Provider value={{ colorMap }}>
+        <ChatContext.Provider
+          value={{ colorMap, chatWebSocket: new (jest.fn())() }}
+        >
           <Message message={MessageMock} />
         </ChatContext.Provider>
       </AuthContext.Provider>,

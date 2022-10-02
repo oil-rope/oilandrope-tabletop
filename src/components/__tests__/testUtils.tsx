@@ -9,7 +9,7 @@ export const UserMock = userMock();
 export const BotMock = botMock();
 export const CampaignMock = campaignMock();
 
-const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
+export const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
   return (
     <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
       {children}
@@ -17,13 +17,15 @@ const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
   );
 };
 
-const TabletopProviders: FC<{ children: ReactElement }> = ({ children }) => {
+export const TabletopProviders: FC<{ children: ReactElement }> = ({
+  children,
+}) => {
   return (
-    <AuthContext.Provider value={{ user: UserMock, bot: BotMock }}>
+    <AuthProvider>
       <CampaignContext.Provider value={CampaignMock}>
         {children}
       </CampaignContext.Provider>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 };
 

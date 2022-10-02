@@ -8,28 +8,24 @@ import Col from 'react-bootstrap/Col';
 
 import { WS_TYPES } from '@Constants';
 import { IChatMessage } from '@Interfaces';
+import { IRoll, IWSServerChatMessage } from './interfaces';
+
 import { AuthContext, CampaignContext } from '@Contexts';
-import { IRoll, IWSReceiveChatMessage } from './interfaces';
-import { ChatContext, ColorMapTypes } from './context';
+import { ChatContext } from './context';
 
 import { Message } from '.';
 
 const MessagesContainerProps = {
-  chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
   height: PropTypes.number.isRequired,
 };
 
 type MessagesContainerTypes = InferProps<typeof MessagesContainerProps>;
-export const MessagesContainer: FC<MessagesContainerTypes> = ({
-  chatWebSocket,
-  height,
-}) => {
+export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
   const container = useRef<HTMLDivElement>(null);
   const { bot } = useContext(AuthContext);
   const campaign = useContext(CampaignContext);
   const [messages, setMessages] = useState<Array<IChatMessage>>([]);
-  // NOTE: This is needed to make sure that the messages are always the same color.
-  const colorMap = useRef<ColorMapTypes>({});
+  const { chatWebSocket } = useContext(ChatContext);
 
   useEffect(() => {
     if (!campaign) return;
@@ -46,7 +42,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
     if (!bot) return;
     if (chatWebSocket.readyState !== WebSocket.OPEN) return;
     chatWebSocket.onmessage = (ev: MessageEvent) => {
-      const data: IWSReceiveChatMessage = JSON.parse(ev.data);
+      const data: IWSServerChatMessage = JSON.parse(ev.data);
       if (data.type === WS_TYPES.SEND_MESSAGE) {
         if (data.content.author.id === bot.id) {
           return makeRollAction(data.content, data.roll || {});
@@ -92,11 +88,9 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       ref={container}
     >
       <Col role="messages-container">
-        <ChatContext.Provider value={{ colorMap: colorMap.current }}>
-          {messages.map((message, index) => (
-            <Message key={index} message={message} />
-          ))}
-        </ChatContext.Provider>
+        {messages.map((message, index) => (
+          <Message key={index} message={message} />
+        ))}
       </Col>
     </Row>
   );

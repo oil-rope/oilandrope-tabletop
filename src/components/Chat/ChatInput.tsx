@@ -1,23 +1,20 @@
-import React, { FC, FormEvent, useContext, useState } from 'react';
-import PropTypes, { InferProps } from 'prop-types';
+import React, { FormEvent, useContext, useState } from 'react';
 
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { WS_TYPES } from '@Constants';
+import { IWSClientChatMessage } from './interfaces';
+
 import { AuthContext, CampaignContext } from '@Contexts';
-import { IWSSendChatMessage } from './interfaces';
+import { ChatContext } from './context';
 
-const ChatInputProps = {
-  chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
-};
-
-type ChatInputTypes = InferProps<typeof ChatInputProps>;
-export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
+export const ChatInput = () => {
   const { bot } = useContext(AuthContext);
   const campaign = useContext(CampaignContext);
   const [message, setMessage] = useState('');
+  const { chatWebSocket } = useContext(ChatContext);
 
   /**
    * Checks if received message is a command to roll dice.
@@ -38,7 +35,7 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
         type: WS_TYPES.SEND_MESSAGE,
         message,
         chat: campaign.chat,
-      } as IWSSendChatMessage),
+      } as IWSClientChatMessage),
     );
     if (isDiceRoll(message)) {
       chatWebSocket.send(
@@ -46,7 +43,7 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
           type: WS_TYPES.MAKE_ROLL,
           message,
           chat: campaign.chat,
-        } as IWSSendChatMessage),
+        } as IWSClientChatMessage),
       );
     }
     ev.currentTarget.dispatchEvent(new Event('reset'));
@@ -76,5 +73,3 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
     </Form>
   );
 };
-
-ChatInput.propTypes = ChatInputProps;
