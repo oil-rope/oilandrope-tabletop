@@ -23,7 +23,7 @@ export const ChatInput = () => {
    * @returns {boolean} True if the message is a command for rolling dice, false otherwise
    */
   const isDiceRoll = (message: string): boolean => {
-    return message.startsWith(`${bot?.command_prefix}roll`);
+    return message.startsWith(`${bot.command_prefix}roll`);
   };
 
   const handleSubmit = (ev: FormEvent) => {

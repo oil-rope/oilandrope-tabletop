@@ -9,8 +9,6 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { faker } from '@faker-js/faker';
 import { campaignMock, messageMock, paginatedMessagesMock } from '@/__mocks__';
 
-import { WS_TYPES } from '@Constants';
-
 import { IPaginatedChatMessageList } from '@Interfaces';
 import { IWSServerChatMessage } from '../interfaces';
 
@@ -150,13 +148,31 @@ describe('MessagesContainer suite with WebSocket', () => {
     const MessageMock = messageMock({ author: UserMock, message: msgText });
 
     const wsReceiveMsg: IWSServerChatMessage = {
-      type: WS_TYPES.SEND_MESSAGE,
+      type: 'send_message',
       content: MessageMock,
       chat: MessageMock.chat,
     };
     server.send(JSON.stringify(wsReceiveMsg));
 
     const messageElement = await screen.findByText(msgText);
+    expect(messageElement).toBeInTheDocument();
+  });
+
+  test('messages from bot are appended to container on send', async () => {
+    chatRender(<MessagesContainer height={faker.datatype.number()} />, {
+      container: divContainer,
+    });
+
+    const MessageMock = messageMock({ author: BotMock });
+
+    const wsReceiveMsg: IWSServerChatMessage = {
+      type: 'send_message',
+      content: MessageMock,
+      chat: MessageMock.chat,
+    };
+    server.send(JSON.stringify(wsReceiveMsg));
+
+    const messageElement = await screen.findByText(MessageMock.message);
     expect(messageElement).toBeInTheDocument();
   });
 
@@ -172,7 +188,7 @@ describe('MessagesContainer suite with WebSocket', () => {
     });
 
     const wsReceiveMsg: IWSServerChatMessage = {
-      type: WS_TYPES.SEND_MESSAGE,
+      type: 'send_message',
       content: RollMessageMock,
       chat: RollMessageMock.chat,
       roll: RollMessageMock.roll,
