@@ -21,8 +21,9 @@ const Tabletop = () => {
   const [campaign, setCampaign] = useState<ICampaign | null>(null);
 
   useEffect(() => {
-    if (campaign) return;
-    if (!campaignID) return;
+    if (campaign !== null) return;
+    // NOTE: `campaignID` can be undefined for tests
+    if (campaignID === undefined) return;
     loadCampaign(Number(campaignID)).then(setCampaign).catch(alert);
   }, [campaign, campaignID]);
 
