@@ -38,7 +38,9 @@ const App: FC = () => {
       const botJSON = await loadBot();
       setBot(botJSON);
     };
-    fetchData().catch(alert);
+    fetchData().catch((msg) => {
+      alert(msg);
+    });
   }, [bot, user]);
 
   if (user === null && !isAuthenticated)
