@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import {
+  IAuthTokenResponse,
   IBot,
   ICampaign,
   IChatMessage,
@@ -47,6 +48,13 @@ export const userMock = (defaults?: Optional<IUser>): IUser => {
     token: faker.internet.password(),
   };
   return { ...user, ...defaults };
+};
+
+export const tokenResponseMock = (
+  defaults?: Optional<IAuthTokenResponse>,
+): IAuthTokenResponse => {
+  const tokenRes = { token: faker.internet.password() };
+  return { ...tokenRes, ...defaults };
 };
 
 export const messageMock = (

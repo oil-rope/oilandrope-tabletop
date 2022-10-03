@@ -1,4 +1,5 @@
-let { API_URL, WS_URL } = process.env;
+let API_URL = process.env.API_URL;
+let WS_URL = process.env.WS_URL;
 
 if (!API_URL) {
   API_URL = 'https://oilandrope-project.com/api';
