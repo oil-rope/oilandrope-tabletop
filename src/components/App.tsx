@@ -1,5 +1,5 @@
 import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import Loader from '@Components/Loader';
 import LoginModal from '@Components/LoginModal';
@@ -59,14 +59,12 @@ const App: FC = () => {
 
   return (
     <Suspense fallback={<Loader text="Loading..." />}>
-      <BrowserRouter>
-        <AuthContext.Provider value={{ user, bot }}>
-          <Routes>
-            <Route path="/campaign/:campaignID" element={<Tabletop />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <AuthContext.Provider value={{ user, bot }}>
+        <Routes>
+          <Route path="/campaign/:campaignID" element={<Tabletop />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AuthContext.Provider>
     </Suspense>
   );
 };

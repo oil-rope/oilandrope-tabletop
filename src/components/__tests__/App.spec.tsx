@@ -1,5 +1,6 @@
 import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -148,7 +149,7 @@ describe('App suite with user and bot fetch mock', () => {
       });
     });
 
-    render(<App />, { container: divContainer });
+    render(<App />, { container: divContainer, wrapper: BrowserRouter });
 
     await waitFor(() => expect(fetchMock).toBeCalledTimes(2));
 
@@ -156,5 +157,45 @@ describe('App suite with user and bot fetch mock', () => {
       'The element you are looking for does not exist.',
     );
     expect(notFoundElement).toBeInTheDocument();
+  });
+});
+
+describe('App suite with react-router', () => {
+  beforeAll(() => {
+    enableFetchMocks();
+    fetchMock.mockIf(/https?:\/\/oilandrope-project\.com\/api\/.+/, (req) => {
+      if (req.url.endsWith('/registration/user/')) {
+        return Promise.resolve({
+          body: JSON.stringify(userMock()),
+          status: 200,
+        });
+      }
+      if (req.url.endsWith('/registration/bot/')) {
+        return Promise.resolve({
+          body: JSON.stringify(botMock()),
+          status: 200,
+        });
+      }
+      return Promise.resolve({ body: 'Not found', status: 404 });
+    });
+  });
+
+  afterAll(() => {
+    fetchMock.resetMocks();
+  });
+
+  test('moves to tabletop correctly', async () => {
+    render(
+      <MemoryRouter initialEntries={['/campaign/1/']}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => expect(fetchMock).toBeCalledTimes(2));
+
+    const loadingChatElements = await screen.findAllByText(
+      'Connecting chat...',
+    );
+    expect(loadingChatElements).toHaveLength(2);
   });
 });

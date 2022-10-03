@@ -1,6 +1,7 @@
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
+import { BrowserRouter } from 'react-router-dom';
 
 import ErrorFallback from '@Components/ErrorFallback';
 import App from '@Components/App';
@@ -12,7 +13,9 @@ const root = createRoot(container);
 root.render(
   <StrictMode>
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ErrorBoundary>
   </StrictMode>,
 );
