@@ -55,8 +55,11 @@ describe('MessagesContainer suite with CampaignContext suite', () => {
   beforeEach(() => {
     MessagesListMock = paginatedMessagesMock();
 
-    fetchMock.mockOnceIf(/.+\/api\/chat\/\d+\/messages/, () => {
-      return Promise.resolve(JSON.stringify(MessagesListMock));
+    fetchMock.mockOnceIf(/\/oarapi\//, (req) => {
+      if (req.url.match(/\/oarapi\/chat\/\d+\/messages/)) {
+        return Promise.resolve(JSON.stringify(MessagesListMock));
+      }
+      return Promise.resolve({ body: 'Not found', status: 404 });
     });
   });
 

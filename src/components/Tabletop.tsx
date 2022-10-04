@@ -27,6 +27,14 @@ const Tabletop = () => {
     loadCampaign(Number(campaignID)).then(setCampaign).catch(alert);
   }, [campaign, campaignID]);
 
+  if (campaign == null) {
+    return (
+      <>
+        <Loader text="Loading campaign..." />
+      </>
+    );
+  }
+
   return (
     <CampaignContext.Provider value={campaign}>
       <Container fluid={true}>

@@ -2,6 +2,7 @@ import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
+import { authRender } from './testUtils';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
@@ -34,7 +35,7 @@ describe('Tabletop suite without router', () => {
     render(<Tabletop />, { container: divContainer });
 
     const loadingChatElements = await screen.findAllByText(
-      'Connecting chat...',
+      'Loading campaign...',
     );
     expect(loadingChatElements).toHaveLength(2);
   });
@@ -48,8 +49,8 @@ describe('Tabletop suite with react-router', () => {
   });
 
   beforeEach(() => {
-    fetchMock.mockIf(/https?:\/\/oilandrope-project\.com\/api\//, (req) => {
-      if (req.url.match(/\/roleplay\/campaign\/\d+$/)) {
+    fetchMock.mockIf(/\/oarapi\//, (req) => {
+      if (req.url.match(/\/roleplay\/campaign\/\d+/)) {
         return Promise.resolve({
           body: JSON.stringify(CampaignMock),
           status: 200,
@@ -66,7 +67,8 @@ describe('Tabletop suite with react-router', () => {
   test('loads campaign on render', async () => {
     const campaignURL = `/campaign/${CampaignMock.id}`;
 
-    render(
+    // TODO: There's a component rendering inside test it'd need to be fixed at some point
+    authRender(
       <MemoryRouter initialEntries={[campaignURL]}>
         <Routes>
           <Route path="/campaign/:campaignID" element={<Tabletop />} />

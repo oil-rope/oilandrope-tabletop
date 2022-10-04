@@ -57,7 +57,7 @@ describe('App suite with user fetch mock', () => {
   });
 
   test("calls 'alert' when failing request for getting bot", async () => {
-    fetchMock.mockIf(/https?:\/\/oilandrope-project\.com\/api\//, (req) => {
+    fetchMock.mockIf(/\/oarapi\//, (req) => {
       if (req.url.endsWith('/registration/user/')) {
         return Promise.resolve(JSON.stringify(userMock()));
       }
@@ -77,7 +77,7 @@ describe('App suite with user fetch mock', () => {
   });
 
   test("calls 'alert' when failing on accessing credentials", async () => {
-    fetchMock.mockIf(/https?:\/\/oilandrope-project\.com\/api\//, (req) => {
+    fetchMock.mockIf(/\/oarapi\//, (req) => {
       if (req.url.endsWith('/auth/token/')) {
         return Promise.resolve({
           body: JSON.stringify({
@@ -117,7 +117,7 @@ describe('App suite with user and bot fetch mock', () => {
   });
 
   beforeEach(() => {
-    fetchMock.mockIf(/https?:\/\/oilandrope-project\.com\/api\//, (req) => {
+    fetchMock.mockIf(/\/oarapi\//, (req) => {
       if (req.url.endsWith('/registration/user/')) {
         return Promise.resolve(JSON.stringify(userMock()));
       }
@@ -136,7 +136,7 @@ describe('App suite with user and bot fetch mock', () => {
   });
 
   test('renders correctly with given user and bot', async () => {
-    fetchMock.mockIf(/https?:\/\/oilandrope-project\.com\/api\//, (req) => {
+    fetchMock.mockIf(/\/oarapi\//, (req) => {
       if (req.url.endsWith('/registration/user/')) {
         return Promise.resolve(JSON.stringify(userMock()));
       }
@@ -163,7 +163,7 @@ describe('App suite with user and bot fetch mock', () => {
 describe('App suite with react-router', () => {
   beforeAll(() => {
     enableFetchMocks();
-    fetchMock.mockIf(/https?:\/\/oilandrope-project\.com\/api\/.+/, (req) => {
+    fetchMock.mockIf(/\/oarapi\/.+/, (req) => {
       if (req.url.endsWith('/registration/user/')) {
         return Promise.resolve({
           body: JSON.stringify(userMock()),
@@ -194,7 +194,7 @@ describe('App suite with react-router', () => {
     await waitFor(() => expect(fetchMock).toBeCalledTimes(2));
 
     const loadingChatElements = await screen.findAllByText(
-      'Connecting chat...',
+      'Loading campaign...',
     );
     expect(loadingChatElements).toHaveLength(2);
   });
