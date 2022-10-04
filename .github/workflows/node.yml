@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, 18.x]
 
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +27,7 @@ jobs:
         run: |
           npm ci
           npm run build
+          rm -rf node_modules/
 
       - name: '[DEV] Install dependencies'
         run: |

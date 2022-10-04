@@ -84,11 +84,11 @@ module.exports = (_env, argv) => {
       },
       historyApiFallback: true,
       host: '127.0.0.1',
-      open: false,
+      open: true,
       port: 8080,
       proxy: {
         '/oarapi': {
-          target: 'http://127.0.0.1:8000',
+          target: process.env.API_URL || 'http://127.0.0.1:8000',
           pathRewrite: { '^/oarapi': '/api' },
         },
       },

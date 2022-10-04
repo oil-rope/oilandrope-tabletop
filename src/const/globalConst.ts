@@ -1,8 +1,8 @@
 const API_URL = '/oarapi';
 let WS_URL = process.env.WS_URL;
 
-if (!WS_URL) {
-  WS_URL = 'ws://127.0.0.1:8000/ws';
+if (WS_URL === undefined) {
+  WS_URL = 'wss://live.oilandrope-project.com/ws';
 }
 
 export const CURRENT_USER_API = `${API_URL}/registration/user/`;
