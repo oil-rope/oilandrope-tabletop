@@ -84,8 +84,14 @@ module.exports = (_env, argv) => {
       },
       historyApiFallback: true,
       host: '127.0.0.1',
-      open: true,
+      open: false,
       port: 8080,
+      proxy: {
+        '/oarapi': {
+          target: 'http://127.0.0.1:8000',
+          pathRewrite: { '^/oarapi': '/api' },
+        },
+      },
       static: {
         directory: PUBLIC_PATH,
         publicPath: PUBLIC_PATH,
