@@ -1,13 +1,13 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import {
-  loadUser,
+  getData,
+  getToken,
   loadBot,
   loadCampaign,
   loadChatMessages,
-  getData,
-  getToken,
+  loadUser,
 } from '@Utils/apiCalls';
 import { IAuthTokenResponse } from '@Interfaces';
 

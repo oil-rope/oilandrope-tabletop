@@ -1,66 +1,63 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { EnvironmentPlugin, DefinePlugin } = require('webpack');
-require('dotenv').config();
+const fs = require('fs');
 
 const BASE_PATH = path.resolve(__dirname, '../../');
 const SOURCE_PATH = path.join(BASE_PATH, 'src/');
 const PUBLIC_PATH = path.join(BASE_PATH, 'public/');
+const DOTENV_PATH = path.join(BASE_PATH, '.env');
 
-const HtmlWebpackPluginConf = new HtmlWebpackPlugin({
-  template: path.join(PUBLIC_PATH, 'index.html'),
-  filename: path.join(PUBLIC_PATH, 'vendor/index.html'),
-});
-let EnvironmentPluginConf;
-
-if (process.env.NODE_ENV == 'production') {
-  EnvironmentPluginConf = new DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify('production'),
-    'process.env.API_URL': JSON.stringify('https://oilandrope-project.com'),
-    'process.env.WS_URL': JSON.stringify('wss://live.oilandrope-project.com'),
+// We check if the file exists in order to load environment variables
+if (fs.existsSync(DOTENV_PATH)) {
+  require('dotenv').config({
+    path: path.join(BASE_PATH, '.env'),
   });
 } else {
-  EnvironmentPluginConf = new EnvironmentPlugin([
-    'API_URL',
-    'WS_URL',
-    'NODE_ENV',
-  ]);
+  console.warn(`File '.env' not found (${DOTENV_PATH})`);
 }
 
-module.exports = {
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+
+/** @type { import('webpack-cli').WebpackDevServerOptions } */
+const webpackConf = {
+  // https://webpack.js.org/configuration/entry-context/#entry
   entry: {
-    oilandrope_tabletop: path.join(SOURCE_PATH, 'index.tsx'),
+    oar_tabletop: path.join(SOURCE_PATH, 'index.tsx'),
   },
+  // https://webpack.js.org/configuration/output/
   output: {
-    path: path.join(PUBLIC_PATH, 'vendor/'),
-    filename: '[name].bundle.js',
-    chunkFilename: '[name].[contenthash:8].bundle.js',
+    chunkFilename: '[id].js',
     clean: true,
-    publicPath: '/',
+    filename: '[name].[contenthash].bundle.js',
+    path: path.resolve(BASE_PATH, 'dist'),
   },
+  mode: process.env.NODE_ENV || 'production',
+  // https://webpack.js.org/configuration/plugins/
+  plugins: [
+    // https://github.com/jantimon/html-webpack-plugin#options
+    new HtmlWebpackPlugin({
+      favicon: path.join(PUBLIC_PATH, 'favicon.ico'),
+      publicPath: '/',
+      title: 'Oil &amp; Rope: Tabletop',
+      template: path.join(PUBLIC_PATH, 'index.html'),
+    }),
+    new webpack.EnvironmentPlugin({
+      API_URL: 'https://oilandrope-project.com',
+      WS_URL: 'wss://live.oilandrope-project.com',
+    }),
+  ],
   module: {
     rules: [
       {
-        test: /\.ts(x)?$/,
-        use: 'ts-loader',
-        exclude: [/node_modules/, /tests/],
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'img/[name][ext][query]',
-        },
+        test: /\.tsx?$/,
+        // NOTE: Exclude, source-map and others are tackled by `webpack.tsconfig.json`
+        use: 'ts-loader?configFile=tsconfig.webpack.json',
       },
     ],
   },
-  performance: {
-    assetFilter: (assetFilename) => !/\.(map|png)$/.test(assetFilename),
-    hints: 'error',
-  },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.tsx', '.ts', '.js'],
     alias: {
       '@': SOURCE_PATH,
       '@Components': path.join(SOURCE_PATH, 'components/'),
@@ -70,5 +67,41 @@ module.exports = {
       '@Interfaces': path.join(SOURCE_PATH, 'interfaces'),
     },
   },
-  plugins: [HtmlWebpackPluginConf, EnvironmentPluginConf],
+  performance: {
+    hints: 'error',
+  },
+};
+
+module.exports = (_env, argv) => {
+  if (argv.mode === 'development') {
+    webpackConf.devtool = 'eval-source-map';
+    webpackConf.output.filename = '[name].js';
+    webpackConf.output.chunkFilename = '[name].js';
+    webpackConf.performance.hints = false;
+    webpackConf.devServer = {
+      client: {
+        overlay: true,
+      },
+      historyApiFallback: true,
+      host: '127.0.0.1',
+      open: true,
+      port: 8080,
+      proxy: {
+        '/oarapi': {
+          target: process.env.API_URL || 'http://127.0.0.1:8000',
+          pathRewrite: { '^/oarapi': '/api' },
+        },
+        '/oarws': {
+          target: process.env.WS_URL || 'ws://127.0.0.1:8000',
+          pathRewrite: { '^/oarws': '/ws' },
+          ws: true,
+        },
+      },
+      static: {
+        directory: PUBLIC_PATH,
+        publicPath: PUBLIC_PATH,
+      },
+    };
+  }
+  return webpackConf;
 };

@@ -1,48 +1,37 @@
-name: (Prod) Node.js Checker
+name: Oil & Rope Tabletop CI
 
-on:
-  push:
-    branches:
-      - master
-      - develop
-  pull_request:
-    branches:
-      - master
-      - develop
+on: [push]
 
 jobs:
-  node:
-    name: Node Build
+  test-and-build:
+    name: Test and Build
     runs-on: ubuntu-latest
     env:
-      NODE_ENV: production
+      NODE_ENV: development
 
     strategy:
-      max-parallel: 4
       matrix:
-        node-version: [16.x, 17.x]
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-          architecture: x64
 
-      - name: Install dependencies
+      - name: '[PROD] Install dependencies and build'
+        env:
+          NODE_ENV: production
         run: |
-          npm ci --audit=false
-        
-      - name: Build
-        run: |
-          cp .env.example .env
-          npm run build:prod
+          npm ci
+          npm run build
+          rm -rf node_modules/
 
-      - name: Install devDependencies
+      - name: '[DEV] Install dependencies'
         run: |
-          npm install --production=false --audit=false 
+          npm ci
 
       - name: Linter
         run: |
@@ -50,12 +39,35 @@ jobs:
 
       - name: Test
         run: |
-          npm run test:coverage
+          npm test
 
-      - name: Update Codecov (coverage)
-        if: ${{ success() }}
-        uses: codecov/codecov-action@v2
+  build-and-push:
+    name: Build Image and Push
+    runs-on: ubuntu-latest
+    needs: test-and-build
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
-          file: ./coverage/clover.xml
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Since the format `developmentType/Code` is invalid we need to replace it
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]${{ github.ref_name }}" | sed -e 's/\//-/g'
+        id: extra_branch_name
+
+      - name: Build & Push Image
+        if: ${{ success() }}
+        uses: docker/build-push-action@v3
+        env:
+          DOCKERFILE: docker/Dockerfile
+          TAG: ${{ steps.extra_branch_name.outputs.branch }}
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tabletop:${{ env.TAG }}
+          file: ${{ env.DOCKERFILE }}

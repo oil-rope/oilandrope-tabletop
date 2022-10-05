@@ -55,15 +55,17 @@ export interface IChat {
   readonly entry_updated_at: string;
 }
 
+export type IRoll = Record<string, Array<number>>;
+
 export interface IChatMessage {
   readonly id: number;
   chat: number;
   message: string;
-  author: ISimpleUser;
+  author: ISimpleUser | IBot;
   readonly entry_created_at: string;
   readonly entry_updated_at: string;
   // This is used by us in order to get roll into messages
-  roll?: Record<string, Array<number>>;
+  roll?: IRoll;
 }
 
 export interface IPaginatedCampaignList extends IPaginated {

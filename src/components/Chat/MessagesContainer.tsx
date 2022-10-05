@@ -1,6 +1,6 @@
 import { loadChatMessages } from '@Utils/apiCalls';
 
-import React, { FC, useState, useContext, useEffect, useRef } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 
 import Row from 'react-bootstrap/Row';
@@ -8,28 +8,24 @@ import Col from 'react-bootstrap/Col';
 
 import { WS_TYPES } from '@Constants';
 import { IChatMessage } from '@Interfaces';
+import { IRoll, IWSServerChatMessage } from './interfaces';
+
 import { AuthContext, CampaignContext } from '@Contexts';
-import { IWebSocketMessage, IRoll } from './interfaces';
-import { ChatContext, ColorMapTypes } from './context';
+import { ChatContext } from './context';
 
 import { Message } from '.';
 
 const MessagesContainerProps = {
-  chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
   height: PropTypes.number.isRequired,
 };
 
 type MessagesContainerTypes = InferProps<typeof MessagesContainerProps>;
-export const MessagesContainer: FC<MessagesContainerTypes> = ({
-  chatWebSocket,
-  height,
-}) => {
+export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
   const container = useRef<HTMLDivElement>(null);
   const { bot } = useContext(AuthContext);
   const campaign = useContext(CampaignContext);
   const [messages, setMessages] = useState<Array<IChatMessage>>([]);
-  // NOTE: This is needed to make sure that the messages are always the same color.
-  const colorMap = useRef<ColorMapTypes>({});
+  const { chatWebSocket } = useContext(ChatContext);
 
   useEffect(() => {
     if (!campaign) return;
@@ -37,14 +33,16 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       .then((paginatedMessages) => {
         setMessages(paginatedMessages.results);
       })
-      .catch(() => alert("Could't load messages"));
+      .catch(() => {
+        alert("Could't load messages");
+      });
   }, [campaign]);
 
   useEffect(() => {
     if (!bot) return;
     if (chatWebSocket.readyState !== WebSocket.OPEN) return;
     chatWebSocket.onmessage = (ev: MessageEvent) => {
-      const data: IWebSocketMessage = JSON.parse(ev.data);
+      const data: IWSServerChatMessage = JSON.parse(ev.data);
       if (data.type === WS_TYPES.SEND_MESSAGE) {
         if (data.content.author.id === bot.id) {
           return makeRollAction(data.content, data.roll || {});
@@ -60,7 +58,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       const clientHeight = container.current.clientHeight;
       container.current.scrollTop = height - clientHeight;
     }
-  }, [container, messages]);
+  }, [container]);
 
   /**
    * Perform action when message is sent.
@@ -90,11 +88,9 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({
       ref={container}
     >
       <Col role="messages-container">
-        <ChatContext.Provider value={{ colorMap: colorMap.current }}>
-          {messages.map((message, index) => (
-            <Message key={index} message={message} />
-          ))}
-        </ChatContext.Provider>
+        {messages.map((message, index) => (
+          <Message key={index} message={message} />
+        ))}
       </Col>
     </Row>
   );

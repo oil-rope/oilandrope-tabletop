@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import PropTypes, { InferProps } from 'prop-types';
+import * as PropTypes from 'prop-types';
 import Spinner from 'react-bootstrap/Spinner';
 
 const LoaderProps = {
@@ -10,7 +10,7 @@ const LoaderDefaults = {
   text: 'Loading...',
 };
 
-type LoaderType = InferProps<typeof LoaderProps>;
+type LoaderType = PropTypes.InferProps<typeof LoaderProps>;
 const Loader: FC<LoaderType> = ({ text }) => {
   return (
     <>

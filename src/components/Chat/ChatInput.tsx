@@ -1,21 +1,20 @@
-import React, { FC, FormEvent, useContext, useState } from 'react';
-import PropTypes, { InferProps } from 'prop-types';
+import React, { FormEvent, useContext, useState } from 'react';
 
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { WS_TYPES } from '@Constants';
+import { IWSClientChatMessage } from './interfaces';
+
 import { AuthContext, CampaignContext } from '@Contexts';
+import { ChatContext } from './context';
 
-const ChatInputProps = {
-  chatWebSocket: PropTypes.instanceOf(WebSocket).isRequired,
-};
-
-type ChatInputTypes = InferProps<typeof ChatInputProps>;
-export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
+export const ChatInput = () => {
   const { bot } = useContext(AuthContext);
-  const session = useContext(CampaignContext);
+  const campaign = useContext(CampaignContext);
+  const { chatWebSocket } = useContext(ChatContext);
+
   const [message, setMessage] = useState('');
 
   /**
@@ -25,27 +24,27 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
    * @returns {boolean} True if the message is a command for rolling dice, false otherwise
    */
   const isDiceRoll = (message: string): boolean => {
-    return message.startsWith(`${bot?.command_prefix}roll`);
+    return message.startsWith(`${bot.command_prefix}roll`);
   };
 
   const handleSubmit = (ev: FormEvent) => {
     ev.preventDefault();
     if (!message) return;
-    if (!session) return;
+    if (!campaign) return;
     chatWebSocket.send(
       JSON.stringify({
         type: WS_TYPES.SEND_MESSAGE,
         message,
-        chat: session.chat,
-      }),
+        chat: campaign.chat,
+      } as IWSClientChatMessage),
     );
     if (isDiceRoll(message)) {
       chatWebSocket.send(
         JSON.stringify({
           type: WS_TYPES.MAKE_ROLL,
           message,
-          chat: session.chat,
-        }),
+          chat: campaign.chat,
+        } as IWSClientChatMessage),
       );
     }
     ev.currentTarget.dispatchEvent(new Event('reset'));
@@ -75,5 +74,3 @@ export const ChatInput: FC<ChatInputTypes> = ({ chatWebSocket }) => {
     </Form>
   );
 };
-
-ChatInput.propTypes = ChatInputProps;

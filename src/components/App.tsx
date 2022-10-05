@@ -1,5 +1,5 @@
-import React, { FC, useState, useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 import Loader from '@Components/Loader';
 import LoginModal from '@Components/LoginModal';
@@ -38,7 +38,9 @@ const App: FC = () => {
       const botJSON = await loadBot();
       setBot(botJSON);
     };
-    fetchData().catch(alert);
+    fetchData().catch((msg) => {
+      alert(msg);
+    });
   }, [bot, user]);
 
   if (user === null && !isAuthenticated)
@@ -57,14 +59,12 @@ const App: FC = () => {
 
   return (
     <Suspense fallback={<Loader text="Loading..." />}>
-      <BrowserRouter>
-        <AuthContext.Provider value={{ user, bot }}>
-          <Routes>
-            <Route path="/campaign/:campaignID" element={<Tabletop />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <AuthContext.Provider value={{ user, bot }}>
+        <Routes>
+          <Route path="/campaign/:campaignID" element={<Tabletop />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AuthContext.Provider>
     </Suspense>
   );
 };

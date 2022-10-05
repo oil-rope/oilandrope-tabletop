@@ -6,6 +6,7 @@ type BOOTSTRAP_COLORS_TYPE = typeof MESSAGE_COLORS[number];
 export type ColorMapTypes = Record<number, BOOTSTRAP_COLORS_TYPE>;
 interface IChatContext {
   colorMap: ColorMapTypes;
+  chatWebSocket: WebSocket;
 }
 
 /**

@@ -1,17 +1,17 @@
 import {
   BOT_API,
+  CAMPAIGN_API,
   CHAT_API,
   CURRENT_USER_API,
-  CAMPAIGN_API,
   TOKEN_API,
 } from '@Constants';
 import {
-  IBot,
-  IPaginatedChatMessageList,
-  ICampaign,
-  IUser,
   IAuthTokenRequest,
   IAuthTokenResponse,
+  IBot,
+  ICampaign,
+  IPaginatedChatMessageList,
+  IUser,
 } from '@Interfaces';
 
 export const COMMON_HEADERS = new Headers({
@@ -35,14 +35,13 @@ export const fetchData = async <T>(
   extra: RequestInit = {},
 ): Promise<T> => {
   // eslint-disable-next-line no-undef
-  let init: RequestInit = {
+  const init: RequestInit = {
     method: method,
     mode: 'cors',
     credentials: 'include',
     headers: COMMON_HEADERS,
   };
-  init = Object.assign(init, extra);
-  const res = await fetch(url, init);
+  const res = await fetch(url, { ...init, ...extra });
   if (res.ok) return await res.json();
   throw new Error(errorMsg);
 };
@@ -145,7 +144,7 @@ export const loadChatMessages = (
   id: number,
 ): Promise<IPaginatedChatMessageList> => {
   return getData<IPaginatedChatMessageList>(
-    `${CHAT_API}/${id}/messages/?nested=true`,
+    `${CHAT_API}/${id}/messages/`,
     "We couldn't get the chat.",
   );
 };

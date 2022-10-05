@@ -1,16 +1,21 @@
 import React, { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
+import { BrowserRouter } from 'react-router-dom';
 
 import ErrorFallback from '@Components/ErrorFallback';
 import App from '@Components/App';
 
-const rootElement = document.getElementById('oilAndRopeTabletopRoot');
-ReactDOM.render(
+const container = document.getElementById('oilAndRopeTabletopRoot');
+if (!container) throw new Error('Impossible to render');
+const root = createRoot(container);
+
+root.render(
   <StrictMode>
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ErrorBoundary>
   </StrictMode>,
-  rootElement,
 );
