@@ -13,8 +13,9 @@ import { ChatContext } from './context';
 export const ChatInput = () => {
   const { bot } = useContext(AuthContext);
   const campaign = useContext(CampaignContext);
-  const [message, setMessage] = useState('');
   const { chatWebSocket } = useContext(ChatContext);
+
+  const [message, setMessage] = useState('');
 
   /**
    * Checks if received message is a command to roll dice.

@@ -3,7 +3,14 @@ import { unmountComponentAtNode } from 'react-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserEvent } from '@testing-library/user-event/dist/types/setup/setup';
-import { BotMock, CampaignMock, chatRender, server } from './testUtils';
+import {
+  BotMock,
+  CampaignMock,
+  chatRender,
+  server,
+  setUpWebSocket,
+  tearDownWebSocket,
+} from './testUtils';
 
 import { faker } from '@faker-js/faker';
 
@@ -13,15 +20,19 @@ import { ChatInput } from '..';
 
 let divContainer: HTMLDivElement;
 
-beforeEach(() => {
+beforeEach(async () => {
   divContainer = document.createElement('div');
   document.body.appendChild(divContainer);
+
+  await setUpWebSocket();
 });
 
 afterEach(() => {
   unmountComponentAtNode(divContainer);
   divContainer.remove();
   divContainer = null;
+
+  tearDownWebSocket();
 });
 
 describe('ChatInput suite without context', () => {
@@ -51,14 +62,12 @@ describe('ChatInput suite with WebSocket', () => {
     user = userEvent.setup();
   });
 
-  beforeEach(async () => {
-    await server.connected;
-  });
-
   test('message is not send with empty message', async () => {
     chatRender(<ChatInput />, {
       container: divContainer,
     });
+
+    await server.connected;
 
     const inputElement = await screen.findByPlaceholderText('Start typing...');
     await user.click(inputElement);
@@ -71,6 +80,8 @@ describe('ChatInput suite with WebSocket', () => {
     render(<ChatInput />, {
       container: divContainer,
     });
+
+    await server.connected;
 
     const inputElement = await screen.findByPlaceholderText('Start typing...');
 
@@ -85,6 +96,8 @@ describe('ChatInput suite with WebSocket', () => {
     chatRender(<ChatInput />, {
       container: divContainer,
     });
+
+    await server.connected;
 
     const inputElement = await screen.findByPlaceholderText('Start typing...');
 
@@ -104,6 +117,8 @@ describe('ChatInput suite with WebSocket', () => {
     chatRender(<ChatInput />, {
       container: divContainer,
     });
+
+    await server.connected;
 
     const inputElement = await screen.findByPlaceholderText('Start typing...');
 

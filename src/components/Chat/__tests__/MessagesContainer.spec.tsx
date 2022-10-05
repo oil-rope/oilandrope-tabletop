@@ -2,7 +2,14 @@ import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { BotMock, chatRender, server, UserMock } from './testUtils';
+import {
+  BotMock,
+  chatRender,
+  server,
+  setUpWebSocket,
+  tearDownWebSocket,
+  UserMock,
+} from './testUtils';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
@@ -19,15 +26,19 @@ import { MessagesContainer } from '..';
 
 let divContainer: HTMLElement | null = null;
 
-beforeEach(() => {
+beforeEach(async () => {
   divContainer = document.createElement('div');
   document.body.appendChild(divContainer);
+
+  await setUpWebSocket();
 });
 
 afterEach(() => {
   unmountComponentAtNode(divContainer);
   divContainer.remove();
   divContainer = null;
+
+  tearDownWebSocket();
 });
 
 describe('MessagesContainer suite without Contexts suite', () => {

@@ -4,14 +4,15 @@ import { render, screen } from '@testing-library/react';
 import {
   authRender,
   CampaignMock,
+  server,
+  setUpWebSocket,
   tabletopRender,
+  tearDownWebSocket,
   UserMock,
-} from '@Components/__tests__/testUtils';
+} from './testUtils';
 
 import { faker } from '@faker-js/faker';
-import WS from 'jest-websocket-mock';
 
-import { CHAT_WEBSOCKET } from '@Constants';
 import { WebSocketTypes } from '../interfaces';
 
 import Chat from '../Chat';
@@ -22,9 +23,11 @@ beforeAll(() => {
   window.alert = jest.fn();
 });
 
-beforeEach(() => {
+beforeEach(async () => {
   divContainer = document.createElement('div');
   document.body.appendChild(divContainer);
+
+  await setUpWebSocket();
 });
 
 afterAll(() => {
@@ -35,6 +38,8 @@ afterEach(() => {
   unmountComponentAtNode(divContainer);
   divContainer.remove();
   divContainer = null;
+
+  tearDownWebSocket();
 });
 
 describe('Chat suite without context', () => {
@@ -79,8 +84,6 @@ describe('Chat suite with WebSocket', () => {
   test('websocket receives connect message on render', async () => {
     window.confirm = jest.fn();
 
-    const server = new WS(CHAT_WEBSOCKET);
-
     tabletopRender(<Chat />);
     await server.connected;
 
@@ -97,8 +100,6 @@ describe('Chat suite with WebSocket', () => {
   });
 
   test('window is popped on websocket forced disconnection', async () => {
-    const server = new WS(CHAT_WEBSOCKET);
-
     jest.spyOn(global, 'confirm').mockReturnValue(true);
 
     tabletopRender(<Chat />);
@@ -117,8 +118,6 @@ describe('Chat suite with WebSocket', () => {
   });
 
   test('window is not popped on websocket clean disconnection', async () => {
-    const server = new WS(CHAT_WEBSOCKET);
-
     jest.spyOn(global, 'confirm').mockReturnValue(true);
 
     tabletopRender(<Chat />);

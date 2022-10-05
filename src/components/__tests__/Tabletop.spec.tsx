@@ -5,14 +5,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { authRender } from './testUtils';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
+import { campaignMock } from '@/__mocks__';
 
 import Tabletop from '../Tabletop';
-import { campaignMock } from '@/__mocks__';
 
 let divContainer: HTMLElement | null = null;
 
 beforeAll(() => {
-  jest.spyOn(window, 'alert');
+  window.alert = jest.fn();
 });
 
 beforeEach(() => {
@@ -67,7 +67,6 @@ describe('Tabletop suite with react-router', () => {
   test('loads campaign on render', async () => {
     const campaignURL = `/campaign/${CampaignMock.id}`;
 
-    // TODO: There's a component rendering inside test it'd need to be fixed at some point
     authRender(
       <MemoryRouter initialEntries={[campaignURL]}>
         <Routes>
@@ -77,11 +76,11 @@ describe('Tabletop suite with react-router', () => {
       { container: divContainer },
     );
 
-    await waitFor(() => expect(fetchMock).toBeCalledTimes(1));
+    // Calls once for campaign and then for getting messages
+    await waitFor(() => expect(fetchMock).toBeCalledTimes(2));
 
-    const loadingChatElements = await screen.findAllByText(
-      'Connecting chat...',
-    );
-    expect(loadingChatElements).toHaveLength(2);
+    // NOTE: Since the URL used is valid the WebSocket instance will be created but not used
+    const inputElement = await screen.findByPlaceholderText('Start typing...');
+    expect(inputElement).toBeInTheDocument();
   });
 });
