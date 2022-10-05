@@ -47,15 +47,17 @@ const Chat = () => {
       return;
     }
 
-    chatWS.onopen = () => {
-      chatWS.send(
-        JSON.stringify({
-          type: WS_TYPES.SETUP_CHANNEL,
-          token: user.token,
-          chat: campaign.chat,
-        }),
-      );
-    };
+    if (!chatWS.onopen) {
+      chatWS.onopen = () => {
+        chatWS.send(
+          JSON.stringify({
+            type: WS_TYPES.SETUP_CHANNEL,
+            token: user.token,
+            chat: campaign.chat,
+          }),
+        );
+      };
+    }
   }, [user, chatWS, campaign]);
 
   if (chatWS === null) {
