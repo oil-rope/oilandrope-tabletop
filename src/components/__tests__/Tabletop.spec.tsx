@@ -77,7 +77,7 @@ describe('Tabletop suite with react-router', () => {
     );
 
     // Calls once for campaign and then for getting messages
-    await waitFor(() => expect(fetchMock).toBeCalledTimes(2));
+    await waitFor(() => expect(fetchMock).toBeCalledTimes(1));
 
     // NOTE: Since the URL used is valid the WebSocket instance will be created but not used
     const inputElement = await screen.findByPlaceholderText('Start typing...');

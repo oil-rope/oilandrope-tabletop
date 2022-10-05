@@ -1,9 +1,9 @@
-const API_URL = '/oarapi';
-let WS_URL = process.env.WS_URL;
+const LOCALHOST = window.location.host;
+const SCHEMA = window.location.protocol;
+const WEBSOCKET_SCHEMA = SCHEMA === 'https:' ? 'wss:' : 'ws:';
 
-if (WS_URL === undefined) {
-  WS_URL = 'wss://live.oilandrope-project.com/ws';
-}
+const API_URL = `${SCHEMA}//${LOCALHOST}/oarapi`;
+const WS_URL = `${WEBSOCKET_SCHEMA}//${LOCALHOST}/oarws`;
 
 export const CURRENT_USER_API = `${API_URL}/registration/user/`;
 export const BOT_API = `${API_URL}/registration/bot/`;

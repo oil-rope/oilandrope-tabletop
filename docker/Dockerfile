@@ -5,7 +5,6 @@ COPY . /app/
 WORKDIR /app/
 
 ENV NODE_ENV=production
-ENV WS_URL=wss://live.oilandrope-project.com/ws
 
 RUN npm ci
 RUN npm run build
