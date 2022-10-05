@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+
 import {
   IAuthTokenResponse,
   IBot,
@@ -9,6 +10,7 @@ import {
   ISimpleUser,
   IUser,
 } from '@Interfaces';
+import { IWSServerChatMessage } from '@Components/Chat/interfaces';
 
 type Optional<T> = {
   [P in keyof T]?: T[P];
@@ -69,6 +71,17 @@ export const messageMock = (
     entry_updated_at: faker.date.recent().toISOString(),
   };
   return { ...message, ...defaults };
+};
+
+export const webSocketMessageReceiveMock = (
+  defaults?: Optional<IWSServerChatMessage>,
+): IWSServerChatMessage => {
+  const wsMessage: IWSServerChatMessage = {
+    type: 'send_message',
+    content: messageMock(),
+    chat: faker.datatype.number(),
+  };
+  return { ...wsMessage, ...defaults };
 };
 
 export const paginatedMessagesMock = (

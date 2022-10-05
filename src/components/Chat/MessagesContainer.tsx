@@ -40,17 +40,18 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
 
   useEffect(() => {
     if (!bot) return;
-    if (chatWebSocket.readyState !== WebSocket.OPEN) return;
-    chatWebSocket.onmessage = (ev: MessageEvent) => {
-      const data: IWSServerChatMessage = JSON.parse(ev.data);
-      if (data.type === WS_TYPES.SEND_MESSAGE) {
-        if (data.content.author.id === bot.id) {
-          return makeRollAction(data.content, data.roll || {});
+    if (!chatWebSocket.onmessage) {
+      chatWebSocket.onmessage = (ev: MessageEvent) => {
+        const data: IWSServerChatMessage = JSON.parse(ev.data);
+        if (data.type === WS_TYPES.SEND_MESSAGE) {
+          if (data.content.author.id === bot.id) {
+            return makeRollAction(data.content, data.roll || {});
+          }
+          return sendMessageAction(data.content);
         }
-        return sendMessageAction(data.content);
-      }
-    };
-  }, [chatWebSocket, chatWebSocket.readyState, bot]);
+      };
+    }
+  }, [chatWebSocket, bot]);
 
   useEffect(() => {
     if (container.current) {
