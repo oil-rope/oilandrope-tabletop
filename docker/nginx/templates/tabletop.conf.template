@@ -1,11 +1,11 @@
 upstream oarapi {
   ip_hash;
-  server ${OAR_API_SERVER}:${OAR_API_PORT};
+  server ${OAR_API_SERVER};
 }
 
 upstream oarws {
   ip_hash;
-  server ${OAR_WS_SERVER}:${OAR_WS_PORT};
+  server ${OAR_WS_SERVER};
 }
 
 server {
