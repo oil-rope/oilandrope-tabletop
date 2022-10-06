@@ -1,11 +1,11 @@
 upstream oarapi {
   ip_hash;
-  server ${OAR_API_DOMAIN}:${OAR_API_PORT};
+  server ${OAR_API_SERVER}:${OAR_API_PORT};
 }
 
 upstream oarws {
   ip_hash;
-  server ${OAR_WS_DOMAIN}:${OAR_WS_PORT};
+  server ${OAR_WS_SERVER}:${OAR_WS_PORT};
 }
 
 server {
@@ -19,18 +19,20 @@ server {
     rewrite /oarapi/(.*) /api/$1 break;
     proxy_pass 	     http://oarapi;
 
-    proxy_set_header Host '${OAR_API_DOMAIN}';
+    proxy_set_header Host '${OAR_API_HOST}';
 
     include /etc/nginx/proxy_params;
   }
 
   location ~ /oarws/(.*) {
+    # IMPORTANT: WebSocket will never connect to a redirect so URL *must* be exact
+    # e.g. it will not redirect from `http` to `https`.
     access_log /var/log/nginx/proxy.access.log proxy_format;
 
     rewrite /oarws/(.*) /ws/$1 break;
     proxy_pass http://oarws;
 
-    proxy_set_header Host '${OAR_WS_DOMAIN}';
+    proxy_set_header Host '${OAR_WS_HOST}';
 
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
