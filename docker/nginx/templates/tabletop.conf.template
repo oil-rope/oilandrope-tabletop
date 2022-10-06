@@ -1,0 +1,47 @@
+upstream oarapi {
+  ip_hash;
+  server ${OAR_API_DOMAIN}:${OAR_API_PORT};
+}
+
+upstream oarws {
+  ip_hash;
+  server ${OAR_WS_DOMAIN}:${OAR_WS_PORT};
+}
+
+server {
+  listen      80;
+  listen      [::]:80;
+  server_name localhost;
+
+  location ~ /oarapi/(.*) {
+    access_log /var/log/nginx/proxy.access.log proxy_format;
+    
+    rewrite /oarapi/(.*) /api/$1 break;
+    proxy_pass 	     http://oarapi;
+
+    proxy_set_header Host '${OAR_API_DOMAIN}';
+
+    include /etc/nginx/proxy_params;
+  }
+
+  location ~ /oarws/(.*) {
+    access_log /var/log/nginx/proxy.access.log proxy_format;
+
+    rewrite /oarws/(.*) /ws/$1 break;
+    proxy_pass http://oarws;
+
+    proxy_set_header Host '${OAR_WS_DOMAIN}';
+
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+
+    include /etc/nginx/proxy_params;
+  }
+
+  # In order to configure ReactRouter all files must go through index.html
+  location / {
+    root /usr/share/nginx/html/;
+    try_files $uri /index.html;
+  }
+}
