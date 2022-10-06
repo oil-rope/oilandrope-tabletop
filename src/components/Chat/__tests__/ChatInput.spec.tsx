@@ -14,6 +14,7 @@ import {
 
 import { faker } from '@faker-js/faker';
 
+import { WS_TYPES } from '@Constants';
 import { IWSClientChatMessage } from '../interfaces';
 
 import { ChatInput } from '..';
@@ -106,7 +107,7 @@ describe('ChatInput suite with WebSocket', () => {
     await user.keyboard('[Enter]');
 
     const expectedMsg: IWSClientChatMessage = {
-      type: 'send_message',
+      type: WS_TYPES.SEND_MESSAGE,
       message: msg,
       chat: CampaignMock.chat,
     };
@@ -127,7 +128,7 @@ describe('ChatInput suite with WebSocket', () => {
     await user.keyboard('[Enter]');
 
     const expectedMsg: IWSClientChatMessage = {
-      type: 'send_message',
+      type: WS_TYPES.SEND_MESSAGE,
       message: msg,
       chat: CampaignMock.chat,
     };

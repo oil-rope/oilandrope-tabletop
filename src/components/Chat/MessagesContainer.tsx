@@ -43,7 +43,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
     if (!chatWebSocket.onmessage) {
       chatWebSocket.onmessage = (ev: MessageEvent) => {
         const data: IWSServerChatMessage = JSON.parse(ev.data);
-        if (data.type === WS_TYPES.SEND_MESSAGE) {
+        if (data.type === WS_TYPES.RECEIVE_MESSAGE) {
           if (data.content.author.id === bot.id) {
             return makeRollAction(data.content, data.roll || {});
           }
