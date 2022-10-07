@@ -6,6 +6,8 @@ import PropTypes, { InferProps } from 'prop-types';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import Loader from '@Components/Loader';
+
 import { WS_TYPES } from '@Constants';
 import { IChatMessage } from '@Interfaces';
 import { IRoll, IWSServerChatMessage } from './interfaces';
@@ -24,8 +26,10 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
   const container = useRef<HTMLDivElement>(null);
   const { bot } = useContext(AuthContext);
   const campaign = useContext(CampaignContext);
-  const [messages, setMessages] = useState<Array<IChatMessage>>([]);
   const { chatWebSocket } = useContext(ChatContext);
+
+  const [messages, setMessages] = useState<Array<IChatMessage>>([]);
+  const [loadingMessage, setLoadingMessages] = useState(true);
 
   useEffect(() => {
     if (!campaign) return;
@@ -33,8 +37,13 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
       .then((paginatedMessages) => {
         setMessages(paginatedMessages.results);
       })
-      .catch(() => {
-        alert("Could't load messages");
+      .then(() => {
+        // Once fetch is done we can show messages
+        setLoadingMessages(false);
+      })
+      .catch((err: Error) => {
+        alert(err.message);
+        setLoadingMessages(false);
       });
   }, [campaign]);
 
@@ -82,6 +91,10 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
     message.roll = roll;
     setMessages((messages) => [...messages, message]);
   };
+
+  if (loadingMessage) {
+    return <Loader text="Loading messages..." />;
+  }
 
   return (
     <Row

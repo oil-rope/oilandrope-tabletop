@@ -77,8 +77,13 @@ export const postData = async <T>(
   url: string,
   data: object,
   errorMsg = "Couldn't post data.",
+  // eslint-disable-next-line no-undef
+  extra?: RequestInit,
 ): Promise<T> => {
-  return fetchData(url, 'POST', errorMsg, { body: JSON.stringify(data) });
+  return fetchData(url, 'POST', errorMsg, {
+    body: JSON.stringify(data),
+    ...extra,
+  });
 };
 
 /**
@@ -105,11 +110,21 @@ export const getToken = (
   username: string,
   password: string,
 ): Promise<IAuthTokenResponse> => {
+  // If we are requesting a new token it means we don't need the old one
+  COMMON_HEADERS.delete('Authorization');
+  sessionStorage.removeItem('authtoken');
+
   const request: IAuthTokenRequest = { username, password };
   return postData<IAuthTokenResponse>(
     TOKEN_API,
     request,
     'Credentials are incorrect.',
+    {
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      }),
+    },
   );
 };
 
@@ -150,6 +165,6 @@ export const loadChatMessages = (
 ): Promise<IPaginatedChatMessageList> => {
   return getData<IPaginatedChatMessageList>(
     `${CHAT_API}/${id}/messages/`,
-    "We couldn't get the chat.",
+    'Error when loading messages',
   );
 };

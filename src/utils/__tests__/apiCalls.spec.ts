@@ -97,7 +97,7 @@ describe('loadChatMessages suite', () => {
     fetchMock.mockResponseOnce(JSON.stringify({}), { status: 400 });
 
     expect(loadChatMessages(1)).rejects.toThrowError(
-      "We couldn't get the chat.",
+      'Error when loading messages',
     );
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
