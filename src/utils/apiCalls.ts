@@ -14,7 +14,7 @@ import {
   IUser,
 } from '@Interfaces';
 
-export const COMMON_HEADERS = new Headers({
+const COMMON_HEADERS = new Headers({
   'Content-Type': 'application/json',
   Accept: 'application/json',
 });
@@ -34,6 +34,11 @@ export const fetchData = async <T>(
   // eslint-disable-next-line no-undef
   extra: RequestInit = {},
 ): Promise<T> => {
+  const authToken = sessionStorage.getItem('authtoken');
+  if (authToken && !COMMON_HEADERS.has('Authorization')) {
+    COMMON_HEADERS.append('Authorization', `Token ${authToken}`);
+  }
+
   // eslint-disable-next-line no-undef
   const init: RequestInit = {
     method: method,

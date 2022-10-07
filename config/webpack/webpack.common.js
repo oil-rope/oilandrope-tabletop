@@ -27,7 +27,7 @@ const webpackConf = {
   },
   // https://webpack.js.org/configuration/output/
   output: {
-    chunkFilename: '[id].js',
+    chunkFilename: '[id].[contenthash].js',
     clean: true,
     filename: '[name].[contenthash].bundle.js',
     path: path.resolve(BASE_PATH, 'dist'),
@@ -75,8 +75,8 @@ const webpackConf = {
 module.exports = (_env, argv) => {
   if (argv.mode === 'development') {
     webpackConf.devtool = 'eval-source-map';
-    webpackConf.output.filename = '[name].js';
-    webpackConf.output.chunkFilename = '[name].js';
+    webpackConf.output.filename = '[name].[contenthash].js';
+    webpackConf.output.chunkFilename = '[name].[contenthash].js';
     webpackConf.performance.hints = false;
     webpackConf.devServer = {
       client: {
