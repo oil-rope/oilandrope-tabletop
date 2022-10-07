@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-import { COMMON_HEADERS, getToken } from '@Utils/apiCalls';
+import { getToken } from '@Utils/apiCalls';
 
 const LoginModalProps = {
   onLogin: PropTypes.func.isRequired,
@@ -42,7 +42,7 @@ const LoginModal: FC<LoginModalTypes> = ({ onLogin, onFail }) => {
             e.preventDefault();
             getToken(username, password)
               .then(({ token }) => {
-                COMMON_HEADERS.append('Authorization', `Token ${token}`);
+                sessionStorage.setItem('authtoken', token);
                 setShow(false);
                 onLogin();
               })
