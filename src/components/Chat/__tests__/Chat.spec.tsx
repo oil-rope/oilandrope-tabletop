@@ -21,6 +21,7 @@ let divContainer: HTMLDivElement;
 
 beforeAll(() => {
   window.alert = jest.fn();
+  window.HTMLElement.prototype.scrollIntoView = jest.fn();
 });
 
 beforeEach(async () => {
@@ -32,6 +33,7 @@ beforeEach(async () => {
 
 afterAll(() => {
   (window.alert as jest.Mock).mockReset();
+  (window.HTMLElement.prototype.scrollIntoView as jest.Mock).mockReset();
 });
 
 afterEach(() => {

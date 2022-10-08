@@ -31,6 +31,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'warn',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'testing-library/no-node-access': [
       'error',
       { allowContainerFirstChild: true },
