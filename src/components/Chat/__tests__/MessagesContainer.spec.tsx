@@ -28,6 +28,10 @@ import { MessagesContainer } from '..';
 
 let divContainer: HTMLElement | null = null;
 
+beforeAll(() => {
+  window.HTMLElement.prototype.scrollIntoView = jest.fn();
+});
+
 beforeEach(async () => {
   divContainer = document.createElement('div');
   document.body.appendChild(divContainer);
@@ -41,6 +45,10 @@ afterEach(() => {
   divContainer = null;
 
   tearDownWebSocket();
+});
+
+afterAll(() => {
+  (window.HTMLElement.prototype.scrollIntoView as jest.Mock).mockReset();
 });
 
 describe('MessagesContainer suite without Contexts suite', () => {

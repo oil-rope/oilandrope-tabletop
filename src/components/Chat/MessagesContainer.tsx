@@ -6,6 +6,8 @@ import PropTypes, { InferProps } from 'prop-types';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import Loader from '@Components/Loader';
+
 import { WS_TYPES } from '@Constants';
 import { IChatMessage } from '@Interfaces';
 import { IRoll, IWSServerChatMessage } from './interfaces';
@@ -21,20 +23,42 @@ const MessagesContainerProps = {
 
 type MessagesContainerTypes = InferProps<typeof MessagesContainerProps>;
 export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
-  const container = useRef<HTMLDivElement>(null);
+  const endOfMessages = useRef<HTMLDivElement>(null);
   const { bot } = useContext(AuthContext);
   const campaign = useContext(CampaignContext);
-  const [messages, setMessages] = useState<Array<IChatMessage>>([]);
   const { chatWebSocket } = useContext(ChatContext);
+
+  const [messages, setMessages] = useState<Array<IChatMessage>>([]);
+  const [loadingMessages, setLoadingMessages] = useState(true);
+
+  /**
+   * Simple method to scroll to the bottom messages.
+   *
+   * @param {ScrollBehavior} behavior Type of scroll to perform.
+   */
+  // eslint-disable-next-line no-undef
+  const scrollToBottom = (behavior: ScrollBehavior = 'auto') => {
+    endOfMessages.current?.scrollIntoView({ behavior });
+  };
 
   useEffect(() => {
     if (!campaign) return;
     loadChatMessages(campaign.chat)
       .then((paginatedMessages) => {
-        setMessages(paginatedMessages.results);
+        // NOTE: We store it in reverse since they come as last sent first but we render them in order
+        // [1: Message 1 (20:00), 2: Message 2 (19:58), 3: Message 3 (19:50)...]
+        setMessages(paginatedMessages.results.reverse());
       })
-      .catch(() => {
-        alert("Could't load messages");
+      .then(() => {
+        // Once fetch is done we can show messages
+        setLoadingMessages(false);
+      })
+      .catch((err: Error) => {
+        alert(err.message);
+        setLoadingMessages(false);
+      })
+      .finally(() => {
+        scrollToBottom('auto');
       });
   }, [campaign]);
 
@@ -54,12 +78,9 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
   }, [chatWebSocket, bot]);
 
   useEffect(() => {
-    if (container.current) {
-      const height = container.current.scrollHeight;
-      const clientHeight = container.current.clientHeight;
-      container.current.scrollTop = height - clientHeight;
-    }
-  }, [container]);
+    if (loadingMessages) return;
+    scrollToBottom('auto');
+  }, [messages, loadingMessages]);
 
   /**
    * Perform action when message is sent.
@@ -68,6 +89,7 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
    */
   const sendMessageAction = (data: IChatMessage) => {
     const message = Object.assign(data);
+    // NOTE: We add the message at the bottom since it will be loaded in reverse
     setMessages((messages) => [...messages, message]);
   };
 
@@ -83,15 +105,18 @@ export const MessagesContainer: FC<MessagesContainerTypes> = ({ height }) => {
     setMessages((messages) => [...messages, message]);
   };
 
+  if (loadingMessages) {
+    return <Loader text="Loading messages..." />;
+  }
+
   return (
-    <Row
-      style={{ maxHeight: `${height - height / 8}px`, overflowY: 'scroll' }}
-      ref={container}
-    >
+    <Row style={{ maxHeight: `${height - height / 8}px`, overflowY: 'scroll' }}>
       <Col role="messages-container">
-        {messages.map((message, index) => (
+        {/* NOTE: In order for this to work we need to make a copy of the array */}
+        {messages.map((message, index, _list) => (
           <Message key={index} message={message} />
         ))}
+        <div ref={endOfMessages} />
       </Col>
     </Row>
   );

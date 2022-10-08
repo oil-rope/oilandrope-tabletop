@@ -1,6 +1,6 @@
 import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import {
   authRender,
   CampaignMock,
@@ -21,6 +21,7 @@ let divContainer: HTMLDivElement;
 
 beforeAll(() => {
   window.alert = jest.fn();
+  window.HTMLElement.prototype.scrollIntoView = jest.fn();
 });
 
 beforeEach(async () => {
@@ -32,6 +33,7 @@ beforeEach(async () => {
 
 afterAll(() => {
   (window.alert as jest.Mock).mockReset();
+  (window.HTMLElement.prototype.scrollIntoView as jest.Mock).mockReset();
 });
 
 afterEach(() => {
@@ -67,9 +69,18 @@ describe('Chat suite without context', () => {
 });
 
 describe('Chat suite with WebSocket', () => {
+  beforeEach(() => {
+    jest.spyOn(window, 'alert');
+  });
+
+  afterEach(() => {
+    (window.alert as jest.Mock).mockReset();
+  });
+
   test('renders correctly', async () => {
     tabletopRender(<Chat />);
 
+    await waitFor(() => expect(alert).toBeCalledTimes(1));
     const inputElement = await screen.findByPlaceholderText('Start typing...');
     expect(inputElement).toBeInTheDocument();
   });
