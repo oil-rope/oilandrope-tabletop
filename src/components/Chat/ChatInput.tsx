@@ -47,7 +47,8 @@ export const ChatInput = () => {
         } as IWSClientChatMessage),
       );
     }
-    ev.currentTarget.dispatchEvent(new Event('reset'));
+    // Reset form
+    setMessage('');
   };
 
   return (
@@ -57,10 +58,11 @@ export const ChatInput = () => {
           <Form.Control
             type="text"
             placeholder="Start typing..."
+            value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
         </Col>
-        <Col xs={3} md={4} xl={3}>
+        <Col xs={3} md={4} lg={4} xl={3}>
           <Button
             aria-label="send"
             className="w-100"
