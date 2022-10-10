@@ -4,7 +4,7 @@
 [![Node Version](https://img.shields.io/badge/Node-16.x+-green.svg)](https://nodejs.org/en/download/)
 [![Docker](https://img.shields.io/badge/Docker-latest-blue.svg)](https://docs.docker.com/get-docker/)
 ![CI/CD Status](https://github.com/oil-rope/oilandrope-tabletop/actions/workflows/node.yml/badge.svg)
-![Coverage](https://codecov.io/gh/oil-rope/oilandrope-tabletop/branch/develop/graph/badge.svg)
+[![Coverage](https://codecov.io/gh/oil-rope/oilandrope-tabletop/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/oil-rope/oilandrope-tabletop/tree/develop/)
 
 [React](https://reactjs.org/) project which manages the visual and
 interactive part of Oil &amp; Rope, which includes a chat and the
