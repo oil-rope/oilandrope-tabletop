@@ -40,6 +40,14 @@ jobs:
       - name: Test
         run: |
           npm test
+      
+      - name: Update coverage
+        if: ${{ matrix.node-version == '18.x' }}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false # CI can continue without Codecov
+          verbose: true
 
   build-and-push:
     name: Build Image and Push
