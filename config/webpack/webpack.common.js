@@ -51,8 +51,7 @@ const webpackConf = {
     rules: [
       {
         test: /\.tsx?$/,
-        // NOTE: Exclude, source-map and others are tackled by `webpack.tsconfig.json`
-        use: 'ts-loader?configFile=tsconfig.webpack.json',
+        use: 'babel-loader',
       },
     ],
   },

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const packageJSON = require('./package.json');
+
 /** @type {import('eslint').ESLint.ConfigData} */
 module.exports = {
   env: {
@@ -24,7 +27,7 @@ module.exports = {
   // 'eslint-testing-library' only for tests
   overrides: [
     {
-      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s(x)?'],
       extends: ['plugin:testing-library/react'],
     },
   ],
@@ -39,7 +42,7 @@ module.exports = {
   },
   settings: {
     react: {
-      version: '18.2.0',
+      version: packageJSON.dependencies.react,
     },
   },
   parserOptions: {

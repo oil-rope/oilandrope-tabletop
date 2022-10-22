@@ -9,10 +9,9 @@ const jestConfig = {
   coverageDirectory: 'coverage',
   moduleDirectories: [...defaults.moduleDirectories, 'src'],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
-  preset: 'ts-jest',
   setupFilesAfterEnv: ['<rootDir>/jestSetup.js'],
   testEnvironment: 'jsdom',
-  testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
+  testMatch: ['**/?(*.)+(spec|test).[jt]s(x)?'],
 };
 
 module.exports = jestConfig;

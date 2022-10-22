@@ -1,4 +1,3 @@
-
 # Oil &amp; Rope Tabletop
 
 [![Node Version](https://img.shields.io/badge/Node-16.x+-green.svg)](https://nodejs.org/en/download/)
@@ -77,7 +76,7 @@ For creating a superuser user just run
 Password as requested.
 
 **If you are running the project** just run
-`python ./manage.py createsuperuser` (*inside the virtual environment if you created one*) and set Username, Email and Password.
+`python ./manage.py createsuperuser` (_inside the virtual environment if you created one_) and set Username, Email and Password.
 
 Then you'll be able to access [localhost:8000](http://localhost:8000/).
 
