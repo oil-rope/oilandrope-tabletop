@@ -1,11 +1,15 @@
 upstream oarapi {
-  ip_hash;
+  hash $binary_remote_addr consistent;
   server ${OAR_API_SERVER};
+
+  keepalive 2;
 }
 
 upstream oarws {
-  ip_hash;
+  hash $binary_remote_addr consistent;
   server ${OAR_WS_SERVER};
+
+  keepalive 2;
 }
 
 server {
@@ -19,7 +23,9 @@ server {
     rewrite /oarapi/(.*) /api/$1 break;
     proxy_pass 	     http://oarapi;
 
-    proxy_set_header Host '${OAR_API_HOST}';
+    proxy_http_version 1.1;
+    proxy_set_header "Host" "${OAR_API_HOST}";
+    proxy_set_header "Connection" "";
 
     include /etc/nginx/proxy_params;
   }
@@ -32,11 +38,10 @@ server {
     rewrite /oarws/(.*) /ws/$1 break;
     proxy_pass http://oarws;
 
-    proxy_set_header Host '${OAR_WS_HOST}';
-
     proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection 'upgrade';
+    proxy_set_header "Host" "${OAR_WS_HOST}";
+    proxy_set_header "Upgrade" $http_upgrade;
+    proxy_set_header "Connection" "upgrade";
 
     include /etc/nginx/proxy_params;
   }
