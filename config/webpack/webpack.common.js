@@ -89,11 +89,13 @@ module.exports = (_env, argv) => {
         '/oarapi': {
           target: process.env.API_URL || 'http://127.0.0.1:8000',
           pathRewrite: { '^/oarapi': '/api' },
+          followRedirects: true,
         },
         '/oarws': {
           target: process.env.WS_URL || 'ws://127.0.0.1:8000',
           pathRewrite: { '^/oarws': '/ws' },
           ws: true,
+          followRedirects: true,
         },
       },
       static: {
