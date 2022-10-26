@@ -36,6 +36,10 @@ Let's do the easy way.
 7. Access [localhost:8080](http://localhost:8080).
 
 ```bash
+# Download the project image at it latest development version
+
+docker pull oilandrope/core:develop
+
 # Execute this command to setup the backend as Docker container
 
 docker run \
@@ -72,7 +76,7 @@ new terminal and run `docker exec -ti oar_core bash` this will create a
 bash terminal inside the container so you can execute any command you
 want.  
 For creating a superuser user just run
-`poetry run ./manage.py createsuperuser` and set Username, Email and
+`python ./manage.py createsuperuser` and set Username, Email and
 Password as requested.
 
 **If you are running the project** just run
@@ -84,7 +88,8 @@ Then you'll be able to access [localhost:8000](http://localhost:8000/).
 
 Once you have cloned the repository
 (`git clone https://github.com/oil-rope/oilandrope-tabletop`) access
-the folder (`cd oilandrope-tabletop`) and execute `npm i -D`.  
+the folder (`cd oilandrope-tabletop`) and execute `npm i -D` (_any change made on `package-lock.json` because of this command_
+_should be ignored_).  
 Once the installation is complete just run it by using `npm start`.
 
 Now you should be able to access [localhost:8080](http://localhost:8080).
