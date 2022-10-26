@@ -40,15 +40,13 @@ const LoginModal: FC<LoginModalTypes> = ({ onLogin, onFail }) => {
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            /*getToken(username, password)
+            getToken(username, password)
               .then(({ token }) => {
                 sessionStorage.setItem('authtoken', token);
                 setShow(false);
                 onLogin();
               })
               .catch(() => onFail());
-              */
-             onLogin();
           }}
         >
           <Form.Group className="mb-3" controlId="id_username">

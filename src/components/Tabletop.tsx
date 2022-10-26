@@ -1,7 +1,6 @@
 import { loadCampaign } from '@Utils/apiCalls';
-import { handleCanvas } from '@/utils/tabletop/glFunctions';
 
-import React, { useEffect, useState, lazy, Suspense, useRef } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 
 import Row from 'react-bootstrap/Row';
@@ -20,13 +19,6 @@ const Tabletop = () => {
   const { campaignID } = useParams();
 
   const [campaign, setCampaign] = useState<ICampaign | null>(null);
-
-  const canvasInput = useRef<HTMLCanvasElement>(null);
-
-  const daniFunction = () => {
-    if (!canvasInput.current) return;
-    handleCanvas(canvasInput.current);
-  };
 
   useEffect(() => {
     if (campaign !== null) return;
@@ -61,14 +53,13 @@ const Tabletop = () => {
                 width: '100%',
                 height: '100%',
               }}
-              ref={canvasInput}
             ></canvas>
           </Col>
-          {/* <Col className="px-0 mx-0">
+          <Col className="px-0 mx-0">
             <Suspense fallback={<Loader text="Loading chat..." />}>
               <Chat />
             </Suspense>
-          </Col> */}
+          </Col>
         </Row>
       </Container>
     </CampaignContext.Provider>
