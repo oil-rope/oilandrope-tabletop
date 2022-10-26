@@ -15,7 +15,7 @@ const Tabletop = lazy(() => import('@Components/Tabletop'));
 const App: FC = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const [bot, setBot] = useState<IBot | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
   const handleUserLogin = () => {
@@ -43,6 +43,7 @@ const App: FC = () => {
     });
   }, [bot, user]);
 
+  /*
   if (user === null && !isAuthenticated)
     return (
       <>
@@ -56,6 +57,7 @@ const App: FC = () => {
       </>
     );
   if (bot === null && user !== null) return <Loader text="Loading bot..." />;
+  */
 
   return (
     <Suspense fallback={<Loader text="Loading..." />}>

@@ -23,7 +23,7 @@ describe('loadData suite', () => {
   it('calls API with default error', async () => {
     fetchMock.mockResponseOnce(JSON.stringify({}), { status: 400 });
 
-    await expect(getData(faker.internet.url())).rejects.toThrowError();
+    await expect(getData(faker.faker.internet.url())).rejects.toThrowError();
   });
 });
 
@@ -106,13 +106,13 @@ describe('loadChatMessages suite', () => {
 describe('getToken suite', () => {
   it('calls API correctly', async () => {
     const response: IAuthTokenResponse = {
-      token: faker.internet.password(),
+      token: faker.faker.internet.password(),
     };
     fetchMock.mockResponseOnce(JSON.stringify(response));
 
     const token = await getToken(
-      faker.internet.userName(),
-      faker.internet.password(),
+      faker.faker.internet.userName(),
+      faker.faker.internet.password(),
     );
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -123,7 +123,7 @@ describe('getToken suite', () => {
     fetchMock.mockResponseOnce(JSON.stringify({}), { status: 400 });
 
     await expect(
-      getToken(faker.internet.userName(), faker.internet.password()),
+      getToken(faker.faker.internet.userName(), faker.faker.internet.password()),
     ).rejects.toThrowError('Credentials are incorrect.');
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
